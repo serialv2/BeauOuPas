@@ -1,0 +1,107 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="BeauOuPas.Views.Dating.ChatPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:BeauOuPas.ViewModels.Dating"
+    xmlns:models="clr-namespace:BeauOuPas.Models"
+    xmlns:tr="clr-namespace:BeauOuPas.Extensions"
+    x:DataType="vm:ChatViewModel"
+    Title="{tr:Translate Key=Chat_Title}"
+    BackgroundColor="{StaticResource BackgroundPage}">
+
+    <ContentPage.ToolbarItems>
+        <!-- ✅ Bouton retour custom qui arrête le timer -->
+        <ToolbarItem Text="⬅"
+                     Priority="0"
+                     Order="Primary"
+                     Clicked="OnBackButtonClicked"/>
+        <ToolbarItem Text="{tr:Translate Key=Chat_Block}"
+                     Command="{Binding BlockChatCommand}"
+                     Order="Secondary"/>
+    </ContentPage.ToolbarItems>
+
+    <Grid RowDefinitions="Auto,*,Auto">
+
+        <Border Grid.Row="0" IsVisible="{Binding IsChatBlocked}"
+                BackgroundColor="#FF5252" Padding="12,8">
+            <Label Text="{tr:Translate Key=Chat_Blocked}" TextColor="White"
+                   FontAttributes="Bold" HorizontalOptions="Center"/>
+        </Border>
+
+        <CollectionView Grid.Row="1" x:Name="MessagesCollection"
+                        ItemsSource="{Binding Messages}" Margin="16,8">
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="models:Message">
+                    <Grid Margin="0,4" ColumnDefinitions="*,Auto,*">
+
+                        <VerticalStackLayout Grid.Column="0"
+                            IsVisible="{Binding IsMyMessage, Converter={StaticResource InverseBoolConverter}}"
+                            HorizontalOptions="Start" MaximumWidthRequest="260" Spacing="2">
+                            <Border BackgroundColor="White" StrokeShape="RoundRectangle 15,15,15,0"
+                                    Stroke="{StaticResource BorderLight}" StrokeThickness="1" Padding="12,8">
+                                <VerticalStackLayout Spacing="2">
+                                    <Label Text="{Binding Content}" TextColor="{StaticResource TextPrimary}" FontSize="14"/>
+                                    <Label Text="{Binding TimeLabel}" TextColor="{StaticResource TextDisabled}"
+                                           FontSize="10" HorizontalOptions="End"/>
+                                </VerticalStackLayout>
+                            </Border>
+                            <Label Text="{tr:Translate Key=Chat_Report}"
+       TextColor="{StaticResource TextSecondary}"
+       FontSize="10"
+       FontAttributes="Bold"
+       HorizontalOptions="Start">
+                                <Label.GestureRecognizers>
+                                    <TapGestureRecognizer
+            Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ChatViewModel}},
+                              Path=ReportMessageCommand}"
+            CommandParameter="{Binding .}"/>
+                                </Label.GestureRecognizers>
+                            </Label>
+                        </VerticalStackLayout>
+
+                        <Border Grid.Column="2" IsVisible="{Binding IsMyMessage}"
+                                BackgroundColor="{StaticResource Primary}" StrokeShape="RoundRectangle 15,15,0,15"
+                                Padding="12,8" HorizontalOptions="End" MaximumWidthRequest="260">
+                            <VerticalStackLayout Spacing="2">
+                                <Label Text="{Binding Content}" TextColor="White" FontSize="14"/>
+                                <Label Text="{Binding TimeLabel}" TextColor="#FFB3D1"
+                                       FontSize="10" HorizontalOptions="End"/>
+                            </VerticalStackLayout>
+                        </Border>
+
+                    </Grid>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <Border Grid.Row="2" BackgroundColor="White" Stroke="{StaticResource BorderLight}" StrokeThickness="1"
+                Padding="12,8"
+                IsVisible="{Binding IsChatBlocked, Converter={StaticResource InverseBoolConverter}}">
+            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                <Border Grid.Column="0" Stroke="{StaticResource BorderMedium}" StrokeThickness="1"
+                        StrokeShape="RoundRectangle 20" BackgroundColor="{StaticResource SurfaceMuted}">
+                    <Entry Text="{Binding NewMessage}"
+                           Placeholder="{tr:Translate Key=Chat_Placeholder}"
+                           PlaceholderColor="{StaticResource TextDisabled}"
+                           ReturnCommand="{Binding SendMessageCommand}" Margin="12,0"/>
+                </Border>
+                <Border Grid.Column="1" BackgroundColor="{StaticResource Primary}" StrokeShape="RoundRectangle 22"
+                        HeightRequest="44" WidthRequest="44">
+                    <Label Text="➤" TextColor="White" FontSize="18"
+                           HorizontalOptions="Center" VerticalOptions="Center"/>
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding SendMessageCommand}"/>
+                    </Border.GestureRecognizers>
+                </Border>
+            </Grid>
+        </Border>
+
+        <Border Grid.Row="2" BackgroundColor="{StaticResource SurfaceMuted}" Stroke="{StaticResource BorderLight}" StrokeThickness="1"
+                Padding="12,12" IsVisible="{Binding IsChatBlocked}">
+            <Label Text="{tr:Translate Key=Chat_BlockedMessage}"
+                   TextColor="{StaticResource TextTertiary}" FontSize="13" HorizontalOptions="Center"/>
+        </Border>
+
+    </Grid>
+</ContentPage>

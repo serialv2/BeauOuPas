@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+	<style name="MainTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+		<item name="windowNoTitle">true</item>
+		<item name="windowActionBar">false</item>
+
+		<item name="colorPrimary">#C2754C</item>
+		<item name="colorPrimaryVariant">#A35C36</item>
+		<item name="colorOnPrimary">#FFFFFF</item>
+
+		<item name="colorSecondary">#3F51B5</item>
+		<item name="colorSecondaryVariant">#303F9F</item>
+		<item name="colorOnSecondary">#FFFFFF</item>
+
+		<item name="android:statusBarColor">#000000</item>
+		<item name="android:navigationBarColor">#000000</item>
+	</style>
+
+	<style name="CropTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+		<item name="colorPrimary">#C2754C</item>
+		<item name="colorPrimaryVariant">#A35C36</item>
+		<item name="colorOnPrimary">#FFFFFF</item>
+
+		<item name="colorSecondary">#3F51B5</item>
+		<item name="colorSecondaryVariant">#303F9F</item>
+		<item name="colorOnSecondary">#FFFFFF</item>
+
+		<item name="android:windowFullscreen">false</item>
+		<item name="android:windowTranslucentStatus">false</item>
+		<item name="android:windowTranslucentNavigation">false</item>
+		<item name="windowNoTitle">false</item>
+		<item name="windowActionBar">true</item>
+	</style>
+
+</resources>

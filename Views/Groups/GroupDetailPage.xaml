@@ -1,0 +1,523 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="BeauOuPas.Views.Groups.GroupDetailPage"
+    x:Name="ThisPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:BeauOuPas.ViewModels.Groups"
+   xmlns:models="clr-namespace:BeauOuPas.Models"  
+        xmlns:tr="clr-namespace:BeauOuPas.Extensions"
+x:DataType="vm:GroupDetailViewModel"
+    Title="{Binding GroupName}"
+    BackgroundColor="{StaticResource BackgroundPage}"
+    >
+    <Grid RowDefinitions="Auto,*">
+
+        <!-- TABS -->
+        <Border Grid.Row="0"
+                BackgroundColor="White"
+                
+                StrokeShape="RoundRectangle 0"
+                Stroke="{StaticResource BorderLight}"
+                StrokeThickness="1"
+                Padding="16,8">
+            <Grid ColumnDefinitions="*,*,*" ColumnSpacing="4">
+                <Border x:Name="TabSeries" Grid.Column="0"
+                        BackgroundColor="{StaticResource Primary}"
+                        StrokeShape="RoundRectangle 10"
+                        Stroke="Transparent"
+                        Padding="0,10">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnTabSeriesTapped"/>
+                    </Border.GestureRecognizers>
+                    <Label x:Name="LblTabSeries"
+                           Text="{tr:Translate Key=GroupDetail_SeriesTab}"
+                           FontSize="13"
+                           FontAttributes="Bold"
+                           TextColor="White"
+                           HorizontalOptions="Center"/>
+                </Border>
+                <Border x:Name="TabChat" Grid.Column="1"
+                        BackgroundColor="{StaticResource SurfaceMuted}"
+                        StrokeShape="RoundRectangle 10"
+                        Stroke="Transparent"
+                        Padding="0,10">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnTabChatTapped"/>
+                    </Border.GestureRecognizers>
+                    <Label Text="💬 Chat"
+                           FontSize="13"
+                           TextColor="{StaticResource TextTertiary}"
+                           HorizontalOptions="Center"/>
+                </Border>
+                <Border x:Name="TabMembers" Grid.Column="2"
+                        BackgroundColor="{StaticResource SurfaceMuted}"
+                        StrokeShape="RoundRectangle 10"
+                        Stroke="Transparent"
+                        Padding="0,10">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnTabMembersTapped"/>
+                    </Border.GestureRecognizers>
+                    <Label Text="👥 Membres"
+                           FontSize="13"
+                           TextColor="{StaticResource TextTertiary}"
+                           HorizontalOptions="Center"/>
+                </Border>
+            </Grid>
+        </Border>
+
+        <!-- CONTENU -->
+        <Grid Grid.Row="1">
+
+            <!-- ═══ TAB SÉRIES ═══ -->
+            <!-- ⚡ FIX PERF v5 : la CollectionView est maintenant LIBRE (plus de
+                 ScrollView englobant). C'est ce qui débloque la virtualisation
+                 native MAUI : seuls les items visibles sont rendus, et la mesure
+                 ne se fait pas sur "infinity height".
+                 - Loader / barre multi-select / bouton Créer-Sélectionner →
+                   passés en Header de la CollectionView (défilent avec la liste
+                   mais profitent de la virtualisation)
+                 - "Aucune série" → passé en EmptyView (rendu seulement quand
+                   la liste est vide, géré nativement par la CollectionView)
+            -->
+            <Grid x:Name="ContentSeries">
+                <CollectionView ItemsSource="{Binding Series}"
+                                SelectionMode="None"
+                                Margin="16,12">
+
+                    <!-- ═══ HEADER : éléments fixes du tab séries ═══ -->
+                    <CollectionView.Header>
+                        <VerticalStackLayout Spacing="0">
+
+                            <ActivityIndicator IsRunning="{Binding IsLoading}"
+                                               IsVisible="{Binding IsLoading}"
+                                               Color="{StaticResource Primary}" Margin="0,40"/>
+
+                            <!-- ⚡ QW2 : Barre d'actions multi-sélection -->
+                            <Border IsVisible="{Binding BindingContext.IsSeriesSelectionMode, Source={x:Reference ThisPage}}"
+                                    BackgroundColor="{StaticResource Primary}"
+                                    StrokeShape="RoundRectangle 14"
+                                    Stroke="Transparent"
+                                    Padding="12,8"
+                                    Margin="0,0,0,16">
+                                <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10">
+                                    <Border Grid.Column="0"
+                                            BackgroundColor="Transparent"
+                                            StrokeShape="RoundRectangle 8"
+                                            Stroke="White"
+                                            StrokeThickness="1"
+                                            Padding="12,6"
+                                            VerticalOptions="Center">
+                                        <Border.GestureRecognizers>
+                                            <TapGestureRecognizer Command="{Binding BindingContext.ExitSeriesSelectionCommand, Source={x:Reference ThisPage}}"/>
+                                        </Border.GestureRecognizers>
+                                        <Label Text="✕ Annuler"
+                                               FontSize="13"
+                                               FontAttributes="Bold"
+                                               TextColor="White"/>
+                                    </Border>
+                                    <Label Grid.Column="1"
+                                           Text="{Binding BindingContext.SelectedSeriesCount, Source={x:Reference ThisPage}, StringFormat='{0} sélectionnée(s)'}"
+                                           FontSize="14"
+                                           FontAttributes="Bold"
+                                           TextColor="White"
+                                           HorizontalOptions="Center"
+                                           VerticalOptions="Center"/>
+                                    <Border Grid.Column="2"
+                                            BackgroundColor="White"
+                                            StrokeShape="RoundRectangle 8"
+                                            Stroke="Transparent"
+                                            Padding="12,6"
+                                            Opacity="{Binding BindingContext.HasSelectedSeries, Source={x:Reference ThisPage}, Converter={StaticResource BoolToOpacityConverter}, FallbackValue=1}"
+                                            IsEnabled="{Binding BindingContext.HasSelectedSeries, Source={x:Reference ThisPage}}"
+                                            VerticalOptions="Center">
+                                        <Border.GestureRecognizers>
+                                            <TapGestureRecognizer Command="{Binding BindingContext.DeleteSelectedSeriesCommand, Source={x:Reference ThisPage}}"/>
+                                        </Border.GestureRecognizers>
+                                        <Label Text="{Binding BindingContext.SelectionHeaderText, Source={x:Reference ThisPage}}"
+                                               FontSize="13"
+                                               FontAttributes="Bold"
+                                               TextColor="{StaticResource Primary}"/>
+                                    </Border>
+                                </Grid>
+                            </Border>
+
+                            <!-- ⚡ QW2 : Rangée Créer + Sélectionner (mode normal) -->
+                            <Grid IsVisible="{Binding BindingContext.IsSeriesSelectionMode, Source={x:Reference ThisPage}, Converter={StaticResource InverseBoolConverter}}"
+                                  ColumnDefinitions="*,Auto"
+                                  ColumnSpacing="8"
+                                  Margin="0,0,0,16">
+                                <Border Grid.Column="0"
+                                        BackgroundColor="{StaticResource Primary}"
+                                        StrokeShape="RoundRectangle 14"
+                                        Stroke="Transparent"
+                                        Padding="0,14">
+                                    <Border.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding BindingContext.CreateSeriesCommand, Source={x:Reference ThisPage}}"/>
+                                    </Border.GestureRecognizers>
+                                    <Label Text="{tr:Translate Key=CreateSeriesType_Header}"
+                                           FontSize="15"
+                                           FontAttributes="Bold"
+                                           TextColor="White"
+                                           HorizontalOptions="Center"/>
+                                </Border>
+                                <Border Grid.Column="1"
+                                        IsVisible="{Binding BindingContext.HasSeries, Source={x:Reference ThisPage}}"
+                                        BackgroundColor="White"
+                                        StrokeShape="RoundRectangle 14"
+                                        Stroke="{StaticResource Primary}"
+                                        StrokeThickness="2"
+                                        Padding="14,0"
+                                        VerticalOptions="Fill">
+                                    <Border.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding BindingContext.StartSeriesSelectionCommand, Source={x:Reference ThisPage}}"/>
+                                    </Border.GestureRecognizers>
+                                    <Label Text="{tr:Translate Key=Common_Select}"
+                                           FontSize="13"
+                                           FontAttributes="Bold"
+                                           TextColor="{StaticResource Primary}"
+                                           HorizontalOptions="Center"
+                                           VerticalOptions="Center"/>
+                                </Border>
+                            </Grid>
+
+                        </VerticalStackLayout>
+                    </CollectionView.Header>
+
+                    <!-- ═══ ITEM TEMPLATE ═══ -->
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="vm:SeriesItem">
+                            <Border BackgroundColor="White"
+                                    StrokeShape="RoundRectangle 14"
+                                    Stroke="{StaticResource BorderLight}"
+                                    StrokeThickness="1"
+                                    Padding="16"
+                                    Margin="0,0,0,12">
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer
+                                        Command="{Binding BindingContext.OpenSeriesCommand, Source={x:Reference ThisPage}}"
+                                        CommandParameter="{Binding .}"/>
+                                </Border.GestureRecognizers>
+
+                                <Grid RowDefinitions="Auto,Auto" RowSpacing="10">
+
+                                    <!-- Ligne 1 : checkbox? + emoji + infos + statut -->
+                                    <Grid Grid.Row="0" ColumnDefinitions="Auto,Auto,*,Auto" ColumnSpacing="10">
+
+                                        <!-- Checkbox sélection -->
+                                        <Border Grid.Column="0"
+                                                IsVisible="{Binding BindingContext.IsSeriesSelectionMode, Source={x:Reference ThisPage}}"
+                                                WidthRequest="28"
+                                                HeightRequest="28"
+                                                StrokeShape="RoundRectangle 14"
+                                                StrokeThickness="2"
+                                                BackgroundColor="{Binding CheckboxBackgroundColor}"
+                                                Stroke="{Binding CheckboxBorderColor}"
+                                                VerticalOptions="Center">
+                                            <Label Text="✓"
+                                                   FontSize="16"
+                                                   FontAttributes="Bold"
+                                                   TextColor="White"
+                                                   HorizontalOptions="Center"
+                                                   VerticalOptions="Center"
+                                                   IsVisible="{Binding IsSelected}"/>
+                                        </Border>
+
+                                        <!-- Emoji type -->
+                                        <Border Grid.Column="1"
+                                                BackgroundColor="{StaticResource SurfaceMuted}"
+                                                StrokeShape="RoundRectangle 10"
+                                                Stroke="Transparent"
+                                                Padding="8,6"
+                                                WidthRequest="40"
+                                                HeightRequest="40"
+                                                VerticalOptions="Center">
+                                            <Label Text="{Binding TypeEmoji}"
+                                                   FontSize="20"
+                                                   HorizontalOptions="Center"
+                                                   VerticalOptions="Center"/>
+                                        </Border>
+
+                                        <!-- Titre + sous-titre -->
+                                        <VerticalStackLayout Grid.Column="2" Spacing="6" VerticalOptions="Center">
+                                            <Label Text="{Binding TitleWithCrown}"
+                                                   FontSize="15"
+                                                   FontAttributes="Bold"
+                                                   TextColor="{StaticResource TextPrimary}"
+                                                   LineBreakMode="TailTruncation"
+                                                   VerticalOptions="Center"/>
+                                            <Label Text="{Binding SubtitleLabel}"
+                                                   FontSize="12"
+                                                   TextColor="{StaticResource TextTertiary}"/>
+                                        </VerticalStackLayout>
+
+                                        <!-- Statut -->
+                                        <Border Grid.Column="3"
+                                                BackgroundColor="{StaticResource SurfaceMuted}"
+                                                StrokeShape="RoundRectangle 10"
+                                                Stroke="Transparent"
+                                                Padding="10,6"
+                                                VerticalOptions="Center">
+                                            <Label Text="{Binding StatusLabel}"
+                                                   FontSize="12"
+                                                   FontAttributes="Bold"
+                                                   TextColor="{Binding StatusColor}"/>
+                                        </Border>
+                                    </Grid>
+
+                                    <!-- Ligne 2 : code d'accès + bouton copier -->
+                                    <Grid Grid.Row="1"
+                                          IsVisible="{Binding HasAccessCode}"
+                                          ColumnDefinitions="*,Auto"
+                                          ColumnSpacing="8">
+                                        <Border Grid.Column="0"
+                                                BackgroundColor="{StaticResource SurfaceMuted}"
+                                                StrokeShape="RoundRectangle 10"
+                                                Stroke="Transparent"
+                                                Padding="10,6"
+                                                HorizontalOptions="Start">
+                                            <Label Text="{Binding AccessCodeLabel}"
+                                                   FontSize="12"
+                                                   FontAttributes="Bold"
+                                                   TextColor="{StaticResource Primary}"/>
+                                        </Border>
+                                        <Border Grid.Column="1"
+                                                BackgroundColor="{StaticResource SurfaceMuted}"
+                                                StrokeShape="RoundRectangle 10"
+                                                Stroke="Transparent"
+                                                Padding="10,6"
+                                                HorizontalOptions="End">
+                                            <Border.GestureRecognizers>
+                                                <TapGestureRecognizer
+                                                    Command="{Binding BindingContext.CopyAccessCodeCommand, Source={x:Reference ThisPage}}"
+                                                    CommandParameter="{Binding .}"/>
+                                            </Border.GestureRecognizers>
+                                            <Label Text="📋 Copier"
+                                                   FontSize="12"
+                                                   FontAttributes="Bold"
+                                                   TextColor="{StaticResource Primary}"/>
+                                        </Border>
+                                    </Grid>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+
+                    <!-- ═══ EMPTY VIEW : "Aucune série" ═══ -->
+                    <CollectionView.EmptyView>
+                        <VerticalStackLayout HorizontalOptions="Center"
+                                             Spacing="10"
+                                             Padding="20,40">
+                            <Label Text="📋" FontSize="48" HorizontalOptions="Center"/>
+                            <Label Text="{tr:Translate Key=GroupDetail_NoSeriesYet}"
+                                   FontSize="15"
+                                   TextColor="{StaticResource TextTertiary}"
+                                   HorizontalOptions="Center"/>
+                            <Label Text="{tr:Translate Key=GroupDetail_CreateFirstSeries}"
+                                   FontSize="13"
+                                   TextColor="{StaticResource TextDisabled}"
+                                   HorizontalOptions="Center"/>
+                        </VerticalStackLayout>
+                    </CollectionView.EmptyView>
+                </CollectionView>
+            </Grid>
+
+            <!-- ═══ TAB CHAT ═══ -->
+            <!-- ⚡ FIX PERF MAJEUR : la CollectionView des messages n'est PLUS
+                 dans un ScrollView. Avant, le ScrollView étranglait la
+                 virtualisation interne de la CollectionView et TOUS les
+                 messages étaient rendus en mémoire dès l'ouverture, même
+                 quand le tab était caché. Maintenant la CollectionView gère
+                 son propre scroll et ne rend que les items visibles. -->
+            <Grid x:Name="ContentChat"
+                  IsVisible="False"
+                  RowDefinitions="*,Auto">
+
+                <!-- Liste des messages (virtualisée, sans ScrollView englobant) -->
+                <Grid Grid.Row="0">
+                    <!-- Empty state quand pas de messages -->
+                    <VerticalStackLayout IsVisible="{Binding HasMessages, Converter={StaticResource InverseBoolConverter}}"
+                                         HorizontalOptions="Center"
+                                         VerticalOptions="Center"
+                                         Spacing="10"
+                                         Padding="20,40">
+                        <Label Text="💬" FontSize="48" HorizontalOptions="Center"/>
+                        <Label Text="Aucun message"
+                               FontSize="15"
+                               TextColor="{StaticResource TextTertiary}"
+                               HorizontalOptions="Center"/>
+                    </VerticalStackLayout>
+
+                    <CollectionView ItemsSource="{Binding Messages}"
+                                    IsVisible="{Binding HasMessages}"
+                                    SelectionMode="None"
+                                    Margin="16,12">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="models:GroupMessage">
+                                <VerticalStackLayout Margin="0,0,0,10">
+                                    <!-- Message de moi -->
+                                    <HorizontalStackLayout IsVisible="{Binding IsMyMessage}"
+                                                           HorizontalOptions="End">
+                                        <Border BackgroundColor="{StaticResource Primary}"
+                                                StrokeShape="RoundRectangle 16,16,4,16"
+                                                Stroke="Transparent"
+                                                Padding="14,10"
+                                                MaximumWidthRequest="280">
+                                            <Label Text="{Binding Content}"
+                                                   FontSize="14"
+                                                   TextColor="White"/>
+                                        </Border>
+                                    </HorizontalStackLayout>
+                                    <!-- Message des autres -->
+                                    <HorizontalStackLayout IsVisible="{Binding IsMyMessage, Converter={StaticResource InverseBoolConverter}}"
+                                                           HorizontalOptions="Start">
+                                        <Border BackgroundColor="White"
+                                                StrokeShape="RoundRectangle 16,16,16,4"
+                                                Stroke="{StaticResource BorderLight}"
+                                                StrokeThickness="1"
+                                                Padding="14,10"
+                                                MaximumWidthRequest="280">
+                                            <Label Text="{Binding Content}"
+                                                   FontSize="14"
+                                                   TextColor="{StaticResource TextPrimary}"/>
+                                        </Border>
+                                    </HorizontalStackLayout>
+                                </VerticalStackLayout>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </Grid>
+
+                <!-- Input message -->
+                <Border Grid.Row="1"
+                        BackgroundColor="White"
+                        StrokeShape="RoundRectangle 0"
+                        Stroke="{StaticResource BorderLight}"
+                        StrokeThickness="1"
+                        Padding="12">
+                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                        <Border Grid.Column="0"
+                                BackgroundColor="{StaticResource SurfaceMuted}"
+                                StrokeShape="RoundRectangle 20"
+                                Stroke="Transparent"
+                                Padding="16,10">
+                            <Entry Placeholder="Message..."
+                                   Text="{Binding NewMessage}"
+                                   FontSize="14"
+                                   TextColor="{StaticResource TextPrimary}"
+                                   PlaceholderColor="{StaticResource TextDisabled}"
+                                   BackgroundColor="Transparent"
+                                   ReturnCommand="{Binding SendMessageCommand}"/>
+                        </Border>
+                        <Border Grid.Column="1"
+                                BackgroundColor="{StaticResource Primary}"
+                                StrokeShape="RoundRectangle 20"
+                                Stroke="Transparent"
+                                Padding="14,10">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding SendMessageCommand}"/>
+                            </Border.GestureRecognizers>
+                            <Label Text="➤"
+                                   FontSize="16"
+                                   TextColor="White"
+                                   HorizontalOptions="Center"
+                                   VerticalOptions="Center"/>
+                        </Border>
+                    </Grid>
+                </Border>
+            </Grid>
+
+            <!-- ═══ TAB MEMBRES ═══ -->
+            <!-- ⚡ FIX PERF : pareil que pour le chat — la CollectionView
+                 des membres n'est PLUS dans un ScrollView. La zone "Danger"
+                 (créateur uniquement) est mise en Footer de la CollectionView
+                 pour qu'elle défile avec la liste sans avoir besoin d'un
+                 ScrollView englobant. -->
+            <Grid x:Name="ContentMembers" IsVisible="False">
+                <CollectionView ItemsSource="{Binding Members}"
+                                IsVisible="{Binding HasMembers}"
+                                SelectionMode="None"
+                                Margin="16,12">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="vm:MemberItem">
+                            <Border BackgroundColor="White"
+                                    StrokeShape="RoundRectangle 14"
+                                    Stroke="{StaticResource BorderLight}"
+                                    StrokeThickness="1"
+                                    Margin="0,0,0,12"
+                                    Padding="14">
+                                <Grid ColumnDefinitions="44,*,Auto" ColumnSpacing="12">
+                                    <Border Grid.Column="0"
+                                            BackgroundColor="{StaticResource SurfaceMuted}"
+                                            StrokeShape="RoundRectangle 22"
+                                            Stroke="Transparent"
+                                            HeightRequest="44"
+                                            WidthRequest="44">
+                                        <Label Text="{Binding FirstLetter}"
+                                               FontSize="18"
+                                               FontAttributes="Bold"
+                                               TextColor="{StaticResource Primary}"
+                                               HorizontalOptions="Center"
+                                               VerticalOptions="Center"/>
+                                    </Border>
+                                    <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
+                                        <Label Text="{Binding Username, StringFormat='@{0}'}"
+                                               FontSize="15"
+                                               FontAttributes="Bold"
+                                               TextColor="{StaticResource TextPrimary}"/>
+                                        <Label Text="{Binding RoleLabel}"
+                                               FontSize="12"
+                                               TextColor="{StaticResource TextTertiary}"/>
+                                    </VerticalStackLayout>
+                                    <Border Grid.Column="2"
+                                            IsVisible="{Binding IsAdmin}"
+                                            BackgroundColor="{StaticResource SurfaceMuted}"
+                                            StrokeShape="RoundRectangle 8"
+                                            Stroke="Transparent"
+                                            Padding="8,4">
+                                        <Label Text="Admin"
+                                               FontSize="11"
+                                               FontAttributes="Bold"
+                                               TextColor="{StaticResource Primary}"/>
+                                    </Border>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                    <!-- Footer : Zone Danger (créateur uniquement). Défile
+                         naturellement avec la liste, pas besoin de ScrollView. -->
+                    <CollectionView.Footer>
+                        <VerticalStackLayout IsVisible="{Binding IsOwner}"
+                                             Spacing="8"
+                                             Margin="0,24,0,16">
+                            <Label Text="{tr:Translate Key=GroupDetail_OwnerZone}"
+                                   FontSize="13"
+                                   FontAttributes="Bold"
+                                   TextColor="{StaticResource TextTertiary}"
+                                   Margin="4,0,0,0"/>
+                            <Border BackgroundColor="White"
+                                    StrokeShape="RoundRectangle 12"
+                                    Stroke="{StaticResource Error}"
+                                    StrokeThickness="1"
+                                    Padding="0,14">
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding BindingContext.DeleteGroupCommand, Source={x:Reference ThisPage}}"/>
+                                </Border.GestureRecognizers>
+                                <Label Text="🗑️ Supprimer le groupe"
+                                       FontSize="14"
+                                       FontAttributes="Bold"
+                                       TextColor="{StaticResource Error}"
+                                       HorizontalOptions="Center"/>
+                            </Border>
+                            <Label Text="{tr:Translate Key=GroupDetail_DeleteWarning}"
+                                   FontSize="11"
+                                   TextColor="{StaticResource TextTertiary}"
+                                   Margin="4,0,0,0"/>
+                        </VerticalStackLayout>
+                    </CollectionView.Footer>
+                </CollectionView>
+            </Grid>
+
+        </Grid>
+    </Grid>
+</ContentPage>

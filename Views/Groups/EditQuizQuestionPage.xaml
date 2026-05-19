@@ -1,0 +1,282 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="BeauOuPas.Views.Groups.EditQuizQuestionPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:BeauOuPas.ViewModels.Groups"
+    xmlns:tr="clr-namespace:BeauOuPas.Extensions"
+    x:DataType="vm:EditQuizQuestionViewModel"
+    Title="{tr:Translate Key=EditQuizQuestion_Title}"
+    BackgroundColor="{StaticResource BackgroundPage}">
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="{tr:Translate Key=Common_Cancel}" Command="{Binding CancelCommand}"/>
+    </ContentPage.ToolbarItems>
+
+    <ScrollView>
+        <VerticalStackLayout Spacing="0" Padding="16,12">
+
+            <!-- En-tête -->
+            <Label Text="{tr:Translate Key=EditQuizQuestion_Header}"
+                   FontSize="22" FontAttributes="Bold"
+                   TextColor="{StaticResource TextPrimary}" Margin="0,0,0,16"/>
+
+            <!-- Titre court -->
+            <Border BackgroundColor="White" StrokeShape="RoundRectangle 14"
+                    Stroke="{StaticResource BorderLight}" StrokeThickness="1" Padding="16" Margin="0,0,0,12">
+                <VerticalStackLayout Spacing="6">
+                    <Label Text="{tr:Translate Key=EditQuizQuestion_TitleLabel}"
+                           FontSize="13" FontAttributes="Bold"
+                           TextColor="{StaticResource TextTertiary}" TextTransform="Uppercase"/>
+                    <Label Text="{tr:Translate Key=EditQuizQuestion_TitleHint}"
+                           FontSize="11" TextColor="{StaticResource TextDisabled}"/>
+                    <Entry Placeholder="{tr:Translate Key=EditQuizQuestion_TitlePlaceholder}"
+                           Text="{Binding Title}" FontSize="16"
+                           TextColor="{StaticResource TextPrimary}" PlaceholderColor="{StaticResource TextDisabled}"
+                           BackgroundColor="Transparent"
+                           MaxLength="200"/>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Énoncé long -->
+            <Border BackgroundColor="White" StrokeShape="RoundRectangle 14"
+                    Stroke="{StaticResource BorderLight}" StrokeThickness="1" Padding="16" Margin="0,0,0,12">
+                <VerticalStackLayout Spacing="6">
+                    <Label Text="{tr:Translate Key=EditQuizQuestion_QuestionTextLabel}"
+                           FontSize="13" FontAttributes="Bold"
+                           TextColor="{StaticResource TextTertiary}" TextTransform="Uppercase"/>
+                    <Label Text="{tr:Translate Key=EditQuizQuestion_QuestionTextHint}"
+                           FontSize="11" TextColor="{StaticResource TextDisabled}"/>
+                    <Editor Placeholder="{tr:Translate Key=EditQuizQuestion_QuestionTextPlaceholder}"
+                            Text="{Binding QuestionText}" FontSize="15"
+                            TextColor="{StaticResource TextPrimary}" PlaceholderColor="{StaticResource TextDisabled}"
+                            BackgroundColor="Transparent" AutoSize="TextChanges"
+                            MinimumHeightRequest="80"
+                            MaxLength="1000"/>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Photo (optionnelle) -->
+            <Label Text="{tr:Translate Key=EditQuizQuestion_PhotoSection}"
+                   FontSize="13" FontAttributes="Bold"
+                   TextColor="{StaticResource TextTertiary}" TextTransform="Uppercase"
+                   Margin="2,0,0,8"/>
+
+            <!-- Bouton "Ajouter une photo" si pas de photo -->
+            <Border IsVisible="{Binding HasPhoto, Converter={StaticResource InverseBoolConverter}}"
+                    BackgroundColor="White"
+                    StrokeShape="RoundRectangle 14"
+                    Stroke="{StaticResource Primary}"
+                    StrokeThickness="2"
+                    Padding="20,18"
+                    Margin="0,0,0,20">
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding PickPhotoCommand}"/>
+                </Border.GestureRecognizers>
+                <VerticalStackLayout Spacing="8" HorizontalOptions="Center">
+                    <Label Text="📷" FontSize="32" HorizontalOptions="Center"/>
+                    <Label Text="{tr:Translate Key=EditQuizQuestion_AddPhoto}"
+                           FontSize="14" FontAttributes="Bold"
+                           TextColor="{StaticResource Primary}"
+                           HorizontalOptions="Center"/>
+                    <Label Text="{tr:Translate Key=EditQuizQuestion_AddPhotoHint}"
+                           FontSize="11" TextColor="{StaticResource TextTertiary}"
+                           HorizontalTextAlignment="Center"
+                           HorizontalOptions="Center"/>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Aperçu photo + bouton supprimer si photo présente -->
+            <VerticalStackLayout IsVisible="{Binding HasPhoto}" Spacing="8" Margin="0,0,0,20">
+                <Border BackgroundColor="White"
+                        StrokeShape="RoundRectangle 14"
+                        Stroke="{StaticResource BorderLight}"
+                        StrokeThickness="1"
+                        Padding="0"
+                        HeightRequest="200">
+                    <Image Source="{Binding PhotoPreview}"
+                           Aspect="AspectFill"/>
+                </Border>
+                <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
+                    <Border Grid.Column="0"
+                            BackgroundColor="{StaticResource SurfaceMuted}"
+                            StrokeShape="RoundRectangle 10"
+                            Stroke="Transparent"
+                            Padding="0,10">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding PickPhotoCommand}"/>
+                        </Border.GestureRecognizers>
+                        <Label Text="{tr:Translate Key=EditQuizQuestion_ChangePhoto}"
+                               FontSize="13" FontAttributes="Bold"
+                               TextColor="{StaticResource Primary}"
+                               HorizontalOptions="Center"/>
+                    </Border>
+                    <Border Grid.Column="1"
+                            BackgroundColor="White"
+                            StrokeShape="RoundRectangle 10"
+                            Stroke="{StaticResource Error}"
+                            StrokeThickness="1"
+                            Padding="0,10">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding RemovePhotoCommand}"/>
+                        </Border.GestureRecognizers>
+                        <Label Text="{tr:Translate Key=EditQuizQuestion_RemovePhoto}"
+                               FontSize="13" FontAttributes="Bold"
+                               TextColor="{StaticResource Error}"
+                               HorizontalOptions="Center"/>
+                    </Border>
+                </Grid>
+            </VerticalStackLayout>
+
+            <!-- Indicateur upload photo -->
+            <ActivityIndicator IsRunning="{Binding IsUploadingPhoto}"
+                               IsVisible="{Binding IsUploadingPhoto}"
+                               Color="{StaticResource Primary}" Margin="0,0,0,12"/>
+
+            <!-- ═══ SECTION OPTIONS ═══ -->
+
+            <Grid ColumnDefinitions="*,Auto" Margin="0,0,0,4">
+                <Label Grid.Column="0"
+                       Text="{tr:Translate Key=EditQuizQuestion_OptionsSection}"
+                       FontSize="13" FontAttributes="Bold"
+                       TextColor="{StaticResource TextTertiary}" TextTransform="Uppercase"
+                       VerticalOptions="Center"/>
+                <Border Grid.Column="1"
+                        BackgroundColor="{StaticResource SurfaceMuted}"
+                        StrokeShape="RoundRectangle 8"
+                        Stroke="Transparent"
+                        Padding="8,4"
+                        VerticalOptions="Center">
+                    <Label Text="{Binding OptionCount, StringFormat='{0} / 4'}"
+                           FontSize="11" FontAttributes="Bold"
+                           TextColor="{StaticResource Primary}"/>
+                </Border>
+            </Grid>
+
+            <Label Text="{tr:Translate Key=EditQuizQuestion_OptionsHint}"
+                   FontSize="11" TextColor="{StaticResource TextDisabled}"
+                   Margin="2,0,0,12"/>
+
+            <!-- Liste dynamique des options -->
+            <CollectionView ItemsSource="{Binding Options}"
+                            SelectionMode="None"
+                            Margin="0,0,0,12">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="vm:EditQuizOptionItem">
+                        <Border BackgroundColor="White"
+                                StrokeShape="RoundRectangle 12"
+                                Stroke="{StaticResource BorderLight}"
+                                StrokeThickness="1"
+                                Margin="0,0,0,8"
+                                Padding="12">
+                            <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10" RowDefinitions="Auto,Auto" RowSpacing="8">
+
+                                <!-- Badge position -->
+                                <Border Grid.Row="0" Grid.Column="0"
+                                        BackgroundColor="{StaticResource SurfaceMuted}"
+                                        StrokeShape="RoundRectangle 8"
+                                        Stroke="Transparent"
+                                        Padding="8,4"
+                                        VerticalOptions="Center">
+                                    <Label Text="{Binding PositionLabel}"
+                                           FontSize="12" FontAttributes="Bold"
+                                           TextColor="{StaticResource TextTertiary}"/>
+                                </Border>
+
+                                <!-- Champ texte -->
+                                <Entry Grid.Row="0" Grid.Column="1"
+                                       Text="{Binding Text}"
+                                       Placeholder="{tr:Translate Key=EditQuizQuestion_OptionPlaceholder}"
+                                       PlaceholderColor="{StaticResource TextDisabled}"
+                                       FontSize="14"
+                                       TextColor="{StaticResource TextPrimary}"
+                                       BackgroundColor="Transparent"
+                                       MaxLength="300"
+                                       VerticalOptions="Center"/>
+
+                                <!-- Bouton supprimer option -->
+                                <Border Grid.Row="0" Grid.Column="2"
+                                        BackgroundColor="White"
+                                        StrokeShape="RoundRectangle 8"
+                                        Stroke="{StaticResource Error}"
+                                        StrokeThickness="1"
+                                        Padding="8,4"
+                                        VerticalOptions="Center">
+                                    <Border.GestureRecognizers>
+                                        <TapGestureRecognizer
+                                            Command="{Binding Source={RelativeSource AncestorType={x:Type vm:EditQuizQuestionViewModel}}, Path=RemoveOptionCommand}"
+                                            CommandParameter="{Binding .}"/>
+                                    </Border.GestureRecognizers>
+                                    <Label Text="🗑"
+                                           FontSize="14"
+                                           TextColor="{StaticResource Error}"/>
+                                </Border>
+
+                                <!-- Toggle "bonne réponse" -->
+                                <!-- 🔧 quiz-fix3 : syntaxe Converter inline + FallbackValue défensifs.
+                                     Les classes BoolToCorrectBgConverter et BoolToCheckEmojiConverter
+                                     existent dans Converters/QuizConverters.cs et sont déclarées
+                                     dans App.xaml. -->
+                                <Border Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3"
+                                        BackgroundColor="{Binding IsCorrect, Converter={StaticResource BoolToCorrectBgConverter}, FallbackValue=#F5F5F5}"
+                                        StrokeShape="RoundRectangle 10"
+                                        Stroke="Transparent"
+                                        Padding="10,8">
+                                    <Border.GestureRecognizers>
+                                        <TapGestureRecognizer
+                                            Command="{Binding Source={RelativeSource AncestorType={x:Type vm:EditQuizQuestionViewModel}}, Path=ToggleOptionCorrectCommand}"
+                                            CommandParameter="{Binding .}"/>
+                                    </Border.GestureRecognizers>
+                                    <HorizontalStackLayout Spacing="8" HorizontalOptions="Center">
+                                        <Label Text="{Binding IsCorrect, Converter={StaticResource BoolToCheckEmojiConverter}, FallbackValue=⬜}"
+                                               FontSize="14"
+                                               VerticalOptions="Center"/>
+                                        <Label Text="{tr:Translate Key=EditQuizQuestion_MarkCorrect}"
+                                               FontSize="13" FontAttributes="Bold"
+                                               TextColor="{StaticResource TextPrimary}"
+                                               VerticalOptions="Center"/>
+                                    </HorizontalStackLayout>
+                                </Border>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <!-- Bouton "+ Ajouter une option" -->
+            <Border BackgroundColor="White"
+                    StrokeShape="RoundRectangle 12"
+                    Stroke="{StaticResource Primary}"
+                    StrokeThickness="2"
+                    Padding="0,12"
+                    Margin="0,0,0,24"
+                    IsEnabled="{Binding CanAddOption}"
+                    Opacity="{Binding CanAddOption, Converter={StaticResource BoolToOpacityConverter}, FallbackValue=1}">
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding AddOptionCommand}"/>
+                </Border.GestureRecognizers>
+                <Label Text="{tr:Translate Key=EditQuizQuestion_AddOption}"
+                       FontSize="13" FontAttributes="Bold"
+                       TextColor="{StaticResource Primary}"
+                       HorizontalOptions="Center"/>
+            </Border>
+
+            <!-- Bouton Enregistrer -->
+            <Border BackgroundColor="{StaticResource Primary}" StrokeShape="RoundRectangle 16"
+                    Stroke="Transparent" Padding="0,16" Margin="0,0,0,40">
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding SaveCommand}"/>
+                </Border.GestureRecognizers>
+                <Grid>
+                    <ActivityIndicator IsRunning="{Binding IsLoading}"
+                                       IsVisible="{Binding IsLoading}" Color="White"/>
+                    <Label Text="{tr:Translate Key=EditQuizQuestion_SaveButton}"
+                           IsVisible="{Binding IsLoading, Converter={StaticResource InverseBoolConverter}}"
+                           FontSize="16" FontAttributes="Bold"
+                           TextColor="White" HorizontalOptions="Center"/>
+                </Grid>
+            </Border>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

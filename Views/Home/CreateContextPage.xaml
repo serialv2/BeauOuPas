@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="BeauOuPas.Views.Home.CreateContextPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:BeauOuPas.ViewModels.Home"
+    xmlns:tr="clr-namespace:BeauOuPas.Extensions"
+    x:DataType="vm:CreateContextViewModel"
+    Title="{tr:Translate Key=CreateCtx_Title}"
+    BackgroundColor="{StaticResource BackgroundPage}">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20,20,20,24" Spacing="0">
+
+            <!-- ═══ EN-TÊTE ════════════════════════════════════════ -->
+            <VerticalStackLayout HorizontalOptions="Center" Margin="0,8,0,24">
+                <Label Text="✨"
+                       FontSize="48"
+                       HorizontalOptions="Center"/>
+                <Label Text="{tr:Translate Key=CreateCtx_Heading}"
+                       FontSize="22"
+                       FontAttributes="Bold"
+                       TextColor="{StaticResource TextPrimary}"
+                       HorizontalOptions="Center"
+                       HorizontalTextAlignment="Center"
+                       Margin="0,8,0,4"/>
+                <Label Text="{tr:Translate Key=CreateCtx_Subheading}"
+                       FontSize="13"
+                       TextColor="{StaticResource TextTertiary}"
+                       HorizontalOptions="Center"
+                       HorizontalTextAlignment="Center"/>
+            </VerticalStackLayout>
+
+            <!-- ═══ CARTE 1 : SANS GROUPE (terracotta) ══════════════════════════ -->
+            <Border BackgroundColor="{StaticResource Primary}"
+                    StrokeShape="RoundRectangle 18"
+                    Stroke="Transparent"
+                    Padding="20"
+                    MinimumHeightRequest="110"
+                    Margin="0,0,0,12">
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding ChooseStandaloneCommand}"/>
+                </Border.GestureRecognizers>
+                <Grid>
+                    <Label Text="🎯"
+                           FontSize="80"
+                           Opacity="0.18"
+                           HorizontalOptions="End"
+                           VerticalOptions="End"
+                           Margin="0,0,-10,-15"
+                           InputTransparent="True"/>
+                    <VerticalStackLayout Spacing="6">
+                        <Label Text="{tr:Translate Key=CreateCtx_Standalone_Title}"
+                               FontSize="18"
+                               FontAttributes="Bold"
+                               TextColor="{StaticResource TextOnPrimary}"/>
+                        <Label Text="{tr:Translate Key=CreateCtx_Standalone_Desc}"
+                               FontSize="12"
+                               TextColor="{StaticResource TextOnPrimary}"
+                               Opacity="0.9"/>
+                        <HorizontalStackLayout Spacing="6" Margin="0,6,0,0">
+                            <Label Text="{tr:Translate Key=CreateCtx_Continue}"
+                                   FontSize="12"
+                                   FontAttributes="Bold"
+                                   TextColor="{StaticResource TextOnPrimary}"
+                                   VerticalOptions="Center"/>
+                            <Label Text="→"
+                                   FontSize="13"
+                                   FontAttributes="Bold"
+                                   TextColor="{StaticResource TextOnPrimary}"
+                                   VerticalOptions="Center"/>
+                        </HorizontalStackLayout>
+                    </VerticalStackLayout>
+                </Grid>
+            </Border>
+
+            <!-- ═══ CARTE 2 : NOUVEAU GROUPE (vert sauge) ════════════════════════ -->
+            <Border BackgroundColor="{StaticResource Accent}"
+                    StrokeShape="RoundRectangle 18"
+                    Stroke="Transparent"
+                    Padding="20"
+                    MinimumHeightRequest="110"
+                    Margin="0,0,0,12">
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding ChooseNewGroupCommand}"/>
+                </Border.GestureRecognizers>
+                <Grid>
+                    <Label Text="➕"
+                           FontSize="80"
+                           Opacity="0.18"
+                           HorizontalOptions="End"
+                           VerticalOptions="End"
+                           Margin="0,0,-10,-15"
+                           InputTransparent="True"/>
+                    <VerticalStackLayout Spacing="6">
+                        <Label Text="{tr:Translate Key=CreateCtx_NewGroup_Title}"
+                               FontSize="18"
+                               FontAttributes="Bold"
+                               TextColor="{StaticResource TextOnAccent}"/>
+                        <Label Text="{tr:Translate Key=CreateCtx_NewGroup_Desc}"
+                               FontSize="12"
+                               TextColor="{StaticResource TextOnAccent}"
+                               Opacity="0.9"/>
+                        <HorizontalStackLayout Spacing="6" Margin="0,6,0,0">
+                            <Label Text="{tr:Translate Key=CreateCtx_Continue}"
+                                   FontSize="12"
+                                   FontAttributes="Bold"
+                                   TextColor="{StaticResource TextOnAccent}"
+                                   VerticalOptions="Center"/>
+                            <Label Text="→"
+                                   FontSize="13"
+                                   FontAttributes="Bold"
+                                   TextColor="{StaticResource TextOnAccent}"
+                                   VerticalOptions="Center"/>
+                        </HorizontalStackLayout>
+                    </VerticalStackLayout>
+                </Grid>
+            </Border>
+
+            <!-- ═══ CARTE 3 : GROUPE EXISTANT (jaune doré, cachée si 0 groupe) ═══ -->
+            <Border BackgroundColor="{StaticResource Warning}"
+                    StrokeShape="RoundRectangle 18"
+                    Stroke="Transparent"
+                    Padding="20"
+                    MinimumHeightRequest="110"
+                    Margin="0,0,0,12"
+                    IsVisible="{Binding HasGroups}">
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding ChooseExistingGroupCommand}"/>
+                </Border.GestureRecognizers>
+                <Grid>
+                    <Label Text="👥"
+                           FontSize="80"
+                           Opacity="0.18"
+                           HorizontalOptions="End"
+                           VerticalOptions="End"
+                           Margin="0,0,-10,-15"
+                           InputTransparent="True"/>
+                    <VerticalStackLayout Spacing="6">
+                        <Label Text="{tr:Translate Key=CreateCtx_ExistingGroup_Title}"
+                               FontSize="18"
+                               FontAttributes="Bold"
+                               TextColor="White"/>
+                        <Label Text="{tr:Translate Key=CreateCtx_ExistingGroup_Desc}"
+                               FontSize="12"
+                               TextColor="White"
+                               Opacity="0.9"/>
+                        <HorizontalStackLayout Spacing="6" Margin="0,6,0,0">
+                            <Label Text="{tr:Translate Key=CreateCtx_Continue}"
+                                   FontSize="12"
+                                   FontAttributes="Bold"
+                                   TextColor="White"
+                                   VerticalOptions="Center"/>
+                            <Label Text="→"
+                                   FontSize="13"
+                                   FontAttributes="Bold"
+                                   TextColor="White"
+                                   VerticalOptions="Center"/>
+                        </HorizontalStackLayout>
+                    </VerticalStackLayout>
+                </Grid>
+            </Border>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

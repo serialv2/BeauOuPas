@@ -1,0 +1,58 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<toolkit:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+               xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+               xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+               xmlns:tr="clr-namespace:BeauOuPas.Extensions"
+               x:Class="BeauOuPas.Views.Auth.BanPopup"
+               CanBeDismissedByTappingOutsideOfPopup="False"
+               Color="Transparent">
+
+    <Border BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#1E1E1E}"
+            StrokeShape="RoundRectangle 16" Stroke="Transparent" Margin="24,0" Padding="0">
+        <VerticalStackLayout Spacing="0">
+            <Grid BackgroundColor="{StaticResource Error}" Padding="24,20" HeightRequest="90">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Label Grid.Row="0" Text="{tr:Translate Key=Ban_Title}" FontSize="20"
+                       FontAttributes="Bold" TextColor="White" HorizontalOptions="Center"/>
+                <Label Grid.Row="1" Text="{tr:Translate Key=Ban_Subtitle}" FontSize="13"
+                       TextColor="{StaticResource ErrorLight}" HorizontalOptions="Center" Margin="0,4,0,0"/>
+            </Grid>
+            <VerticalStackLayout Padding="24,20" Spacing="16">
+                <Border BackgroundColor="#FFF3F3" Stroke="{StaticResource ErrorLight}" StrokeThickness="1"
+                        StrokeShape="RoundRectangle 8" Padding="12,10">
+                    <HorizontalStackLayout Spacing="10">
+                        <Label Text="📅" FontSize="16" VerticalOptions="Center"/>
+                        <VerticalStackLayout Spacing="2">
+                            <Label Text="{tr:Translate Key=Ban_DateLabel}" FontSize="11" TextColor="{StaticResource TextTertiary}"/>
+                            <Label x:Name="BanDateLabel" FontSize="14" FontAttributes="Bold" TextColor="{StaticResource Error}"/>
+                        </VerticalStackLayout>
+                    </HorizontalStackLayout>
+                </Border>
+                <VerticalStackLayout Spacing="6">
+                    <Label Text="{tr:Translate Key=Ban_ReasonLabel}" FontSize="13"
+                           FontAttributes="Bold" TextColor="{AppThemeBinding Light=#333333, Dark=#CCCCCC}"/>
+                    <Border BackgroundColor="{AppThemeBinding Light=#F5F5F5, Dark=#2A2A2A}"
+                            Stroke="{AppThemeBinding Light=#E0E0E0, Dark=#404040}"
+                            StrokeThickness="1" StrokeShape="RoundRectangle 8" Padding="12,10">
+                        <Label x:Name="BanReasonLabel" FontSize="14" LineBreakMode="WordWrap"
+                               TextColor="{AppThemeBinding Light=#444444, Dark=#DDDDDD}"/>
+                    </Border>
+                </VerticalStackLayout>
+                <Border BackgroundColor="#E3F2FD" Stroke="#BBDEFB" StrokeThickness="1"
+                        StrokeShape="RoundRectangle 8" Padding="12,10">
+                    <HorizontalStackLayout Spacing="10">
+                        <Label Text="ℹ️" FontSize="16" VerticalOptions="Start" Margin="0,2,0,0"/>
+                        <Label Text="{tr:Translate Key=Ban_Contact}" FontSize="13"
+                               TextColor="#1565C0" LineBreakMode="WordWrap"/>
+                    </HorizontalStackLayout>
+                </Border>
+                <Button Text="{tr:Translate Key=Ban_Close}" x:Name="CloseButton"
+                        BackgroundColor="{StaticResource Error}" TextColor="White" FontAttributes="Bold"
+                        FontSize="15" CornerRadius="10" HeightRequest="48" Margin="0,4,0,0"/>
+            </VerticalStackLayout>
+        </VerticalStackLayout>
+    </Border>
+</toolkit:Popup>

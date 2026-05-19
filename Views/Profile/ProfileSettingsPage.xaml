@@ -1,0 +1,353 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="BeauOuPas.Views.Profile.ProfileSettingsPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:BeauOuPas.ViewModels.Profile"
+    xmlns:tr="clr-namespace:BeauOuPas.Extensions"
+    x:DataType="vm:ProfileSettingsViewModel"
+    Title="{tr:Translate Key=Profile_Title}"
+    BackgroundColor="{StaticResource BackgroundPage}">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="16">
+
+            <ActivityIndicator IsRunning="{Binding IsLoading}"
+                               IsVisible="{Binding IsLoading}" Color="{StaticResource Primary}"/>
+
+            <!-- ─── Photo de profil ─────────────────────────────── -->
+            <Border BackgroundColor="{StaticResource SurfaceCardAlt}" StrokeShape="RoundRectangle 12"
+                    Stroke="{StaticResource BorderLight}" StrokeThickness="1" Padding="16">
+                <VerticalStackLayout Spacing="12" HorizontalOptions="Center">
+                    <Label Text="{tr:Translate Key=Profile_Avatar}"
+                           FontSize="14" FontAttributes="Bold" TextColor="{StaticResource TextSecondary}"
+                           HorizontalOptions="Center"/>
+                    <Grid HorizontalOptions="Center">
+                        <Border StrokeShape="RoundRectangle 50"
+                                HeightRequest="90" WidthRequest="90"
+                                BackgroundColor="{StaticResource Primary}">
+                            <Grid>
+                                <Label Text="{Binding AvatarInitial}"
+                                       TextColor="{StaticResource TextOnPrimary}" FontSize="34" FontAttributes="Bold"
+                                       HorizontalOptions="Center" VerticalOptions="Center"
+                                       IsVisible="{Binding HasAvatar, Converter={StaticResource InverseBoolConverter}}"/>
+                                <Image Source="{Binding AvatarUrl}" Aspect="AspectFill"
+                                       IsVisible="{Binding HasAvatar}"/>
+                            </Grid>
+                        </Border>
+                    </Grid>
+                    <Button Text="{tr:Translate Key=Profile_ChangeAvatar}"
+                            Command="{Binding ChangeAvatarCommand}"
+                            BackgroundColor="{StaticResource SurfaceMuted}"
+                            TextColor="{StaticResource Primary}"
+                            CornerRadius="8" HeightRequest="38" FontSize="13"/>
+                    <Label Text="{Binding AvatarUploadProgress}"
+                           IsVisible="{Binding IsUploadingAvatar}"
+                           FontSize="12" TextColor="{StaticResource Primary}" HorizontalOptions="Center"/>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- ─── Infos profil ────────────────────────────────── -->
+            <Border BackgroundColor="{StaticResource SurfaceCardAlt}" StrokeShape="RoundRectangle 12"
+                    Stroke="{StaticResource BorderLight}" StrokeThickness="1" Padding="16">
+                <VerticalStackLayout Spacing="12">
+                    <Label Text="{tr:Translate Key=Profile_MyProfile}"
+                           FontSize="16" FontAttributes="Bold" TextColor="{StaticResource TextPrimary}"/>
+                    <Label Text="{tr:Translate Key=Profile_Username}"
+                           FontSize="13" TextColor="{StaticResource TextSecondary}"/>
+                    <Border Stroke="{StaticResource BorderMedium}" StrokeThickness="1"
+                            BackgroundColor="{StaticResource SurfaceCardAlt}" StrokeShape="RoundRectangle 10">
+                        <Entry Text="{Binding Username}" Placeholder="@monpseudo"
+                               PlaceholderColor="{StaticResource TextDisabled}" Margin="12,0"/>
+                    </Border>
+                    <Label Text="{tr:Translate Key=Profile_Email}"
+                           FontSize="13" TextColor="{StaticResource TextSecondary}"/>
+                    <Border Stroke="{StaticResource BorderLight}" StrokeThickness="1"
+                            BackgroundColor="{StaticResource SurfaceMuted}" StrokeShape="RoundRectangle 10">
+                        <Entry Text="{Binding Email}" IsReadOnly="True"
+                               TextColor="{StaticResource TextTertiary}" Margin="12,0"/>
+                    </Border>
+                    <Label Text="{tr:Translate Key=CompleteProfile_BirthDate}"
+                           FontSize="13" TextColor="{StaticResource TextSecondary}"/>
+                    <Border Stroke="{StaticResource BorderMedium}" StrokeThickness="1"
+                            BackgroundColor="{StaticResource SurfaceCardAlt}" StrokeShape="RoundRectangle 10"
+                            Padding="12,10">
+                        <DatePicker Date="{Binding BirthDate}"
+                                    MaximumDate="{Binding MaxBirthDate}"
+                                    MinimumDate="{Binding MinBirthDate}"
+                                    Format="dd/MM/yyyy" TextColor="{StaticResource TextPrimary}"/>
+                    </Border>
+                    <Label Text="{tr:Translate Key=Profile_Gender}"
+                           FontSize="13" TextColor="{StaticResource TextSecondary}"/>
+                    <Border Stroke="{StaticResource BorderMedium}" StrokeThickness="1"
+                            BackgroundColor="{StaticResource SurfaceCardAlt}" StrokeShape="RoundRectangle 10">
+                        <Picker ItemsSource="{Binding GenderOptions}"
+                                SelectedItem="{Binding SelectedGender}"
+                                TitleColor="{StaticResource TextDisabled}"
+                                TextColor="{StaticResource TextPrimary}" Margin="12,0"/>
+                    </Border>
+                    <Label Text="{tr:Translate Key=Profile_Phone}"
+                           FontSize="13" TextColor="{StaticResource TextSecondary}"/>
+                    <Border Stroke="{StaticResource BorderMedium}" StrokeThickness="1"
+                            BackgroundColor="{StaticResource SurfaceCardAlt}" StrokeShape="RoundRectangle 10">
+                        <Entry Text="{Binding Phone}" Placeholder="+33 6 00 00 00 00"
+                               Keyboard="Telephone"
+                               PlaceholderColor="{StaticResource TextDisabled}" Margin="12,0"/>
+                    </Border>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- ─── Préférence projets ──────────────────────────── -->
+            <Border BackgroundColor="{StaticResource SurfaceCardAlt}" StrokeShape="RoundRectangle 12"
+                    Stroke="{StaticResource BorderLight}" StrokeThickness="1" Padding="16">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="{tr:Translate Key=CompleteProfile_ProjectPref}"
+                           FontSize="14" FontAttributes="Bold" TextColor="{StaticResource TextPrimary}"/>
+                    <Grid ColumnDefinitions="*,*,*" ColumnSpacing="8">
+                        <Button Grid.Column="0" Text="{tr:Translate Key=Common_Male}"
+                                Command="{Binding SelectPrefMaleCommand}"
+                                BackgroundColor="{Binding PrefMaleColor}"
+                                TextColor="{Binding PrefMaleTextColor}"
+                                CornerRadius="10" HeightRequest="44"/>
+                        <Button Grid.Column="1" Text="{tr:Translate Key=Common_Female}"
+                                Command="{Binding SelectPrefFemaleCommand}"
+                                BackgroundColor="{Binding PrefFemaleColor}"
+                                TextColor="{Binding PrefFemaleTextColor}"
+                                CornerRadius="10" HeightRequest="44"/>
+                        <Button Grid.Column="2" Text="{tr:Translate Key=Common_Other}"
+                                Command="{Binding SelectPrefOtherCommand}"
+                                BackgroundColor="{Binding PrefOtherColor}"
+                                TextColor="{Binding PrefOtherTextColor}"
+                                CornerRadius="10" HeightRequest="44"/>
+                    </Grid>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- ─── Géolocalisation ─────────────────────────────── -->
+            <Border BackgroundColor="{StaticResource SurfaceCardAlt}" StrokeShape="RoundRectangle 12"
+                    Stroke="{StaticResource BorderLight}" StrokeThickness="1" Padding="16">
+                <VerticalStackLayout Spacing="10">
+                    <HorizontalStackLayout Spacing="12">
+                        <Label Text="📍" FontSize="24" VerticalOptions="Center"/>
+                        <VerticalStackLayout VerticalOptions="Center">
+                            <Label Text="{tr:Translate Key=CompleteProfile_Location}"
+                                   FontSize="14" FontAttributes="Bold" TextColor="{StaticResource TextPrimary}"/>
+                            <Label Text="{tr:Translate Key=CompleteProfile_LocationHint}"
+                                   FontSize="12" TextColor="{StaticResource TextTertiary}"/>
+                        </VerticalStackLayout>
+                    </HorizontalStackLayout>
+                    <Button Text="{Binding LocationButtonText}"
+                            Command="{Binding RequestLocationCommand}"
+                            BackgroundColor="{Binding LocationButtonColor}"
+                            TextColor="{StaticResource TextOnPrimary}" CornerRadius="8" HeightRequest="40"/>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- ─── Notifications ───────────────────────────────── -->
+            <Border BackgroundColor="{StaticResource SurfaceCardAlt}" StrokeShape="RoundRectangle 12"
+                    Stroke="{StaticResource BorderLight}" StrokeThickness="1" Padding="16">
+                <VerticalStackLayout Spacing="10">
+                    <HorizontalStackLayout Spacing="12">
+                        <Label Text="🔔" FontSize="24" VerticalOptions="Center"/>
+                        <VerticalStackLayout VerticalOptions="Center">
+                            <Label Text="{tr:Translate Key=CompleteProfile_Notifs}"
+                                   FontSize="14" FontAttributes="Bold" TextColor="{StaticResource TextPrimary}"/>
+                            <Label Text="{tr:Translate Key=CompleteProfile_NotifsHint}"
+                                   FontSize="12" TextColor="{StaticResource TextTertiary}"/>
+                        </VerticalStackLayout>
+                    </HorizontalStackLayout>
+                    <Button Text="{Binding NotifButtonText}"
+                            Command="{Binding RequestNotifCommand}"
+                            BackgroundColor="{Binding NotifButtonColor}"
+                            TextColor="{StaticResource TextOnPrimary}" CornerRadius="8" HeightRequest="40"/>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- ─── Rencontres ──────────────────────────────────── -->
+            <Border BackgroundColor="{StaticResource SurfaceCardAlt}" StrokeShape="RoundRectangle 12"
+                    Stroke="{StaticResource BorderLight}" StrokeThickness="1" Padding="16"
+                    IsVisible="{Binding MeetVisible}">
+                <VerticalStackLayout Spacing="12">
+                    <Label Text="{tr:Translate Key=Profile_Dating}"
+                           FontSize="16" FontAttributes="Bold" TextColor="{StaticResource TextPrimary}"/>
+                    <HorizontalStackLayout Spacing="12">
+                        <Switch IsToggled="{Binding DatingEnabled}" OnColor="{StaticResource Primary}"/>
+                        <Label Text="{tr:Translate Key=Profile_DatingEnable}"
+                               VerticalOptions="Center" FontSize="14" TextColor="{StaticResource TextPrimary}"/>
+                    </HorizontalStackLayout>
+                    <VerticalStackLayout IsVisible="{Binding DatingEnabled}" Spacing="8">
+                        <Label Text="{tr:Translate Key=Profile_DatingPref}"
+                               FontSize="13" TextColor="{StaticResource TextSecondary}"/>
+                        <Grid ColumnDefinitions="*,*,*" ColumnSpacing="8">
+                            <Button Grid.Column="0" Text="{tr:Translate Key=Profile_DatingAll}"
+                                    Command="{Binding SelectDatingBothCommand}"
+                                    BackgroundColor="{Binding DatingBothColor}"
+                                    TextColor="{Binding DatingBothTextColor}"
+                                    CornerRadius="8" HeightRequest="40" FontSize="13"/>
+                            <Button Grid.Column="1" Text="{tr:Translate Key=Profile_DatingFemale}"
+                                    Command="{Binding SelectDatingFemaleCommand}"
+                                    BackgroundColor="{Binding DatingFemaleColor}"
+                                    TextColor="{Binding DatingFemaleTextColor}"
+                                    CornerRadius="8" HeightRequest="40" FontSize="13"/>
+                            <Button Grid.Column="2" Text="{tr:Translate Key=Profile_DatingMale}"
+                                    Command="{Binding SelectDatingMaleCommand}"
+                                    BackgroundColor="{Binding DatingMaleColor}"
+                                    TextColor="{Binding DatingMaleTextColor}"
+                                    CornerRadius="8" HeightRequest="40" FontSize="13"/>
+                        </Grid>
+                    </VerticalStackLayout>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- ─── Crédits ─────────────────────────────────────── -->
+            <Border BackgroundColor="{StaticResource SurfaceCardAlt}" StrokeShape="RoundRectangle 12"
+                    Stroke="{StaticResource BorderLight}" StrokeThickness="1" Padding="16">
+                <HorizontalStackLayout Spacing="12">
+                    <Label Text="💰" FontSize="24" VerticalOptions="Center"/>
+                    <VerticalStackLayout VerticalOptions="Center">
+                        <Label Text="{tr:Translate Key=Profile_MyCredits}"
+                               FontSize="14" TextColor="{StaticResource TextPrimary}"/>
+                        <Label Text="{Binding Credits, StringFormat='{0} crédits disponibles'}"
+                               FontSize="13" TextColor="{StaticResource Primary}" FontAttributes="Bold"/>
+                    </VerticalStackLayout>
+                </HorizontalStackLayout>
+            </Border>
+
+            <!-- ─── Feedback ────────────────────────────────────── -->
+            <Border BackgroundColor="{StaticResource SurfaceCardAlt}" StrokeShape="RoundRectangle 12"
+                    Stroke="{StaticResource BorderLight}" StrokeThickness="1" Padding="16"
+                    IsVisible="{Binding FeedbackVisible}">
+                <Button Text="{tr:Translate Key=Profile_Feedback}"
+                        Command="{Binding OpenFeedbackCommand}"
+                        BackgroundColor="{StaticResource SurfaceMuted}"
+                        TextColor="{StaticResource Primary}"
+                        CornerRadius="10" HeightRequest="45" FontSize="14"/>
+            </Border>
+
+            <!-- ─── Erreur / Succès ──────────────────────────────── -->
+            <Border IsVisible="{Binding HasError}" BackgroundColor="{StaticResource ErrorLight}"
+                    Stroke="{StaticResource Error}" StrokeThickness="1"
+                    StrokeShape="RoundRectangle 8" Padding="12,8">
+                <Label Text="{Binding ErrorMessage}" TextColor="{StaticResource Error}" FontSize="13"/>
+            </Border>
+            <Border IsVisible="{Binding HasSuccess}" BackgroundColor="{StaticResource SuccessLight}"
+                    Stroke="{StaticResource Success}" StrokeThickness="1"
+                    StrokeShape="RoundRectangle 8" Padding="12,8">
+                <Label Text="{Binding SuccessMessage}" TextColor="{StaticResource Success}" FontSize="13"/>
+            </Border>
+
+            <Button Text="{tr:Translate Key=Common_Save}"
+                    Command="{Binding SaveProfileCommand}"
+                    BackgroundColor="{StaticResource Primary}"
+                    TextColor="{StaticResource TextOnPrimary}"
+                    CornerRadius="10" HeightRequest="50"
+                    FontSize="16" FontAttributes="Bold"/>
+
+            <!-- ─── 🎟️ REJOINDRE UNE SÉRIE ──────────────────────── -->
+            <Border BackgroundColor="{StaticResource Primary}"
+                    StrokeShape="RoundRectangle 16"
+                    Stroke="Transparent"
+                    Padding="20,20"
+                    Margin="0,8,0,0">
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding JoinSeriesCommand}"/>
+                </Border.GestureRecognizers>
+                <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="14">
+                    <Border Grid.Column="0"
+                            BackgroundColor="{StaticResource PrimaryDark}"
+                            StrokeShape="RoundRectangle 12"
+                            Stroke="Transparent"
+                            Padding="10">
+                        <Label Text="🎟️" FontSize="28" VerticalOptions="Center"/>
+                    </Border>
+                    <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="2">
+                        <Label Text="{tr:Translate Key=Home_JoinSection}"
+                               FontSize="16" FontAttributes="Bold"
+                               TextColor="{StaticResource TextOnPrimary}"/>
+                        <Label Text="{tr:Translate Key=ProfileSettings_JoinEventHint}"
+                               FontSize="12" TextColor="{StaticResource PrimaryLight}"/>
+                    </VerticalStackLayout>
+                    <Label Grid.Column="2" Text="›"
+                           FontSize="24" TextColor="{StaticResource TextOnPrimary}"
+                           VerticalOptions="Center"/>
+                </Grid>
+            </Border>
+
+            <!-- ⚡ MAI 2026 : Section "Informations légales" — liens vers les
+                 pages hébergées sur serialv2.github.io/beauoupas-web. Requis
+                 pour conformité Play Store + RGPD. -->
+            <Border BackgroundColor="{StaticResource SurfaceCardAlt}" StrokeShape="RoundRectangle 12"
+                    Stroke="{StaticResource BorderLight}" StrokeThickness="1" Padding="16" Margin="0,8,0,0">
+                <VerticalStackLayout Spacing="2">
+                    <Label Text="{tr:Translate Key=Profile_LegalSection}"
+                           FontSize="14" FontAttributes="Bold" TextColor="{StaticResource TextSecondary}"
+                           Margin="0,0,0,8"/>
+
+                    <!-- Privacy -->
+                    <Grid ColumnDefinitions="Auto,*,Auto" Padding="0,12">
+                        <Grid.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnPrivacyTapped"/>
+                        </Grid.GestureRecognizers>
+                        <Label Grid.Column="0" Text="🔒" FontSize="18"
+                               VerticalOptions="Center" Margin="0,0,12,0"/>
+                        <Label Grid.Column="1" Text="{tr:Translate Key=Profile_LegalPrivacy}"
+                               FontSize="14" TextColor="{StaticResource TextPrimary}"
+                               VerticalOptions="Center"/>
+                        <Label Grid.Column="2" Text="›" FontSize="20"
+                               TextColor="{StaticResource TextDisabled}" VerticalOptions="Center"/>
+                    </Grid>
+                    <BoxView HeightRequest="1" Color="{StaticResource BorderLight}"/>
+
+                    <!-- CGU -->
+                    <Grid ColumnDefinitions="Auto,*,Auto" Padding="0,12">
+                        <Grid.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnTermsTapped"/>
+                        </Grid.GestureRecognizers>
+                        <Label Grid.Column="0" Text="📜" FontSize="18"
+                               VerticalOptions="Center" Margin="0,0,12,0"/>
+                        <Label Grid.Column="1" Text="{tr:Translate Key=Profile_LegalTerms}"
+                               FontSize="14" TextColor="{StaticResource TextPrimary}"
+                               VerticalOptions="Center"/>
+                        <Label Grid.Column="2" Text="›" FontSize="20"
+                               TextColor="{StaticResource TextDisabled}" VerticalOptions="Center"/>
+                    </Grid>
+                    <BoxView HeightRequest="1" Color="{StaticResource BorderLight}"/>
+
+                    <!-- Mentions légales -->
+                    <Grid ColumnDefinitions="Auto,*,Auto" Padding="0,12">
+                        <Grid.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnLegalTapped"/>
+                        </Grid.GestureRecognizers>
+                        <Label Grid.Column="0" Text="📋" FontSize="18"
+                               VerticalOptions="Center" Margin="0,0,12,0"/>
+                        <Label Grid.Column="1" Text="{tr:Translate Key=Profile_LegalNotice}"
+                               FontSize="14" TextColor="{StaticResource TextPrimary}"
+                               VerticalOptions="Center"/>
+                        <Label Grid.Column="2" Text="›" FontSize="20"
+                               TextColor="{StaticResource TextDisabled}" VerticalOptions="Center"/>
+                    </Grid>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- ─── Zone danger ──────────────────────────────────── -->
+            <Border BackgroundColor="{StaticResource SurfaceCardAlt}" StrokeShape="RoundRectangle 12"
+                    Stroke="{StaticResource Error}" StrokeThickness="1" Padding="16" Margin="0,8,0,0">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="{tr:Translate Key=Profile_DangerZone}"
+                           FontSize="14" FontAttributes="Bold" TextColor="{StaticResource Error}"/>
+                    <Button Text="{tr:Translate Key=Profile_Logout}"
+                            Command="{Binding LogoutCommand}"
+                            BackgroundColor="{StaticResource SurfaceMuted}"
+                            TextColor="{StaticResource TextPrimary}"
+                            CornerRadius="10" HeightRequest="45" FontSize="14"/>
+                    <Button Text="{tr:Translate Key=Profile_DeleteAccount}"
+                            Command="{Binding DeleteAccountCommand}"
+                            BackgroundColor="{StaticResource ErrorLight}"
+                            TextColor="{StaticResource Error}"
+                            CornerRadius="10" HeightRequest="45" FontSize="14"/>
+                </VerticalStackLayout>
+            </Border>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

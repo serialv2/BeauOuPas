@@ -1,0 +1,179 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="BeauOuPas.Views.Auth.RegisterPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:BeauOuPas.ViewModels.Auth"
+    xmlns:tr="clr-namespace:BeauOuPas.Extensions"
+    x:DataType="vm:RegisterViewModel"
+    Shell.NavBarIsVisible="False"
+    BackgroundColor="{StaticResource BackgroundPage}">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="30,50,30,30" Spacing="0">
+
+            <!-- ⚡ Logo "B" orange -->
+            <Image Source="logo.png"
+                   WidthRequest="100" HeightRequest="100"
+                   HorizontalOptions="Center"
+                   Margin="0,0,0,8"/>
+
+            <!-- ⚡ MAI 2026 — Rebrand Orange : Beau (sombre) + Ou (orange) + Pas (sombre) -->
+            <Label FontSize="32" FontAttributes="Bold"
+                   HorizontalOptions="Center" Margin="0,0,0,4">
+                <Label.FormattedText>
+                    <FormattedString>
+                        <Span Text="Beau" TextColor="#0F0F14"/>
+                        <Span Text="Ou" TextColor="{StaticResource Primary}"/>
+                        <Span Text="Pas" TextColor="#0F0F14"/>
+                    </FormattedString>
+                </Label.FormattedText>
+            </Label>
+            <Label Text="{tr:Translate Key=Register_Title}" FontSize="16"
+                   TextColor="{StaticResource TextTertiary}" HorizontalOptions="Center" Margin="0,0,0,30"/>
+
+            <Label Text="{tr:Translate Key=Register_Username}" FontSize="13"
+                   TextColor="{StaticResource TextSecondary}" Margin="0,0,0,4"/>
+            <Border Stroke="{StaticResource BorderMedium}" StrokeThickness="1" BackgroundColor="White"
+                    StrokeShape="RoundRectangle 10" Margin="0,0,0,16">
+                <Entry Text="{Binding Username}"
+                       Placeholder="{tr:Translate Key=Register_UsernamePlaceholder}"
+                       PlaceholderColor="{StaticResource TextDisabled}" Margin="12,0"/>
+            </Border>
+
+            <Label Text="{tr:Translate Key=Register_Email}" FontSize="13"
+                   TextColor="{StaticResource TextSecondary}" Margin="0,0,0,4"/>
+            <Border Stroke="{StaticResource BorderMedium}" StrokeThickness="1" BackgroundColor="White"
+                    StrokeShape="RoundRectangle 10" Margin="0,0,0,16">
+                <Entry Text="{Binding Email}" Placeholder="votre@email.com"
+                       Keyboard="Email" PlaceholderColor="{StaticResource TextDisabled}" Margin="12,0"/>
+            </Border>
+
+            <Label Text="{tr:Translate Key=Register_Password}" FontSize="13"
+                   TextColor="{StaticResource TextSecondary}" Margin="0,0,0,4"/>
+            <Border Stroke="{StaticResource BorderMedium}" StrokeThickness="1" BackgroundColor="White"
+                    StrokeShape="RoundRectangle 10" Margin="0,0,0,16">
+                <Entry Text="{Binding Password}"
+                       Placeholder="{tr:Translate Key=Register_PasswordPlaceholder}"
+                       IsPassword="True" PlaceholderColor="{StaticResource TextDisabled}" Margin="12,0"/>
+            </Border>
+
+            <Label Text="{tr:Translate Key=Register_ConfirmPassword}" FontSize="13"
+                   TextColor="{StaticResource TextSecondary}" Margin="0,0,0,4"/>
+            <Border Stroke="{StaticResource BorderMedium}" StrokeThickness="1" BackgroundColor="White"
+                    StrokeShape="RoundRectangle 10" Margin="0,0,0,16">
+                <Entry Text="{Binding ConfirmPassword}" Placeholder="••••••••"
+                       IsPassword="True" PlaceholderColor="{StaticResource TextDisabled}" Margin="12,0"/>
+            </Border>
+
+            <Label Text="{tr:Translate Key=Register_BirthDate}" FontSize="13"
+                   TextColor="{StaticResource TextSecondary}" Margin="0,0,0,4"/>
+            <Border Stroke="{StaticResource BorderMedium}" StrokeThickness="1" BackgroundColor="White"
+                    StrokeShape="RoundRectangle 10" Margin="0,0,0,16">
+                <DatePicker Date="{Binding BirthDate}" Format="dd/MM/yyyy"
+                            MaximumDate="{Binding MaxBirthDate}"
+                            TextColor="{StaticResource TextPrimary}" Margin="12,0"/>
+            </Border>
+
+            <Label Text="{tr:Translate Key=Register_Gender}" FontSize="13"
+                   TextColor="{StaticResource TextSecondary}" Margin="0,0,0,4"/>
+            <Border Stroke="{StaticResource BorderMedium}" StrokeThickness="1" BackgroundColor="White"
+                    StrokeShape="RoundRectangle 10" Margin="0,0,0,16">
+                <Picker ItemsSource="{Binding GenderOptions}"
+                        SelectedItem="{Binding SelectedGender}"
+                        Title="{tr:Translate Key=Register_GenderSelect}"
+                        TitleColor="{StaticResource TextDisabled}" TextColor="{StaticResource TextPrimary}" Margin="12,0"/>
+            </Border>
+
+            <Label Text="{tr:Translate Key=Register_Phone}" FontSize="13"
+                   TextColor="{StaticResource TextSecondary}" Margin="0,0,0,4"/>
+            <Border Stroke="{StaticResource BorderMedium}" StrokeThickness="1" BackgroundColor="White"
+                    StrokeShape="RoundRectangle 10" Margin="0,0,0,16">
+                <Entry Text="{Binding Phone}"
+                       Placeholder="{tr:Translate Key=Register_PhonePlaceholder}"
+                       Keyboard="Telephone" PlaceholderColor="{StaticResource TextDisabled}" Margin="12,0"/>
+            </Border>
+
+            <HorizontalStackLayout Margin="0,0,0,20" Spacing="10">
+                <CheckBox IsChecked="{Binding AcceptedTerms}" Color="{StaticResource Primary}"/>
+                <Label VerticalOptions="Center" FontSize="13" TextColor="{StaticResource TextSecondary}">
+                    <Label.FormattedText>
+                        <FormattedString>
+                            <Span Text="{tr:Translate Key=Register_TermsAccept}"/>
+                            <!-- ⚡ FIX BUG : CGU cliquable -->
+                            <Span Text="{tr:Translate Key=Register_Terms}"
+                                  TextColor="{StaticResource Primary}" FontAttributes="Bold"
+                                  TextDecorations="Underline">
+                                <Span.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding OpenTermsCommand}"/>
+                                </Span.GestureRecognizers>
+                            </Span>
+                            <Span Text="{tr:Translate Key=Register_TermsAnd}"/>
+                            <!-- ⚡ FIX BUG : Politique de confidentialité cliquable -->
+                            <Span Text="{tr:Translate Key=Register_Privacy}"
+                                  TextColor="{StaticResource Primary}" FontAttributes="Bold"
+                                  TextDecorations="Underline">
+                                <Span.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding OpenPrivacyCommand}"/>
+                                </Span.GestureRecognizers>
+                            </Span>
+                        </FormattedString>
+                    </Label.FormattedText>
+                </Label>
+            </HorizontalStackLayout>
+
+            <Border IsVisible="{Binding HasError}" BackgroundColor="{StaticResource ErrorLight}"
+                    Stroke="{StaticResource ErrorLight}" StrokeThickness="1" StrokeShape="RoundRectangle 8"
+                    Padding="12,8" Margin="0,0,0,16">
+                <Label Text="{Binding ErrorMessage}" TextColor="{StaticResource Error}" FontSize="13"/>
+            </Border>
+
+            <Button Text="{tr:Translate Key=Register_Button}" Command="{Binding RegisterCommand}"
+                    BackgroundColor="{StaticResource Primary}" TextColor="White" FontAttributes="Bold"
+                    FontSize="16" CornerRadius="10" HeightRequest="50" Margin="0,0,0,16"/>
+
+            <ActivityIndicator IsRunning="{Binding IsLoading}" IsVisible="{Binding IsLoading}"
+                               Color="{StaticResource Primary}" Margin="0,0,0,16"/>
+
+            <Grid Margin="0,0,0,16">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <BoxView Grid.Column="0" Color="{StaticResource BorderMedium}" HeightRequest="1" VerticalOptions="Center"/>
+                <Label Grid.Column="1" Text="{tr:Translate Key=Common_Or}"
+                       TextColor="{StaticResource TextTertiary}" FontSize="13"/>
+                <BoxView Grid.Column="2" Color="{StaticResource BorderMedium}" HeightRequest="1" VerticalOptions="Center"/>
+            </Grid>
+
+            <Border Stroke="{StaticResource BorderMedium}" StrokeThickness="1" BackgroundColor="White"
+                    StrokeShape="RoundRectangle 10" Margin="0,0,0,12">
+                <Button Text="{tr:Translate Key=Register_Google}" Command="{Binding RegisterWithGoogleCommand}"
+                        BackgroundColor="Transparent" TextColor="{StaticResource TextPrimary}" FontSize="15" HeightRequest="50"/>
+            </Border>
+
+            <Border Stroke="#000000" StrokeThickness="1" BackgroundColor="Black"
+                    StrokeShape="RoundRectangle 10" Margin="0,0,0,24"
+                    IsVisible="False">
+                <!-- ⚡ Bouton Apple temporairement masqué : nécessite un compte
+                     Apple Developer payant (99€/an). Changer IsVisible="True"
+                     quand le compte sera actif et Apple Sign-In configuré dans
+                     Supabase Dashboard → Authentication → Providers → Apple. -->
+                <Button Text="{tr:Translate Key=Register_Apple}" Command="{Binding RegisterWithAppleCommand}"
+                        BackgroundColor="Transparent" TextColor="White" FontSize="15" HeightRequest="50"/>
+            </Border>
+
+            <HorizontalStackLayout HorizontalOptions="Center" Spacing="4">
+                <Label Text="{tr:Translate Key=Register_HaveAccount}" TextColor="{StaticResource TextTertiary}" FontSize="14"/>
+                <Label Text="{tr:Translate Key=Register_Login}" TextColor="{StaticResource Primary}"
+                       FontAttributes="Bold" FontSize="14">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding GoToLoginCommand}"/>
+                    </Label.GestureRecognizers>
+                </Label>
+            </HorizontalStackLayout>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

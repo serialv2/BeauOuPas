@@ -1,0 +1,1838 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!--
+    Microsoft ResX Schema
+
+    Version 2.0
+  -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e098</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e098</value>
+  </resheader>
+  <data name="CreateQuiz_QuestionPositionFormat" xml:space="preserve">
+    <value>F{0}</value>
+  </data>
+  <data name="CreateQuiz_NewQuestionTitle" xml:space="preserve">
+    <value>Frage {0}</value>
+  </data>
+  <data name="CreateQuiz_NewQuestionPlaceholder" xml:space="preserve">
+    <value>(Frage zu vervollständigen)</value>
+  </data>
+  <data name="CreateQuiz_QuestionIncomplete" xml:space="preserve">
+    <value>Frage {0} ist unvollständig. Öffne sie und fülle alle Pflichtfelder aus.</value>
+  </data>
+  <data name="CreateQuiz_CreatedTitle" xml:space="preserve">
+    <value>✅ Quiz erstellt!</value>
+  </data>
+<data name="Credits_GainFriend" xml:space="preserve">
+    <value>Einen Freund hinzufügen</value>
+  </data>
+  <data name="Credits_CostSuperMeet" xml:space="preserve">
+    <value>Super Meet (vorrangig)</value>
+  </data>
+  <data name="Credits_AdWatchedTitle" xml:space="preserve">
+    <value>Glückwunsch! 🎉</value>
+  </data>
+  <data name="Credits_AdWatchedMessage" xml:space="preserve">
+    <value>+{0} Credits erhalten!</value>
+  </data>
+  <data name="CreateQuiz_CreatedMessage" xml:space="preserve">
+    <value>Zugangscode: {0}
+
+Teile diesen Code, um Teilnehmer einzuladen!</value>
+  </data>
+  <data name="CreateQuiz_UpdateButton" xml:space="preserve">
+    <value>💾 Aktualisieren</value>
+  </data>
+  <data name="CreateQuiz_EditHeader" xml:space="preserve">
+    <value>Fragen bearbeiten</value>
+  </data>
+  <data name="CreateQuiz_UpdatedTitle" xml:space="preserve">
+    <value>✅ Quiz aktualisiert</value>
+  </data>
+  <data name="CreateQuiz_UpdatedMessage" xml:space="preserve">
+    <value>Die Fragen wurden gespeichert.</value>
+  </data>
+  <data name="CreateQuiz_Error_NotCreator" xml:space="preserve">
+    <value>Du bist nicht der Ersteller dieses Quiz.</value>
+  </data>
+  <data name="CreateQuiz_Error_NotAQuiz" xml:space="preserve">
+    <value>Diese Serie ist kein Quiz.</value>
+  </data>
+  <data name="CreateQuiz_Error_SeriesNotFound" xml:space="preserve">
+    <value>Quiz nicht gefunden.</value>
+  </data>
+  <data name="CreateQuiz_Error_SeriesNotEditable" xml:space="preserve">
+    <value>Dieses Quiz hat bereits begonnen, seine Fragen können nicht mehr bearbeitet werden.</value>
+  </data>
+  <data name="CreateQuiz_CreatedOK" xml:space="preserve">
+    <value>Super!</value>
+  </data>
+  <data name="CreateQuiz_CreationFailedTitle" xml:space="preserve">
+    <value>Quiz-Erstellung fehlgeschlagen</value>
+  </data>
+  <data name="EditQuizQuestions_Title" xml:space="preserve">
+    <value>Fragen bearbeiten</value>
+  </data>
+  <data name="EditQuizQuestions_Header" xml:space="preserve">
+    <value>Fragen bearbeiten</value>
+  </data>
+  <data name="EditQuizQuestions_SaveButton" xml:space="preserve">
+    <value>💾 Aktualisieren</value>
+  </data>
+  <data name="EditQuizQuestions_SavedTitle" xml:space="preserve">
+    <value>✅ Quiz aktualisiert</value>
+  </data>
+  <data name="EditQuizQuestions_SavedMessage" xml:space="preserve">
+    <value>Die Fragen wurden gespeichert.</value>
+  </data>
+  <data name="EditQuizQuestions_SaveFailedTitle" xml:space="preserve">
+    <value>Aktualisierung fehlgeschlagen</value>
+  </data>
+  <data name="EditQuizQuestions_LoadFailed" xml:space="preserve">
+    <value>Die Fragen des Quiz konnten nicht geladen werden.</value>
+  </data>
+  <data name="CreateQuiz_Error_Unauthenticated" xml:space="preserve">
+    <value>Du musst angemeldet sein, um ein Quiz zu erstellen.</value>
+  </data>
+  <data name="CreateQuiz_Error_TitleRequired" xml:space="preserve">
+    <value>Der Quiz-Titel ist erforderlich.</value>
+  </data>
+  <data name="CreateQuiz_Error_TitleTooLong" xml:space="preserve">
+    <value>Der Quiz-Titel ist zu lang (max. 200 Zeichen).</value>
+  </data>
+  <data name="CreateQuiz_Error_InvalidQuizStyle" xml:space="preserve">
+    <value>Ungültiger Quiz-Stil.</value>
+  </data>
+  <data name="CreateQuiz_Error_QuestionsInvalid" xml:space="preserve">
+    <value>Die Fragenliste ist ungültig.</value>
+  </data>
+  <data name="CreateQuiz_Error_NoQuestions" xml:space="preserve">
+    <value>Du musst mindestens eine Frage hinzufügen.</value>
+  </data>
+  <data name="CreateQuiz_Error_TooManyQuestions" xml:space="preserve">
+    <value>Ein Quiz kann nicht mehr als 50 Fragen enthalten.</value>
+  </data>
+  <data name="CreateQuiz_Error_NotGroupMember" xml:space="preserve">
+    <value>Du bist kein Mitglied dieser Gruppe mehr.</value>
+  </data>
+  <data name="CreateQuiz_Error_QuestionTitleRequired" xml:space="preserve">
+    <value>Einer der Fragen fehlt der Titel.</value>
+  </data>
+  <data name="CreateQuiz_Error_QuestionTextRequired" xml:space="preserve">
+    <value>Einer der Fragen fehlt der Text.</value>
+  </data>
+  <data name="CreateQuiz_Error_OptionsInvalid" xml:space="preserve">
+    <value>Eine der Fragen hat ungültige Antworten.</value>
+  </data>
+  <data name="CreateQuiz_Error_OptionsCountInvalid" xml:space="preserve">
+    <value>Jede Frage muss zwischen 2 und 4 Antworten haben.</value>
+  </data>
+  <data name="CreateQuiz_Error_OptionTextRequired" xml:space="preserve">
+    <value>Eine der Antworten hat keinen Text.</value>
+  </data>
+  <data name="CreateQuiz_Error_OptionTextTooLong" xml:space="preserve">
+    <value>Eine der Antworten ist zu lang (max. 300 Zeichen).</value>
+  </data>
+  <data name="CreateQuiz_Error_NoCorrectAnswer" xml:space="preserve">
+    <value>Jede Frage muss mindestens eine richtige Antwort haben.</value>
+  </data>
+  <data name="CreateQuiz_Error_SqlError" xml:space="preserve">
+    <value>Ein Serverfehler ist aufgetreten. Bitte erneut versuchen.</value>
+  </data>
+  <data name="CreateQuiz_Error_Unknown" xml:space="preserve">
+    <value>Ein unerwarteter Fehler ist aufgetreten.</value>
+  </data>
+  <data name="EditQuizQuestion_Title" xml:space="preserve">
+    <value>Frage bearbeiten</value>
+  </data>
+  <data name="EditQuizQuestion_Header" xml:space="preserve">
+    <value>🧠 Quiz-Frage</value>
+  </data>
+  <data name="EditQuizQuestion_TitleLabel" xml:space="preserve">
+    <value>Titel</value>
+  </data>
+  <data name="EditQuizQuestion_TitleHint" xml:space="preserve">
+    <value>Kurzer Titel in der Fragenliste angezeigt (max. 200 Zeichen).</value>
+  </data>
+  <data name="EditQuizQuestion_TitlePlaceholder" xml:space="preserve">
+    <value>z. B. Hauptstadt von Frankreich</value>
+  </data>
+  <data name="EditQuizQuestion_QuestionTextLabel" xml:space="preserve">
+    <value>Frage</value>
+  </data>
+  <data name="EditQuizQuestion_QuestionTextHint" xml:space="preserve">
+    <value>Langer Text, der während des Quiz auf dem TV angezeigt wird (max. 1000 Zeichen).</value>
+  </data>
+  <data name="EditQuizQuestion_QuestionTextPlaceholder" xml:space="preserve">
+    <value>Was ist die Hauptstadt von Frankreich?</value>
+  </data>
+  <data name="EditQuizQuestion_PhotoSection" xml:space="preserve">
+    <value>Foto (optional)</value>
+  </data>
+  <data name="EditQuizQuestion_AddPhoto" xml:space="preserve">
+    <value>Foto hinzufügen</value>
+  </data>
+  <data name="EditQuizQuestion_AddPhotoHint" xml:space="preserve">
+    <value>Das Foto wird über der Frage auf dem TV angezeigt.</value>
+  </data>
+  <data name="EditQuizQuestion_ChangePhoto" xml:space="preserve">
+    <value>📷 Ändern</value>
+  </data>
+  <data name="EditQuizQuestion_RemovePhoto" xml:space="preserve">
+    <value>🗑️ Entfernen</value>
+  </data>
+  <data name="EditQuizQuestion_RemovePhotoTitle" xml:space="preserve">
+    <value>Foto entfernen?</value>
+  </data>
+  <data name="EditQuizQuestion_RemovePhotoMessage" xml:space="preserve">
+    <value>Das Foto wird für diese Frage nicht mehr auf dem TV angezeigt.</value>
+  </data>
+  <data name="EditQuizQuestion_PhotoSourceTitle" xml:space="preserve">
+    <value>Fotoquelle</value>
+  </data>
+  <data name="EditQuizQuestion_PhotoFromGallery" xml:space="preserve">
+    <value>Aus Galerie wählen</value>
+  </data>
+  <data name="EditQuizQuestion_PhotoFromCamera" xml:space="preserve">
+    <value>Foto aufnehmen</value>
+  </data>
+  <data name="EditQuizQuestion_CameraNotSupported" xml:space="preserve">
+    <value>Die Kamera ist auf diesem Gerät nicht verfügbar.</value>
+  </data>
+  <data name="EditQuizQuestion_PhotoUploadFailed" xml:space="preserve">
+    <value>Das Hochladen des Fotos ist fehlgeschlagen. Bitte erneut versuchen.</value>
+  </data>
+  <data name="EditQuizQuestion_OptionsSection" xml:space="preserve">
+    <value>Antworten</value>
+  </data>
+  <data name="EditQuizQuestion_OptionsHint" xml:space="preserve">
+    <value>2 bis 4 Antworten. Mindestens eine muss als richtig markiert sein (mehrere richtige Antworten möglich).</value>
+  </data>
+  <data name="EditQuizQuestion_OptionPositionFormat" xml:space="preserve">
+    <value>{0}</value>
+  </data>
+  <data name="EditQuizQuestion_OptionPlaceholder" xml:space="preserve">
+    <value>Antworttext...</value>
+  </data>
+  <data name="EditQuizQuestion_MarkCorrect" xml:space="preserve">
+    <value>Richtige Antwort</value>
+  </data>
+  <data name="EditQuizQuestion_AddOption" xml:space="preserve">
+    <value>+ Antwort hinzufügen</value>
+  </data>
+  <data name="EditQuizQuestion_RemoveOptionTitle" xml:space="preserve">
+    <value>Antwort entfernen?</value>
+  </data>
+  <data name="EditQuizQuestion_RemoveOptionMessage" xml:space="preserve">
+    <value>Diese Antwort wird aus der Frage entfernt.</value>
+  </data>
+  <data name="EditQuizQuestion_SaveButton" xml:space="preserve">
+    <value>✓ Frage speichern</value>
+  </data>
+  <data name="EditQuizQuestion_ValidationTitle" xml:space="preserve">
+    <value>Fehlende Information</value>
+  </data>
+  <data name="EditQuizQuestion_TitleRequired" xml:space="preserve">
+    <value>Der Fragetitel ist erforderlich.</value>
+  </data>
+  <data name="EditQuizQuestion_TitleTooLong" xml:space="preserve">
+    <value>Der Titel ist zu lang (max. 200 Zeichen).</value>
+  </data>
+  <data name="EditQuizQuestion_QuestionTextRequired" xml:space="preserve">
+    <value>Der Fragetext ist erforderlich.</value>
+  </data>
+  <data name="EditQuizQuestion_QuestionTextTooLong" xml:space="preserve">
+    <value>Der Fragetext ist zu lang (max. 1000 Zeichen).</value>
+  </data>
+  <data name="EditQuizQuestion_OptionsCountInvalid" xml:space="preserve">
+    <value>Die Frage muss zwischen {0} und {1} Antworten haben.</value>
+  </data>
+  <data name="EditQuizQuestion_OptionTextRequired" xml:space="preserve">
+    <value>Antwort {0} darf nicht leer sein.</value>
+  </data>
+  <data name="EditQuizQuestion_OptionTextTooLong" xml:space="preserve">
+    <value>Antwort {0} ist zu lang (max. 300 Zeichen).</value>
+  </data>
+  <data name="EditQuizQuestion_NoCorrectAnswer" xml:space="preserve">
+    <value>Du musst mindestens eine Antwort als richtig markieren.</value>
+  </data>
+  <data name="EditQuizQuestion_CancelConfirmTitle" xml:space="preserve">
+    <value>Änderungen verwerfen?</value>
+  </data>
+  <data name="EditQuizQuestion_CancelConfirmMessage" xml:space="preserve">
+    <value>Du hast nicht gespeicherte Änderungen. Möchtest du wirklich gehen?</value>
+  </data>
+  <data name="EditQuizQuestion_DiscardChanges" xml:space="preserve">
+    <value>Verwerfen</value>
+  </data>
+  <data name="EditQuizQuestion_KeepEditing" xml:space="preserve">
+    <value>Weiter bearbeiten</value>
+  </data>
+  <data name="Common_Yes" xml:space="preserve">
+    <value>Ja</value>
+  </data>
+  <data name="Common_No" xml:space="preserve">
+    <value>Nein</value>
+  </data>
+  <data name="Common_Error" xml:space="preserve">
+    <value>Erreur</value>
+  </data>
+  <data name="CreateQuiz_EditQuestion" xml:space="preserve">
+    <value>✏️ Bearbeiten</value>
+  </data>
+  <data name="CreateQuiz_DeleteQuestion" xml:space="preserve">
+    <value>🗑️ Löschen</value>
+  </data>
+  <data name="CreateQuiz_QuestionsSection" xml:space="preserve">
+    <value>📝 Quiz-Fragen</value>
+  </data>
+  <data name="CreateQuiz_QuestionsHint" xml:space="preserve">
+    <value>Füge 1 bis 50 Multiple-Choice-Fragen hinzu.</value>
+  </data>
+  <data name="CreateQuiz_QuestionsCount" xml:space="preserve">
+    <value>{0} / {1} Fragen</value>
+  </data>
+  <data name="CreateQuiz_NoQuestionsTitle" xml:space="preserve">
+    <value>Noch keine Fragen</value>
+  </data>
+  <data name="CreateQuiz_NoQuestionsHint" xml:space="preserve">
+    <value>Füge deine erste Frage hinzu, um dein Quiz zu starten.</value>
+  </data>
+  <data name="CreateQuiz_AddQuestion" xml:space="preserve">
+    <value>+ Frage hinzufügen</value>
+  </data>
+  <data name="CreateQuiz_DefaultQuestionTitle" xml:space="preserve">
+    <value>Frage {0}</value>
+  </data>
+  <data name="CreateQuiz_NoQuestions" xml:space="preserve">
+    <value>Das Quiz muss mindestens eine Frage enthalten.</value>
+  </data>
+  <data name="CreateQuiz_DeleteQuestionTitle" xml:space="preserve">
+    <value>Frage löschen?</value>
+  </data>
+  <data name="CreateQuiz_DeleteQuestionMessage" xml:space="preserve">
+    <value>Frage {0} wird endgültig gelöscht.</value>
+  </data>
+  <data name="CreateQuiz_LimitReachedTitle" xml:space="preserve">
+    <value>Limit erreicht</value>
+  </data>
+  <data name="CreateQuiz_LimitReachedMessage" xml:space="preserve">
+    <value>Ein Quiz kann maximal {0} Fragen enthalten.</value>
+  </data>
+  <data name="CreateQuiz_EditQuestionComingSoon" xml:space="preserve">
+    <value>Die Bearbeitung von Fragen wird im nächsten Update verfügbar sein.</value>
+  </data>
+  <data name="CreateQuiz_CancelConfirmTitle" xml:space="preserve">
+    <value>Ohne Speichern beenden?</value>
+  </data>
+  <data name="CreateQuiz_CancelConfirmMessage" xml:space="preserve">
+    <value>Deine Änderungen gehen verloren.</value>
+  </data>
+  <data name="Common_Delete" xml:space="preserve">
+    <value>🗑️ Supprimer</value>
+  </data>
+  <data name="CreateSeriesType_Title" xml:space="preserve">
+    <value>Neue Serie</value>
+  </data>
+  <data name="CreateSeriesType_Header" xml:space="preserve">
+    <value>🎬 Serie erstellen</value>
+  </data>
+  <data name="CreateSeriesType_Standalone" xml:space="preserve">
+    <value>Eigenständige Serie (ohne Gruppe)</value>
+  </data>
+  <data name="CreateSeriesType_Subtitle" xml:space="preserve">
+    <value>Wähle, welche Art von Serie du erstellen möchtest.</value>
+  </data>
+  <data name="CreateSeriesType_VoteTitle" xml:space="preserve">
+    <value>Abstimmungsserie</value>
+  </data>
+  <data name="CreateSeriesType_VoteDescription" xml:space="preserve">
+    <value>Fotos und Projekte, in Echtzeit von den Teilnehmern bewertet.</value>
+  </data>
+  <data name="CreateSeriesType_QuizTitle" xml:space="preserve">
+    <value>Quiz</value>
+  </data>
+  <data name="CreateSeriesType_QuizDescription" xml:space="preserve">
+    <value>Multiple-Choice-Fragen, Punktzahl und Endrangliste.</value>
+  </data>
+  <data name="CreateSeriesType_QuizDisabled" xml:space="preserve">
+    <value>Die Quiz-Erstellung ist derzeit deaktiviert.</value>
+  </data>
+  <data name="CreateSeriesType_QuizDisabledTitle" xml:space="preserve">
+    <value>Quiz nicht verfügbar</value>
+  </data>
+  <data name="CreateQuiz_Title" xml:space="preserve">
+    <value>Neues Quiz</value>
+  </data>
+  <data name="CreateQuiz_Header" xml:space="preserve">
+    <value>🧠 Quiz erstellen</value>
+  </data>
+  <data name="CreateQuiz_Standalone" xml:space="preserve">
+    <value>Eigenständiges Quiz (ohne Gruppe)</value>
+  </data>
+  <data name="CreateQuiz_TitleLabel" xml:space="preserve">
+    <value>Titel *</value>
+  </data>
+  <data name="CreateQuiz_TitlePlaceholder" xml:space="preserve">
+    <value>z.B. Allgemeinwissen-Quiz</value>
+  </data>
+  <data name="CreateQuiz_DescriptionLabel" xml:space="preserve">
+    <value>Beschreibung</value>
+  </data>
+  <data name="CreateQuiz_DescriptionPlaceholder" xml:space="preserve">
+    <value>Worum geht es in diesem Quiz?</value>
+  </data>
+  <data name="CreateQuiz_ShowFullLeaderboard" xml:space="preserve">
+    <value>Vollständige Rangliste anzeigen</value>
+  </data>
+  <data name="CreateQuiz_ShowFullLeaderboardHint" xml:space="preserve">
+    <value>Position jedes Spielers am Ende anzeigen (nicht nur die Top 3).</value>
+  </data>
+  <data name="CreateQuiz_QuestionsComingSoonTitle" xml:space="preserve">
+    <value>Fragen bald verfügbar</value>
+  </data>
+  <data name="CreateQuiz_QuestionsComingSoonHint" xml:space="preserve">
+    <value>Die Fragenliste wird im nächsten Update verfügbar sein.</value>
+  </data>
+  <data name="CreateQuiz_AccessCodeTitle" xml:space="preserve">
+    <value>Automatischer Zugangscode</value>
+  </data>
+  <data name="CreateQuiz_AccessCodeHint" xml:space="preserve">
+    <value>Ein Code wird generiert, um Freunde oder externe Gäste einzuladen.</value>
+  </data>
+  <data name="CreateQuiz_CreateButton" xml:space="preserve">
+    <value>🚀 Quiz erstellen</value>
+  </data>
+  <data name="CreateQuiz_ValidationTitle" xml:space="preserve">
+    <value>Fehlende Information</value>
+  </data>
+  <data name="CreateQuiz_TitleRequired" xml:space="preserve">
+    <value>Der Quiz-Titel ist erforderlich.</value>
+  </data>
+  <data name="CreateQuiz_ComingSoonTitle" xml:space="preserve">
+    <value>Bald verfügbar</value>
+  </data>
+  <data name="CreateQuiz_ComingSoonMessage" xml:space="preserve">
+    <value>Die Quiz-Erstellung wird sehr bald verfügbar sein!</value>
+  </data>
+  <data name="CreateSeriesType_QuizDisabledMessage" xml:space="preserve">
+    <value>Die Quiz-Erstellung wurde vom Administrator deaktiviert. Bitte später erneut versuchen.</value>
+  </data>
+  <data name="Ban_Close" xml:space="preserve">
+    <value>Schließen</value>
+  </data>
+  <data name="Ban_Contact" xml:space="preserve">
+    <value>Wenn du denkst, dass es sich um einen Fehler handelt, kontaktiere unseren Support unter support@beauoupas.com</value>
+  </data>
+  <data name="Ban_DateLabel" xml:space="preserve">
+    <value>Date de suspension</value>
+  </data>
+  <data name="Ban_ReasonLabel" xml:space="preserve">
+    <value>Motif de la suspension</value>
+  </data>
+  <data name="Ban_Subtitle" xml:space="preserve">
+    <value>Dein Zugang zu BeauOuPas wurde widerrufen</value>
+  </data>
+  <data name="Ban_Title" xml:space="preserve">
+    <value>🚫 Compte suspendu</value>
+  </data>
+  <data name="Chat_Block" xml:space="preserve">
+    <value>🚫 Bloquer</value>
+  </data>
+  <data name="Chat_BlockConfirm" xml:space="preserve">
+    <value>Bloquer</value>
+  </data>
+  <data name="Chat_Blocked" xml:space="preserve">
+    <value>🚫 Dieser Chat ist blockiert</value>
+  </data>
+  <data name="Chat_BlockedConversation" xml:space="preserve">
+    <value>Das Gespräch wurde blockiert.</value>
+  </data>
+  <data name="Chat_BlockedMessage" xml:space="preserve">
+    <value>🚫 Gespräch blockiert — du kannst keine Nachrichten mehr senden</value>
+  </data>
+  <data name="Chat_BlockedSend" xml:space="preserve">
+    <value>Dieser Chat wurde blockiert. Du kannst keine Nachrichten mehr senden.</value>
+  </data>
+  <data name="Chat_BlockedTitle" xml:space="preserve">
+    <value>Chat blockiert</value>
+  </data>
+  <data name="Chat_BlockFailed" xml:space="preserve">
+    <value>Impossible de bloquer ce chat.</value>
+  </data>
+  <data name="Chat_BlockMessage" xml:space="preserve">
+    <value>Voulez-vous bloquer cette conversation ? Vous ne pourrez plus envoyer ni recevoir de messages.</value>
+  </data>
+  <data name="Chat_BlockTitle" xml:space="preserve">
+    <value>Verlassen und blockieren</value>
+  </data>
+  <data name="Chat_Placeholder" xml:space="preserve">
+    <value>Votre message...</value>
+  </data>
+  <data name="Chat_Report" xml:space="preserve">
+    <value>⚑ Signaler</value>
+  </data>
+  <data name="Chat_ReportConfirm" xml:space="preserve">
+    <value>Signaler</value>
+  </data>
+  <data name="Chat_ReportFailed" xml:space="preserve">
+    <value>Impossible de signaler ce message.</value>
+  </data>
+  <data name="Chat_ReportSentMessage" xml:space="preserve">
+    <value>Diese Nachricht wurde dem Moderationsteam gemeldet.</value>
+  </data>
+  <data name="Chat_ReportSentTitle" xml:space="preserve">
+    <value>Meldung gesendet</value>
+  </data>
+  <data name="Chat_ReportTitle" xml:space="preserve">
+    <value>Diese Nachricht melden</value>
+  </data>
+  <data name="Chat_SendFailed" xml:space="preserve">
+    <value>Nachricht nicht gesendet</value>
+  </data>
+  <data name="Chat_Title" xml:space="preserve">
+    <value>Chat 💬</value>
+  </data>
+  <data name="Common_Back" xml:space="preserve">
+    <value>← Retour</value>
+  </data>
+  <data name="Common_Cancel" xml:space="preserve">
+    <value>Abbrechen</value>
+  </data>
+  <data name="Common_Close" xml:space="preserve">
+    <value>Schließen</value>
+  </data>
+  <data name="Common_Female" xml:space="preserve">
+    <value>Frau</value>
+  </data>
+  <data name="Common_Gender" xml:space="preserve">
+    <value>Genre</value>
+  </data>
+  <data name="Common_Loading" xml:space="preserve">
+    <value>Laden...</value>
+  </data>
+  <data name="Common_Male" xml:space="preserve">
+    <value>Mann</value>
+  </data>
+  <data name="Common_Next" xml:space="preserve">
+    <value>Suivant →</value>
+  </data>
+  <data name="Common_OK" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="Common_UsernameTaken" xml:space="preserve">
+    <value>Dieser Benutzername wird bereits verwendet. Bitte wähle einen anderen.</value>
+  </data>
+  <data name="Common_Or" xml:space="preserve">
+    <value> ou </value>
+  </data>
+  <data name="Common_Other" xml:space="preserve">
+    <value>Andere</value>
+  </data>
+  <data name="Common_Save" xml:space="preserve">
+    <value>💾 Sauvegarder</value>
+  </data>
+  <data name="CompleteProfile_AgeError" xml:space="preserve">
+    <value>Sie müssen mindestens 13 Jahre alt sein</value>
+  </data>
+  <data name="CompleteProfile_BirthDate" xml:space="preserve">
+    <value>Geburtsdatum</value>
+  </data>
+  <data name="CompleteProfile_Continue" xml:space="preserve">
+    <value>Weiter →</value>
+  </data>
+  <data name="CompleteProfile_Gender" xml:space="preserve">
+    <value>Geschlecht</value>
+  </data>
+  <data name="CompleteProfile_Location" xml:space="preserve">
+    <value>Standort</value>
+  </data>
+  <data name="CompleteProfile_LocationHint" xml:space="preserve">
+    <value>Um Ihnen Projekte in der Nähe zu zeigen</value>
+  </data>
+  <data name="CompleteProfile_Notifs" xml:space="preserve">
+    <value>Benachrichtigungen</value>
+  </data>
+  <data name="CompleteProfile_NotifsHint" xml:space="preserve">
+    <value>Um über Nachrichten und Abstimmungen informiert zu werden</value>
+  </data>
+  <data name="CompleteProfile_ProjectPref" xml:space="preserve">
+    <value>Projektpräferenz</value>
+  </data>
+  <data name="CompleteProfile_Subtitle" xml:space="preserve">
+    <value>Für ein besseres Erlebnis,
+bitte füllen Sie diese Informationen aus.</value>
+  </data>
+  <data name="CompleteProfile_Title" xml:space="preserve">
+    <value>Profil vervollständigen</value>
+  </data>
+  <data name="CompleteProfile_Username" xml:space="preserve">
+    <value>Benutzername</value>
+  </data>
+  <data name="CompleteProfile_UsernameRequired" xml:space="preserve">
+    <value>Benutzername erforderlich (min 3 Zeichen)</value>
+  </data>
+  <data name="Create_AgeFormat" xml:space="preserve">
+    <value>Von {0} bis {1} Jahren</value>
+  </data>
+  <data name="Create_AgeMax" xml:space="preserve">
+    <value>Âge maximum</value>
+  </data>
+  <data name="Create_AgeMin" xml:space="preserve">
+    <value>Âge minimum</value>
+  </data>
+  <data name="Create_AgeRange" xml:space="preserve">
+    <value>Altersgruppe</value>
+  </data>
+  <data name="Create_CheckingCredits" xml:space="preserve">
+    <value>Credits werden geprüft...</value>
+  </data>
+  <data name="Create_ChooseMode" xml:space="preserve">
+    <value>Diesen Modus wählen</value>
+  </data>
+  <data name="Create_Compressing" xml:space="preserve">
+    <value>Foto wird komprimiert...</value>
+  </data>
+  <data name="Create_CompressingAll" xml:space="preserve">
+    <value>Fotos werden komprimiert...</value>
+  </data>
+  <data name="Create_Description" xml:space="preserve">
+    <value>Description (optionnel)</value>
+  </data>
+  <data name="Create_DescriptionPlaceholder" xml:space="preserve">
+    <value>Donnez plus de contexte...</value>
+  </data>
+  <data name="Create_DualPhoto" xml:space="preserve">
+    <value>Un choix entre 2 photos</value>
+  </data>
+  <data name="Create_DualPhotoHint" xml:space="preserve">
+    <value>Die Community wählt zwischen deinen 2 Fotos</value>
+  </data>
+  <data name="Create_DurationFormat" xml:space="preserve">
+    <value>Dauer: {0} Tage</value>
+  </data>
+  <data name="Create_ErrorPhoto" xml:space="preserve">
+    <value>Bitte wählen Sie ein Foto.</value>
+  </data>
+  <data name="Create_ErrorTitle" xml:space="preserve">
+    <value>Titel ist erforderlich.</value>
+  </data>
+  <data name="Create_ErrorTwoPhotos" xml:space="preserve">
+    <value>Bitte wählen Sie beide Fotos.</value>
+  </data>
+  <data name="Create_GenderAll" xml:space="preserve">
+    <value>👥 Tous</value>
+  </data>
+  <data name="Create_GenderFemale" xml:space="preserve">
+    <value>👩 Femmes</value>
+  </data>
+  <data name="Create_GenderMale" xml:space="preserve">
+    <value>👨 Hommes</value>
+  </data>
+  <data name="Create_LimitDuration" xml:space="preserve">
+    <value>Umfragedauer begrenzen</value>
+  </data>
+  <data name="Create_PhotoA" xml:space="preserve">
+    <value>Photo A</value>
+  </data>
+  <data name="Create_PhotoB" xml:space="preserve">
+    <value>Photo B</value>
+  </data>
+  <data name="Create_PhotoInvalid" xml:space="preserve">
+    <value>Ungültiges Format oder Datei zu groß (max 10MB).</value>
+  </data>
+  <data name="Create_PrivateProjectHint" xml:space="preserve">
+    <value>Nur eingeladene Personen können dieses Projekt sehen.</value>
+  </data>
+  <data name="Create_PrivateProjectWarning" xml:space="preserve">
+    <value>Privates Projekt</value>
+  </data>
+  <data name="Create_Refund" xml:space="preserve">
+    <value>Rückerstattung - Projekterstellung fehlgeschlagen</value>
+  </data>
+  <data name="Create_SinglePhoto" xml:space="preserve">
+    <value>Ein Foto zum Bewerten</value>
+  </data>
+  <data name="Create_SinglePhotoHint" xml:space="preserve">
+    <value>Die Community bewertet dein Foto mit ❤️ 😐 👎</value>
+  </data>
+  <data name="Create_Step1" xml:space="preserve">
+    <value>1. Type</value>
+  </data>
+  <data name="Create_Step2" xml:space="preserve">
+    <value>2. Ciblage</value>
+  </data>
+  <data name="Create_Step3" xml:space="preserve">
+    <value>3. Photos</value>
+  </data>
+  <data name="Create_Submit" xml:space="preserve">
+    <value>📤 Soumettre mon projet</value>
+  </data>
+  <data name="Create_SuccessMessage" xml:space="preserve">
+    <value>Dein Projekt wartet auf die Freigabe. Du wirst benachrichtigt, sobald es genehmigt ist.</value>
+  </data>
+  <data name="Create_SuccessTitle" xml:space="preserve">
+    <value>Projet soumis ! 🎉</value>
+  </data>
+  <data name="Create_TapPhoto" xml:space="preserve">
+    <value>📷 Appuyez pour choisir</value>
+  </data>
+  <data name="Create_Title" xml:space="preserve">
+    <value>Projekt erstellen</value>
+  </data>
+  <data name="Create_TitleField" xml:space="preserve">
+    <value>Titre *</value>
+  </data>
+  <data name="Create_TitlePlaceholder" xml:space="preserve">
+    <value>Ex: Ma nouvelle coupe de cheveux</value>
+  </data>
+  <data name="Create_WhatSubmit" xml:space="preserve">
+    <value>Was möchten Sie einreichen?</value>
+  </data>
+  <data name="Create_WhoVote" xml:space="preserve">
+    <value>Qui peut voter ?</value>
+  </data>
+  <data name="Create_YourPhoto" xml:space="preserve">
+    <value>Votre photo *</value>
+  </data>
+  <data name="Create_YourProject" xml:space="preserve">
+    <value>Votre projet</value>
+  </data>
+  <data name="Create_YourTwoPhotos" xml:space="preserve">
+    <value>Vos deux photos *</value>
+  </data>
+  <data name="Credits_AdBanner" xml:space="preserve">
+    <value>Banner-Werbung ansehen</value>
+  </data>
+  <data name="Credits_AdReward" xml:space="preserve">
+    <value>Video ansehen</value>
+  </data>
+  <data name="Credits_Available" xml:space="preserve">
+    <value>verfügbare Credits</value>
+  </data>
+  <data name="Credits_CostBoost" xml:space="preserve">
+    <value>Booster un projet</value>
+  </data>
+  <data name="Credits_CostMeet" xml:space="preserve">
+    <value>Demander une rencontre</value>
+  </data>
+  <data name="Credits_CostProject" xml:space="preserve">
+    <value>Soumettre un projet</value>
+  </data>
+  <data name="Credits_CostRewind" xml:space="preserve">
+    <value>Rewind (zurückgehen)</value>
+  </data>
+  <data name="Credits_CostTitle" xml:space="preserve">
+    <value>🔴 Aktionskosten</value>
+  </data>
+  <data name="Credits_History" xml:space="preserve">
+    <value>📋 Historique</value>
+  </data>
+  <data name="Credits_HowToEarn" xml:space="preserve">
+    <value>💚 Wie man Credits verdient</value>
+  </data>
+  <data name="Credits_Title" xml:space="preserve">
+    <value>Meine Credits</value>
+  </data>
+  <data name="Credits_Vote" xml:space="preserve">
+    <value>Voter sur un projet</value>
+  </data>
+  <data name="Credits_WatchAd" xml:space="preserve">
+    <value>▶️ Jetzt ein Video ansehen</value>
+  </data>
+  <data name="Crop_Title" xml:space="preserve">
+    <value>Recadrer</value>
+  </data>
+  <data name="Dashboard_Credits" xml:space="preserve">
+    <value>Credits</value>
+  </data>
+  <data name="Dashboard_Hello" xml:space="preserve">
+    <value>👋 Bonjour !</value>
+  </data>
+  <data name="Dashboard_Logout" xml:space="preserve">
+    <value>Abmelden</value>
+  </data>
+  <data name="Dashboard_MyCredits" xml:space="preserve">
+    <value>Meine Credits</value>
+  </data>
+  <data name="Dashboard_MyMatches" xml:space="preserve">
+    <value>Meine Matches</value>
+  </data>
+  <data name="Dashboard_MyProjects" xml:space="preserve">
+    <value>Meine Projekte</value>
+  </data>
+  <data name="Dashboard_ProjectsCreated" xml:space="preserve">
+    <value>Erstellte Projekte</value>
+  </data>
+  <data name="Dashboard_Settings" xml:space="preserve">
+    <value>Einstellungen</value>
+  </data>
+  <data name="Dashboard_Title" xml:space="preserve">
+    <value>Mein Konto</value>
+  </data>
+  <data name="Feedback_ErrorEmpty" xml:space="preserve">
+    <value>Bitte schreiben Sie einen Kommentar.</value>
+  </data>
+  <data name="Feedback_Message" xml:space="preserve">
+    <value>Ihr Kommentar</value>
+  </data>
+  <data name="Feedback_Placeholder" xml:space="preserve">
+    <value>Sagen Sie uns Ihre Meinung...</value>
+  </data>
+  <data name="Feedback_Rating" xml:space="preserve">
+    <value>Gesamtbewertung</value>
+  </data>
+  <data name="Feedback_Send" xml:space="preserve">
+    <value>Feedback senden</value>
+  </data>
+  <data name="Feedback_Subtitle" xml:space="preserve">
+    <value>Ihr Feedback hilft uns, die App zu verbessern!</value>
+  </data>
+  <data name="Feedback_SuccessMessage" xml:space="preserve">
+    <value>Ihr Feedback wurde gesendet.</value>
+  </data>
+  <data name="Feedback_SuccessTitle" xml:space="preserve">
+    <value>Danke!</value>
+  </data>
+  <data name="Feedback_Title" xml:space="preserve">
+    <value>Feedback geben</value>
+  </data>
+  <data name="FriendProfile_Message" xml:space="preserve">
+    <value>💬 Nachricht</value>
+  </data>
+  <data name="FriendProfile_NoProjects" xml:space="preserve">
+    <value>Noch keine Projekte.</value>
+  </data>
+  <data name="FriendProfile_Projects" xml:space="preserve">
+    <value>Seine Projekte</value>
+  </data>
+  <data name="FriendProfile_Remove" xml:space="preserve">
+    <value>Entfernen</value>
+  </data>
+  <data name="Friends_Accept" xml:space="preserve">
+    <value>Annehmen</value>
+  </data>
+  <data name="Friends_AcceptError" xml:space="preserve">
+    <value>Diese Einladung kann nicht angenommen werden.</value>
+  </data>
+  <data name="Friends_CancelConfirm" xml:space="preserve">
+    <value>Einladung abbrechen</value>
+  </data>
+  <data name="Friends_CreditsEarned" xml:space="preserve">
+    <value>Verdiente Credits</value>
+  </data>
+  <data name="Friends_DeleteConfirm" xml:space="preserve">
+    <value>Möchten Sie entfernen</value>
+  </data>
+  <data name="Friends_DeleteError" xml:space="preserve">
+    <value>Freund konnte nicht entfernt werden.</value>
+  </data>
+  <data name="Friends_DeleteTitle" xml:space="preserve">
+    <value>Freund entfernen</value>
+  </data>
+  <data name="Friends_Empty" xml:space="preserve">
+    <value>Noch keine Freunde.</value>
+  </data>
+  <data name="Friends_EmptyHint" xml:space="preserve">
+    <value>Lade deine Freunde ein, um über ihre Projekte abzustimmen.</value>
+  </data>
+  <data name="Friends_Invite" xml:space="preserve">
+    <value>Einladen</value>
+  </data>
+  <data name="Friends_InviteAccepted" xml:space="preserve">
+    <value>Ihr seid jetzt Freunde 🎉</value>
+  </data>
+  <data name="Friends_InviteButton" xml:space="preserve">
+    <value>Freund einladen</value>
+  </data>
+  <data name="Friends_NewFriend" xml:space="preserve">
+    <value>Neuer Freund!</value>
+  </data>
+  <data name="Friends_PendingReceived" xml:space="preserve">
+    <value>Erhaltene Einladungen</value>
+  </data>
+  <data name="Friends_PendingSent" xml:space="preserve">
+    <value>Gesendete Einladungen</value>
+  </data>
+  <data name="Friends_Title" xml:space="preserve">
+    <value>Freunde</value>
+  </data>
+  <data name="Login_Apple" xml:space="preserve">
+    <value>Mit Apple fortfahren</value>
+  </data>
+  <data name="Login_Button" xml:space="preserve">
+    <value>Anmelden</value>
+  </data>
+  <data name="Login_Email" xml:space="preserve">
+    <value>Email</value>
+  </data>
+  <data name="Login_ErrorEmail" xml:space="preserve">
+    <value>Gib deine E-Mail ein, um dein Passwort zurückzusetzen.</value>
+  </data>
+  <data name="Login_ErrorFields" xml:space="preserve">
+    <value>Veuillez remplir tous les champs.</value>
+  </data>
+  <data name="Login_ForgotPassword" xml:space="preserve">
+    <value>Passwort vergessen?</value>
+  </data>
+  <data name="Login_ForgotPrompt" xml:space="preserve">
+    <value>Gib deine E-Mail-Adresse ein, um den Zurücksetzungslink zu erhalten:</value>
+  </data>
+  <data name="Login_ForgotSend" xml:space="preserve">
+    <value>Envoyer</value>
+  </data>
+  <data name="Login_ForgotSentMessage" xml:space="preserve">
+    <value>Überprüfe deinen Posteingang (und den Spam-Ordner).</value>
+  </data>
+  <data name="Login_ForgotSentTitle" xml:space="preserve">
+    <value>E-Mail gesendet ✅</value>
+  </data>
+  <data name="Login_ForgotTitle" xml:space="preserve">
+    <value>Passwort vergessen</value>
+  </data>
+  <data name="Login_Google" xml:space="preserve">
+    <value>Mit Google fortfahren</value>
+  </data>
+  <data name="Login_NoAccount" xml:space="preserve">
+    <value>Noch kein Konto?</value>
+  </data>
+  <data name="Login_Password" xml:space="preserve">
+    <value>Mot de passe</value>
+  </data>
+  <data name="Login_Register" xml:space="preserve">
+    <value>Registrieren</value>
+  </data>
+  <data name="Login_Subtitle" xml:space="preserve">
+    <value>Stimmen Sie, vergleichen Sie, wählen Sie!</value>
+  </data>
+  <data name="Maintenance_Message" xml:space="preserve">
+    <value>Die App ist vorübergehend nicht verfügbar. Bitte versuchen Sie es später erneut.</value>
+  </data>
+  <data name="Maintenance_Retry" xml:space="preserve">
+    <value>Wir arbeiten daran, den Dienst wiederherzustellen.</value>
+  </data>
+  <data name="Matches_Empty" xml:space="preserve">
+    <value>Pas encore de match !</value>
+  </data>
+  <data name="Matches_EmptyHint" xml:space="preserve">
+    <value>Votez et cliquez sur 💘 pour rencontrer</value>
+  </data>
+  <data name="Matches_MatchDate" xml:space="preserve">
+    <value>Match le {0}</value>
+  </data>
+  <data name="Matches_Title" xml:space="preserve">
+    <value>💘 Mes Matches</value>
+  </data>
+  <data name="MyProjects_Close" xml:space="preserve">
+    <value>🔒 Schließen</value>
+  </data>
+  <data name="MyProjects_Delete" xml:space="preserve">
+    <value>🗑️ Supprimer</value>
+  </data>
+  <data name="MyProjects_Empty" xml:space="preserve">
+    <value>Vous n'avez pas encore de projets</value>
+  </data>
+  <data name="MyProjects_EmptyHint" xml:space="preserve">
+    <value>Erstelle dein erstes Projekt!</value>
+  </data>
+  <data name="MyProjects_NewProject" xml:space="preserve">
+    <value>+ Nouveau projet</value>
+  </data>
+  <data name="MyProjects_Title" xml:space="preserve">
+    <value>Meine Projekte</value>
+  </data>
+  <data name="Profile_Avatar" xml:space="preserve">
+    <value>Profilbild</value>
+  </data>
+  <data name="Profile_ChangeAvatar" xml:space="preserve">
+    <value>Foto ändern</value>
+  </data>
+  <data name="Profile_DangerZone" xml:space="preserve">
+    <value>⚠️ Zone dangereuse</value>
+  </data>
+  <data name="Profile_Dating" xml:space="preserve">
+    <value>💘 Rencontres</value>
+  </data>
+  <data name="Profile_DatingAll" xml:space="preserve">
+    <value>👥 Tous</value>
+  </data>
+  <data name="Profile_DatingEnable" xml:space="preserve">
+    <value>Activer les rencontres</value>
+  </data>
+  <data name="Profile_DatingFemale" xml:space="preserve">
+    <value>👩 Femmes</value>
+  </data>
+  <data name="Profile_DatingHint" xml:space="preserve">
+    <value>Activez cette option pour pouvoir rencontrer d'autres utilisateurs lors des votes.</value>
+  </data>
+  <data name="Profile_DatingMale" xml:space="preserve">
+    <value>👨 Hommes</value>
+  </data>
+  <data name="Profile_DatingPref" xml:space="preserve">
+    <value>Je souhaite rencontrer</value>
+  </data>
+  <data name="Profile_DeleteAccount" xml:space="preserve">
+    <value>🗑️ Supprimer mon compte</value>
+  </data>
+  <data name="Profile_Email" xml:space="preserve">
+    <value>Email</value>
+  </data>
+  <data name="Profile_Feedback" xml:space="preserve">
+    <value>💬 App-Feedback geben</value>
+  </data>
+  <data name="Profile_Friends" xml:space="preserve">
+    <value>Freunde</value>
+  </data>
+  <data name="Profile_Gender" xml:space="preserve">
+    <value>Genre</value>
+  </data>
+  <data name="Profile_Logout" xml:space="preserve">
+    <value>Abmelden</value>
+  </data>
+  <data name="Profile_MyCredits" xml:space="preserve">
+    <value>Meine Credits</value>
+  </data>
+  <data name="Profile_MyProfile" xml:space="preserve">
+    <value>Mon profil</value>
+  </data>
+  <data name="Profile_Offline" xml:space="preserve">
+    <value>Offline</value>
+  </data>
+  <data name="Profile_Online" xml:space="preserve">
+    <value>â— Online</value>
+  </data>
+  <data name="Profile_Phone" xml:space="preserve">
+    <value>Telefon</value>
+  </data>
+  <data name="Profile_Projects" xml:space="preserve">
+    <value>Projekte</value>
+  </data>
+  <data name="Profile_RecentlyOnline" xml:space="preserve">
+    <value>â— KÃ¼rzlich online</value>
+  </data>
+  <data name="Profile_Title" xml:space="preserve">
+    <value>Einstellungen</value>
+  </data>
+  <data name="Profile_UploadingAvatar" xml:space="preserve">
+    <value>Wird hochgeladen...</value>
+  </data>
+  <data name="Profile_Username" xml:space="preserve">
+    <value>Pseudo *</value>
+  </data>
+  <data name="Profile_Votes" xml:space="preserve">
+    <value>Stimmen</value>
+  </data>
+  <data name="ProjectDetail_Dislike" xml:space="preserve">
+    <value>Gefällt mir nicht</value>
+  </data>
+  <data name="ProjectDetail_GiveOpinion" xml:space="preserve">
+    <value>Gib deine Meinung ab</value>
+  </data>
+  <data name="ProjectDetail_Like" xml:space="preserve">
+    <value>Gefällt mir</value>
+  </data>
+  <data name="ProjectDetail_Neutral" xml:space="preserve">
+    <value>Neutral</value>
+  </data>
+  <data name="ProjectDetail_StatsHiddenAfterVote" xml:space="preserve">
+    <value>Die Statistiken sind für dieses Projekt ausgeblendet.</value>
+  </data>
+  <data name="ProjectDetail_TapVoteA" xml:space="preserve">
+    <value>Tippe, um für A zu stimmen</value>
+  </data>
+  <data name="ProjectDetail_TapVoteB" xml:space="preserve">
+    <value>Tippe, um für B zu stimmen</value>
+  </data>
+  <data name="ProjectDetail_ThanksVote" xml:space="preserve">
+    <value>Danke für deine Stimme!</value>
+  </data>
+  <data name="Promo_Team" xml:space="preserve">
+    <value>📢 Nachricht vom Team</value>
+  </data>
+  <data name="Promo_Understood" xml:space="preserve">
+    <value>J'ai compris ! 👍</value>
+  </data>
+  <data name="Register_Apple" xml:space="preserve">
+    <value>Mit Apple fortfahren</value>
+  </data>
+  <data name="Register_BirthDate" xml:space="preserve">
+    <value>Geburtsdatum *</value>
+  </data>
+  <data name="Register_Button" xml:space="preserve">
+    <value>Mein Konto erstellen</value>
+  </data>
+  <data name="Register_ConfirmPassword" xml:space="preserve">
+    <value>Confirmer le mot de passe *</value>
+  </data>
+  <data name="Register_Email" xml:space="preserve">
+    <value>Email *</value>
+  </data>
+  <data name="Register_ErrorAge" xml:space="preserve">
+    <value>Vous devez avoir au moins 18 ans pour vous inscrire.</value>
+  </data>
+  <data name="Register_ErrorTerms" xml:space="preserve">
+    <value>Vous devez accepter les CGU pour continuer.</value>
+  </data>
+  <data name="Register_Gender" xml:space="preserve">
+    <value>Genre *</value>
+  </data>
+  <data name="Register_GenderFemale" xml:space="preserve">
+    <value>Femme</value>
+  </data>
+  <data name="Register_GenderMale" xml:space="preserve">
+    <value>Homme</value>
+  </data>
+  <data name="Register_GenderNone" xml:space="preserve">
+    <value>Keine Angabe</value>
+  </data>
+  <data name="Register_GenderOther" xml:space="preserve">
+    <value>Autre</value>
+  </data>
+  <data name="Register_GenderSelect" xml:space="preserve">
+    <value>Ihr Geschlecht auswählen</value>
+  </data>
+  <data name="Register_Google" xml:space="preserve">
+    <value>Mit Google fortfahren</value>
+  </data>
+  <data name="Register_HaveAccount" xml:space="preserve">
+    <value>Hast du schon ein Konto?</value>
+  </data>
+  <data name="Register_Login" xml:space="preserve">
+    <value>Anmelden</value>
+  </data>
+  <data name="Register_Password" xml:space="preserve">
+    <value>Mot de passe *</value>
+  </data>
+  <data name="Register_PasswordPlaceholder" xml:space="preserve">
+    <value>Mindestens 6 Zeichen</value>
+  </data>
+  <data name="Register_Phone" xml:space="preserve">
+    <value>Telefon (optional)</value>
+  </data>
+  <data name="Register_PhonePlaceholder" xml:space="preserve">
+    <value>+33 6 00 00 00 00</value>
+  </data>
+  <data name="Register_Privacy" xml:space="preserve">
+    <value>Datenschutzrichtlinie</value>
+  </data>
+  <data name="Register_SuccessMessage" xml:space="preserve">
+    <value>Dein Konto wurde erstellt. Bestätige deine E-Mail, bevor du dich anmeldest.</value>
+  </data>
+  <data name="Register_SuccessTitle" xml:space="preserve">
+    <value>Konto erstellt</value>
+  </data>
+  <data name="Register_Terms" xml:space="preserve">
+    <value>CGU</value>
+  </data>
+  <data name="Register_TermsAccept" xml:space="preserve">
+    <value>J'accepte les </value>
+  </data>
+  <data name="Register_TermsAnd" xml:space="preserve">
+    <value> et la </value>
+  </data>
+  <data name="Register_Title" xml:space="preserve">
+    <value>Konto erstellen</value>
+  </data>
+  <data name="Register_Username" xml:space="preserve">
+    <value>Pseudo *</value>
+  </data>
+  <data name="Register_UsernamePlaceholder" xml:space="preserve">
+    <value>Ihr Benutzername</value>
+  </data>
+  <data name="Report_AlreadyDone" xml:space="preserve">
+    <value>Sie haben dieses Projekt bereits gemeldet.</value>
+  </data>
+  <data name="Report_Fake" xml:space="preserve">
+    <value>Falsche Identität</value>
+  </data>
+  <data name="Report_Nudity" xml:space="preserve">
+    <value>Nacktheit/unangemessener Inhalt</value>
+  </data>
+  <data name="Report_Other" xml:space="preserve">
+    <value>Sonstiges</value>
+  </data>
+  <data name="Report_Reason" xml:space="preserve">
+    <value>Grund der Meldung</value>
+  </data>
+  <data name="Report_Spam" xml:space="preserve">
+    <value>Spam oder Werbung</value>
+  </data>
+  <data name="Report_Success" xml:space="preserve">
+    <value>Meldung gesendet, danke!</value>
+  </data>
+  <data name="Report_Title" xml:space="preserve">
+    <value>Projekt melden</value>
+  </data>
+  <data name="Stats_AverageScore" xml:space="preserve">
+    <value>Durchschnittliche Bewertung</value>
+  </data>
+  <data name="Stats_Dislike" xml:space="preserve">
+    <value>Gefällt mir nicht</value>
+  </data>
+  <data name="Stats_DuelResult" xml:space="preserve">
+    <value>Duell-Ergebnis</value>
+  </data>
+  <data name="Stats_Gender" xml:space="preserve">
+    <value>Geschlecht</value>
+  </data>
+  <data name="Stats_Like" xml:space="preserve">
+    <value>Gefällt mir</value>
+  </data>
+  <data name="Stats_Neutral" xml:space="preserve">
+    <value>Neutral</value>
+  </data>
+  <data name="Stats_NoVotes" xml:space="preserve">
+    <value>Noch keine Stimmen.</value>
+  </data>
+  <data name="Stats_Title" xml:space="preserve">
+    <value>Statistiken</value>
+  </data>
+  <data name="Stats_Votes" xml:space="preserve">
+    <value>Stimmen</value>
+  </data>
+  <data name="Update_Button" xml:space="preserve">
+    <value>â¬‡ï¸ Jetzt aktualisieren</value>
+  </data>
+  <data name="Update_Message" xml:space="preserve">
+    <value>Eine neue Version ist verfügbar. Bitte aktualisieren Sie die App.</value>
+  </data>
+  <data name="Update_Title" xml:space="preserve">
+    <value>Update verfügbar</value>
+  </data>
+  <data name="Vote_AllVoted" xml:space="preserve">
+    <value>Sie haben alles abgestimmt!</value>
+  </data>
+  <data name="Vote_ComeBack" xml:space="preserve">
+    <value>Kommen Sie später für neue Projekte zurück</value>
+  </data>
+  <data name="Vote_Refresh" xml:space="preserve">
+    <value>🔄 Aktualisieren</value>
+  </data>
+  <data name="Vote_Remaining" xml:space="preserve">
+    <value>{0} projets restants</value>
+  </data>
+  <data name="Quiz_Page_Title" xml:space="preserve">
+    <value>Quiz</value>
+  </data>
+  <data name="Quiz_Lobby_Title" xml:space="preserve">
+    <value>Mach dich bereit!</value>
+  </data>
+  <data name="Quiz_Lobby_Subtitle" xml:space="preserve">
+    <value>Warten, bis der Moderator das Quiz startet…</value>
+  </data>
+  <data name="Quiz_Intro_Tag" xml:space="preserve">
+    <value>MACH DICH BEREIT</value>
+  </data>
+  <data name="Quiz_Intro_StartingIn" xml:space="preserve">
+    <value>Beginnt in {0}s</value>
+  </data>
+  <data name="Quiz_Intro_WaitingFirst" xml:space="preserve">
+    <value>Warten auf die erste Frage…</value>
+  </data>
+  <data name="Quiz_Question_Progress" xml:space="preserve">
+    <value>Frage {0} / {1}</value>
+  </data>
+  <data name="Quiz_Question_AnswerCount" xml:space="preserve">
+    <value>{0} / {1} haben geantwortet</value>
+  </data>
+  <data name="Quiz_Answered_Title" xml:space="preserve">
+    <value>Antwort gesendet!</value>
+  </data>
+  <data name="Quiz_Answered_Subtitle" xml:space="preserve">
+    <value>Warten auf die anderen Spieler…</value>
+  </data>
+  <data name="Quiz_Reveal_Correct" xml:space="preserve">
+    <value>✅ Richtig!</value>
+  </data>
+  <data name="Quiz_Reveal_CorrectMessage" xml:space="preserve">
+    <value>Gut gemacht – Punkt hinzugefügt.</value>
+  </data>
+  <data name="Quiz_Reveal_Wrong" xml:space="preserve">
+    <value>❌ Falsche Antwort</value>
+  </data>
+  <data name="Quiz_Reveal_WrongMessage" xml:space="preserve">
+    <value>Bei der nächsten klappt's bestimmt!</value>
+  </data>
+  <data name="Quiz_Reveal_NoAnswer" xml:space="preserve">
+    <value>⏱️ Zeit abgelaufen</value>
+  </data>
+  <data name="Quiz_Reveal_NoAnswerMessage" xml:space="preserve">
+    <value>Du hast nicht rechtzeitig geantwortet.</value>
+  </data>
+  <data name="Quiz_Reveal_WaitingNext" xml:space="preserve">
+    <value>Nächste Frage gleich…</value>
+  </data>
+  <data name="Quiz_Finish_Winner" xml:space="preserve">
+    <value>🏆 SIEGER</value>
+  </data>
+  <data name="Quiz_Finish_YourRank" xml:space="preserve">
+    <value>#{0}</value>
+  </data>
+  <data name="Quiz_Finish_YourRankLabel" xml:space="preserve">
+    <value>DEIN RANG</value>
+  </data>
+  <data name="Quiz_Finish_YourScore" xml:space="preserve">
+    <value>{0} Pkt.</value>
+  </data>
+  <data name="Quiz_Finish_YourScoreLabel" xml:space="preserve">
+    <value>DEINE PUNKTE</value>
+  </data>
+  <data name="Quiz_Finish_LeaderboardHeader" xml:space="preserve">
+    <value>GESAMTRANGLISTE</value>
+  </data>
+  <data name="Quiz_Finish_LeaveButton" xml:space="preserve">
+    <value>Zurück zur Serie</value>
+  </data>
+  <data name="Quiz_Paused_Title" xml:space="preserve">
+    <value>Pausiert</value>
+  </data>
+  <data name="Quiz_Paused_Subtitle" xml:space="preserve">
+    <value>Der Moderator hat das Quiz pausiert</value>
+  </data>
+  <data name="Quiz_Error_SeriesNotFound" xml:space="preserve">
+    <value>Quiz nicht gefunden.</value>
+  </data>
+  <data name="Quiz_Error_TvDeactivatedTitle" xml:space="preserve">
+    <value>TV-Modus deaktiviert</value>
+  </data>
+  <data name="Quiz_Error_TvDeactivatedMessage" xml:space="preserve">
+    <value>Der Moderator hat die TV-Sitzung beendet.</value>
+  </data>
+  <data name="Quiz_Stats_SectionTitle" xml:space="preserve">
+    <value>QUIZ-STATISTIKEN</value>
+  </data>
+  <data name="Quiz_Stats_TotalPlayers" xml:space="preserve">
+    <value>Spieler</value>
+  </data>
+  <data name="Quiz_Stats_TotalQuestions" xml:space="preserve">
+    <value>Fragen</value>
+  </data>
+  <data name="Quiz_Stats_TotalAnswers" xml:space="preserve">
+    <value>Antworten gesamt</value>
+  </data>
+  <data name="Quiz_Stats_SuccessRate" xml:space="preserve">
+    <value>Erfolgsquote</value>
+  </data>
+  <data name="Quiz_Stats_HardestQuestion" xml:space="preserve">
+    <value>Schwierigste Frage</value>
+  </data>
+  <data name="Quiz_Stats_EasiestQuestion" xml:space="preserve">
+    <value>Leichteste Frage</value>
+  </data>
+  <data name="Quiz_Stats_GenderBreakdown" xml:space="preserve">
+    <value>Nach Geschlecht</value>
+  </data>
+  <data name="Quiz_Stats_AgeBreakdown" xml:space="preserve">
+    <value>Nach Altersgruppe</value>
+  </data>
+  <data name="Quiz_Stats_GenderMale" xml:space="preserve">
+    <value>Männer</value>
+  </data>
+  <data name="Quiz_Stats_GenderFemale" xml:space="preserve">
+    <value>Frauen</value>
+  </data>
+  <data name="Quiz_Stats_GenderOther" xml:space="preserve">
+    <value>Andere</value>
+  </data>
+  <data name="Quiz_Stats_GenderUnknown" xml:space="preserve">
+    <value>Nicht angegeben</value>
+  </data>
+  <data name="Quiz_Stats_Age0To17" xml:space="preserve">
+    <value>Unter 18</value>
+  </data>
+  <data name="Quiz_Stats_Age18To29" xml:space="preserve">
+    <value>18 – 29 Jahre</value>
+  </data>
+  <data name="Quiz_Stats_Age30To49" xml:space="preserve">
+    <value>30 – 49 Jahre</value>
+  </data>
+  <data name="Quiz_Stats_Age50Plus" xml:space="preserve">
+    <value>50 und älter</value>
+  </data>
+  <data name="Quiz_Stats_AgeUnknown" xml:space="preserve">
+    <value>Nicht angegeben</value>
+  </data>
+  <data name="Quiz_Stats_NoData" xml:space="preserve">
+    <value>Nicht genug Daten, um Statistiken anzuzeigen</value>
+  </data>
+  <data name="Home_Title" xml:space="preserve">
+    <value>Start</value>
+  </data>
+  <data name="Home_Hello" xml:space="preserve">
+    <value>👋 Hallo</value>
+  </data>
+  <data name="Home_JoinSection" xml:space="preserve">
+    <value>⚡ EINER SERIE BEITRETEN</value>
+  </data>
+  <data name="Home_JoinPlaceholder" xml:space="preserve">
+    <value>6-stelliger Code…</value>
+  </data>
+  <data name="Home_JoinButton" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="Home_JoinErrorEmpty" xml:space="preserve">
+    <value>Code eingeben</value>
+  </data>
+  <data name="Home_JoinErrorInvalid" xml:space="preserve">
+    <value>Ungültiger Code</value>
+  </data>
+  <data name="Home_JoinErrorNetwork" xml:space="preserve">
+    <value>Netzwerkfehler</value>
+  </data>
+  <data name="Home_VoteCardTitle" xml:space="preserve">
+    <value>🗳️ Abstimmen</value>
+  </data>
+  <data name="Home_VoteCardDesc" xml:space="preserve">
+    <value>Fotos, Duelle, Umfragen in deinen Gruppen</value>
+  </data>
+  <data name="Home_VoteCardAction" xml:space="preserve">
+    <value>Mein Feed ansehen</value>
+  </data>
+  <data name="Home_QuizCardTitle" xml:space="preserve">
+    <value>🧠 Quiz spielen</value>
+  </data>
+  <data name="Home_QuizCardDesc" xml:space="preserve">
+    <value>Burger, Millionär, Kahoot, Schwächstes Glied…</value>
+  </data>
+  <data name="Home_QuizCardAction" xml:space="preserve">
+    <value>Spiel beitreten</value>
+  </data>
+  <data name="Home_MoreOptions" xml:space="preserve">
+    <value>WEITERE OPTIONEN</value>
+  </data>
+  <data name="Home_MyGroups" xml:space="preserve">
+    <value>Meine Gruppen</value>
+  </data>
+  <data name="Home_GroupsCount_Singular" xml:space="preserve">
+    <value>{0} Gruppe</value>
+  </data>
+  <data name="Home_GroupsCount_Plural" xml:space="preserve">
+    <value>{0} Gruppen</value>
+  </data>
+  <data name="Home_MySeries" xml:space="preserve">
+    <value>Meine Serien</value>
+  </data>
+  <data name="Home_MySeriesDesc" xml:space="preserve">
+    <value>Alle meine Kreationen</value>
+  </data>
+  <data name="Home_MyProjects" xml:space="preserve">
+    <value>Meine Projekte</value>
+  </data>
+  <data name="Home_ProjectsCount_Singular" xml:space="preserve">
+    <value>{0} Projekt</value>
+  </data>
+  <data name="Home_ProjectsCount_Plural" xml:space="preserve">
+    <value>{0} Projekte</value>
+  </data>
+  <data name="Home_MyCredits" xml:space="preserve">
+    <value>Mein Guthaben</value>
+  </data>
+  <data name="Home_CreditsCount" xml:space="preserve">
+    <value>{0} verfügbar</value>
+  </data>
+  <data name="Home_CreateCardTitle" xml:space="preserve">
+    <value>✨ Quiz oder Spiel erstellen</value>
+  </data>
+  <data name="Home_CreateCardDesc" xml:space="preserve">
+    <value>Quiz oder Serie, mit oder ohne Gruppe</value>
+  </data>
+  <data name="Home_CreateCardAction" xml:space="preserve">
+    <value>Wo wählen</value>
+  </data>
+  <data name="CreateCtx_Title" xml:space="preserve">
+    <value>Wo erstellen?</value>
+  </data>
+  <data name="CreateCtx_Heading" xml:space="preserve">
+    <value>Wo möchtest du erstellen?</value>
+  </data>
+  <data name="CreateCtx_Subheading" xml:space="preserve">
+    <value>Wähle den Kontext für dein neues Quiz oder deine Serie</value>
+  </data>
+  <data name="CreateCtx_Standalone_Title" xml:space="preserve">
+    <value>🎯 Ohne Gruppe</value>
+  </data>
+  <data name="CreateCtx_Standalone_Desc" xml:space="preserve">
+    <value>Erstelle in deinen persönlichen Serien</value>
+  </data>
+  <data name="CreateCtx_NewGroup_Title" xml:space="preserve">
+    <value>➕ Neue Gruppe</value>
+  </data>
+  <data name="CreateCtx_NewGroup_Desc" xml:space="preserve">
+    <value>Erstelle zuerst eine Gruppe, dann deine Serie darin</value>
+  </data>
+  <data name="CreateCtx_ExistingGroup_Title" xml:space="preserve">
+    <value>👥 In einer bestehenden Gruppe</value>
+  </data>
+  <data name="CreateCtx_ExistingGroup_Desc" xml:space="preserve">
+    <value>Wähle eine deiner Gruppen für die Serie</value>
+  </data>
+  <data name="CreateCtx_Continue" xml:space="preserve">
+    <value>Weiter</value>
+  </data>
+  <data name="PickGroup_Title" xml:space="preserve">
+    <value>Gruppe wählen</value>
+  </data>
+  <data name="PickGroup_Heading" xml:space="preserve">
+    <value>In welcher Gruppe?</value>
+  </data>
+  <data name="PickGroup_Subheading" xml:space="preserve">
+    <value>Wähle die Gruppe für dein Quiz oder deine Serie</value>
+  </data>
+  <data name="PickGroup_Empty" xml:space="preserve">
+    <value>Du hast noch keine Gruppen.
+Erstelle eine vom vorherigen Bildschirm aus.</value>
+  </data>
+  <data name="CreateQuiz_CancelConfirm" xml:space="preserve">
+    <value>Verwerfen</value>
+  </data>
+  <data name="CreateQuiz_DeleteConfirm" xml:space="preserve">
+    <value>Löschen</value>
+  </data>
+  <data name="CreateQuiz_KeepEditing" xml:space="preserve">
+    <value>Weiter bearbeiten</value>
+  </data>
+  <data name="CreateQuiz_TooManyQuestionsMessage" xml:space="preserve">
+    <value>Ein Quiz darf nicht mehr als {0} Fragen enthalten.</value>
+  </data>
+  <data name="CreateQuiz_TooManyQuestionsTitle" xml:space="preserve">
+    <value>Limit erreicht</value>
+  </data>
+  <data name="MyInvitations_Title" xml:space="preserve">
+    <value>Einladungen</value>
+  </data>
+  <data name="MyInvitations_Header" xml:space="preserve">
+    <value>📩 Erhaltene Einladungen</value>
+  </data>
+  <data name="MyInvitations_Empty" xml:space="preserve">
+    <value>Derzeit keine Einladungen</value>
+  </data>
+  <data name="MyInvitations_FriendsSectionTitle" xml:space="preserve">
+    <value>👋 Freundschaftsanfragen</value>
+  </data>
+  <data name="MyInvitations_SeriesSectionTitle" xml:space="preserve">
+    <value>📩 Serien-Einladungen</value>
+  </data>
+  <data name="MyInvitations_WantsToBeFriend" xml:space="preserve">
+    <value>möchte dein Freund sein</value>
+  </data>
+  <data name="MyInvitations_Accept" xml:space="preserve">
+    <value>✅ Annehmen</value>
+  </data>
+  <data name="MyInvitations_Decline" xml:space="preserve">
+    <value>Ablehnen</value>
+  </data>
+  <data name="MyInvitations_InvitedBy" xml:space="preserve">
+    <value>Eingeladen von {0}</value>
+  </data>
+  <data name="MyInvitations_FriendAcceptedTitle" xml:space="preserve">
+    <value>🎉 Neuer Freund</value>
+  </data>
+  <data name="MyInvitations_FriendAcceptedMessage" xml:space="preserve">
+    <value>Du bist jetzt mit @{0} befreundet</value>
+  </data>
+  <data name="MyInvitations_SeriesAcceptedTitle" xml:space="preserve">
+    <value>✅</value>
+  </data>
+  <data name="MyInvitations_SeriesAcceptedMessage" xml:space="preserve">
+    <value>Du bist der Serie beigetreten!</value>
+  </data>
+  <data name="MyInvitations_DeclineFriendTitle" xml:space="preserve">
+    <value>Anfrage ablehnen</value>
+  </data>
+  <data name="MyInvitations_DeclineFriendMessage" xml:space="preserve">
+    <value>Freundschaftsanfrage von @{0} ablehnen?</value>
+  </data>
+  <data name="MyInvitations_DeclineSeriesTitle" xml:space="preserve">
+    <value>Einladung ablehnen</value>
+  </data>
+  <data name="MyInvitations_DeclineSeriesMessage" xml:space="preserve">
+    <value>Einladung zu „{0}&quot; ablehnen?</value>
+  </data>
+  <data name="MyInvitations_DeletedSeries" xml:space="preserve">
+    <value>Gelöschte Serie</value>
+  </data>
+  <data name="MyInvitations_Someone" xml:space="preserve">
+    <value>Jemand</value>
+  </data>
+  <data name="Home_MyInvitations" xml:space="preserve">
+    <value>Einladungen</value>
+  </data>
+  <data name="Home_InvitationsCount_Pending" xml:space="preserve">
+    <value>{0} ausstehend</value>
+  </data>
+  <data name="Home_InvitationsCount_None" xml:space="preserve">
+    <value>Keine</value>
+  </data>
+  <data name="Profile_LegalSection" xml:space="preserve">
+    <value>Rechtliche Informationen</value>
+  </data>
+  <data name="Profile_LegalPrivacy" xml:space="preserve">
+    <value>Datenschutzerklärung</value>
+  </data>
+  <data name="Profile_LegalTerms" xml:space="preserve">
+    <value>Nutzungsbedingungen</value>
+  </data>
+  <data name="Profile_LegalNotice" xml:space="preserve">
+    <value>Impressum</value>
+  </data>
+  <data name="CreateSeries_MembersCanAddTitle" xml:space="preserve">
+    <value>Mitglieder können Projekte hinzufügen</value>
+  </data>
+  <data name="CreateSeries_MembersCanAddDescription" xml:space="preserve">
+    <value>Wenn deaktiviert, kannst nur du (der Ersteller) Projekte zur Serie hinzufügen.</value>
+  </data>
+
+  <data name="Credits_CostSeriesFromTemplate" xml:space="preserve">
+    <value>Serie aus Vorlage erstellen</value>
+  </data>
+  <data name="Credits_CostAddProjectToSeries" xml:space="preserve">
+    <value>Projekt zu einer Serie hinzufügen</value>
+  </data>
+  <data name="Credits_CostVisualTheme" xml:space="preserve">
+    <value>Visuelles Thema (TV/Quiz)</value>
+  </data>
+  <data name="Credits_RewardVoteReceived" xml:space="preserve">
+    <value>Stimme für dein Projekt erhalten</value>
+  </data>
+  <data name="Credits_ScrollHint" xml:space="preserve">
+    <value>↕️ Scrolle, um alle Kosten zu sehen</value>
+  </data>
+  <data name="CreateProject_PollHint" xml:space="preserve">
+    <value>Stelle eine Frage mit Antwortmöglichkeiten</value>
+  </data>
+  <data name="ProjectDetail_PollResults" xml:space="preserve">
+    <value>📊 Umfrageergebnisse</value>
+  </data>
+  <data name="ProfileSettings_JoinEventHint" xml:space="preserve">
+    <value>Hast du einen Code? Tritt einer Veranstaltung bei!</value>
+  </data>
+  <data name="Templates_ComingSoon" xml:space="preserve">
+    <value>⏳ In Entwicklung</value>
+  </data>
+  <data name="SeriesResults_Title" xml:space="preserve">
+    <value>Ergebnisse</value>
+  </data>
+  <data name="SeriesResults_Header" xml:space="preserve">
+    <value>🏆 Serienergebnisse</value>
+  </data>
+  <data name="SeriesVote_Loading" xml:space="preserve">
+    <value>Serie wird geladen...</value>
+  </data>
+  <data name="SeriesVote_AnimatorWaiting" xml:space="preserve">
+    <value>Der Moderator startet das Projekt gleich.</value>
+  </data>
+  <data name="SeriesVote_Voted" xml:space="preserve">
+    <value>✓ Abgestimmt</value>
+  </data>
+  <data name="SeriesVote_VoteRecorded" xml:space="preserve">
+    <value>✅ Stimme erfasst!</value>
+  </data>
+  <data name="SeriesVote_SeriesEnded" xml:space="preserve">
+    <value>Serie beendet!</value>
+  </data>
+  <data name="SeriesVote_CongratsAll" xml:space="preserve">
+    <value>Bravo an alle Teilnehmer!</value>
+  </data>
+  <data name="SeriesVote_ViewResults" xml:space="preserve">
+    <value>📊 Ergebnisse anzeigen</value>
+  </data>
+  <data name="GroupDetail_SeriesTab" xml:space="preserve">
+    <value>📋 Serien</value>
+  </data>
+  <data name="Common_Select" xml:space="preserve">
+    <value>✓ Auswählen</value>
+  </data>
+  <data name="GroupDetail_NoSeriesYet" xml:space="preserve">
+    <value>Noch keine Serien</value>
+  </data>
+  <data name="GroupDetail_CreateFirstSeries" xml:space="preserve">
+    <value>Erstelle die erste Serie der Gruppe!</value>
+  </data>
+  <data name="GroupDetail_OwnerZone" xml:space="preserve">
+    <value>⚠️ Eigentümer-Bereich</value>
+  </data>
+  <data name="GroupDetail_DeleteWarning" xml:space="preserve">
+    <value>Verknüpfte Serien werden behalten (ohne Gruppe). Nachrichten werden endgültig gelöscht.</value>
+  </data>
+  <data name="Groups_EmptyHint" xml:space="preserve">
+    <value>Erstelle eine Gruppe, um Abstimmungsserien mit deinen Freunden zu organisieren!</value>
+  </data>
+  <data name="Groups_CreateGroup" xml:space="preserve">
+    <value>➕ Gruppe erstellen</value>
+  </data>
+  <data name="Groups_OpenSeriesNoGroup" xml:space="preserve">
+    <value>Offene Serien ohne Gruppe</value>
+  </data>
+  <data name="Groups_CreateOpenSeries" xml:space="preserve">
+    <value>🎬 Offene Serie erstellen</value>
+  </data>
+  <data name="Groups_NoOpenSeries" xml:space="preserve">
+    <value>Keine offene Serie</value>
+  </data>
+  <data name="Groups_OpenSeriesHint" xml:space="preserve">
+    <value>Erstelle eine Serie mit Zugangscode für eine Hochzeit, Veranstaltung...</value>
+  </data>
+  <data name="InviteToSeries_Title" xml:space="preserve">
+    <value>👥 Zur Serie einladen</value>
+  </data>
+  <data name="CreateSeries_DescriptionLabel" xml:space="preserve">
+    <value>Worum geht es?</value>
+  </data>
+  <data name="CreateSeries_VisibilityLabel" xml:space="preserve">
+    <value>Sichtbarkeit der Projekte</value>
+  </data>
+  <data name="CreateSeries_VisibilityHint" xml:space="preserve">
+    <value>Können andere Mitglieder vor dem Start die hinzugefügten Projekte sehen?</value>
+  </data>
+  <data name="CreateSeries_Hidden" xml:space="preserve">
+    <value>Versteckt</value>
+  </data>
+  <data name="CreateSeries_HiddenHint" xml:space="preserve">
+    <value>Überraschungseffekt beim Start</value>
+  </data>
+  <data name="CreateSeries_ChoiceRequired" xml:space="preserve">
+    <value>⚠️ Pflichtwahl vor dem Erstellen der Serie</value>
+  </data>
+  <data name="CreateSeries_TvStatsLabel" xml:space="preserve">
+    <value>Detaillierte TV-Statistiken</value>
+  </data>
+  <data name="CreateSeries_TvStatsHint" xml:space="preserve">
+    <value>Nach jedem Projekt die Verteilung der Stimmen nach Geschlecht und Altersgruppe anzeigen.</value>
+  </data>
+  <data name="CreateSeries_MembersAddHint" xml:space="preserve">
+    <value>Wenn deaktiviert, kannst nur du (der Ersteller) Projekte zur Serie hinzufügen.</value>
+  </data>
+  <data name="CreateSeries_OpenAccessHint" xml:space="preserve">
+    <value>Ein Code wird generiert, um Last-Minute-Freunde oder externe Gäste einzuladen.</value>
+  </data>
+  <data name="CreateSeries_CreateButton" xml:space="preserve">
+    <value>🚀 Serie erstellen</value>
+  </data>
+  <data name="CreateGroup_Title" xml:space="preserve">
+    <value>👥 Gruppe erstellen</value>
+  </data>
+  <data name="CreateGroup_NamePlaceholder" xml:space="preserve">
+    <value>Z. B.: Freitagabend-Party</value>
+  </data>
+  <data name="CreateGroup_CreateButton" xml:space="preserve">
+    <value>🚀 Gruppe erstellen</value>
+  </data>
+  <data name="JoinSeries_CodeHint" xml:space="preserve">
+    <value>Gib den vom Organisator geteilten Code ein</value>
+  </data>
+  <data name="SeriesDetail_Start" xml:space="preserve">
+    <value>▶ Starten</value>
+  </data>
+  <data name="SeriesDetail_EventHint" xml:space="preserve">
+    <value>Für Hochzeiten, Partys, Veranstaltungen</value>
+  </data>
+  <data name="SeriesDetail_TvModeOn" xml:space="preserve">
+    <value>📺 TV-Modus aktiviert</value>
+  </data>
+  <data name="SeriesDetail_StartSeries" xml:space="preserve">
+    <value>▶ Serie starten</value>
+  </data>
+  <data name="SeriesDetail_DisableTvMode" xml:space="preserve">
+    <value>❌ TV-Modus deaktivieren</value>
+  </data>
+  <data name="Common_Disable" xml:space="preserve">
+    <value>❌ Deaktivieren</value>
+  </data>
+  <data name="SeriesDetail_Reprepare" xml:space="preserve">
+    <value>🔄 Neu vorbereiten</value>
+  </data>
+  <data name="SeriesDetail_Moderation" xml:space="preserve">
+    <value>🛡️ Moderation</value>
+  </data>
+  <data name="SeriesDetail_ModerationHint" xml:space="preserve">
+    <value>Als Ersteller der Serie kannst du bei Bedarf die Projekte anderer Teilnehmer löschen.</value>
+  </data>
+  <data name="SeriesDetail_BeFirstToAdd" xml:space="preserve">
+    <value>Sei der Erste, der eines hinzufügt!</value>
+  </data>
+  <data name="SeriesDetail_ProjectsHeader" xml:space="preserve">
+    <value>📋 Projekte der Serie</value>
+  </data>
+  <data name="SeriesDetail_CreateEventProjectsHint" xml:space="preserve">
+    <value>Erstelle Projekte speziell für diese Veranstaltung!</value>
+  </data>
+  <data name="CreateSeriesProject_Title" xml:space="preserve">
+    <value>🎬 Projekt für Serie</value>
+  </data>
+  <data name="CreateSeriesProject_DuelHint" xml:space="preserve">
+    <value>Zwei Fotos zum Vergleichen</value>
+  </data>
+  <data name="CreateSeriesProject_AddButton" xml:space="preserve">
+    <value>✅ Zur Serie hinzufügen</value>
+  </data>
+  <data name="PhotoVote_ComingSoon" xml:space="preserve">
+    <value>Foto-Abstimmung - Bald verfügbar</value>
+  </data>
+  <data name="DuelVote_ComingSoon" xml:space="preserve">
+    <value>Duell-Abstimmung - Bald verfügbar</value>
+  </data>
+  <data name="ProjectDetail_Distribution" xml:space="preserve">
+    <value>Verteilung</value>
+  </data>
+  <data name="ProjectDetail_VotesDistribution" xml:space="preserve">
+    <value>Stimmenverteilung</value>
+  </data>
+  <data name="Friends_NoUserFound" xml:space="preserve">
+    <value>Kein Benutzer gefunden</value>
+  </data>
+</root>

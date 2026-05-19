@@ -1,0 +1,228 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="BeauOuPas.Views.Friends.FriendsPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:BeauOuPas.ViewModels.Friends"
+    xmlns:models="clr-namespace:BeauOuPas.Models"
+    xmlns:tr="clr-namespace:BeauOuPas.Extensions"
+    x:DataType="vm:FriendsViewModel"
+    Title="{tr:Translate Key=Friends_Title}"
+    BackgroundColor="{StaticResource BackgroundPage}">
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="{tr:Translate Key=Friends_Invite}"
+                     Command="{Binding InviteFriendCommand}"/>
+    </ContentPage.ToolbarItems>
+
+    <Grid RowDefinitions="Auto,*">
+
+        <!-- ─── Barre de recherche ──────────────────────────────── -->
+        <Border Grid.Row="0" BackgroundColor="White" Stroke="{StaticResource BorderLight}"
+                StrokeThickness="1" Padding="12,8" Margin="12,8,12,0"
+                StrokeShape="RoundRectangle 12">
+            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                <SearchBar Grid.Column="0"
+                           Text="{Binding SearchQuery}"
+                           Placeholder="🔍 Rechercher un utilisateur..."
+                           PlaceholderColor="{StaticResource TextDisabled}"
+                           BackgroundColor="Transparent"
+                           SearchCommand="{Binding SearchUsersCommand}"
+                           CancelButtonColor="#C2754C"/>
+                <!-- Bouton annuler recherche -->
+                <Button Grid.Column="1"
+                        Text="✕"
+                        IsVisible="{Binding IsSearchMode}"
+                        Command="{Binding ExitSearchModeCommand}"
+                        BackgroundColor="Transparent"
+                        TextColor="{StaticResource TextTertiary}"
+                        FontSize="16"
+                        WidthRequest="36" HeightRequest="36"
+                        Padding="0"/>
+            </Grid>
+        </Border>
+
+        <!-- ─── Contenu principal ───────────────────────────────── -->
+        <Grid Grid.Row="1">
+
+            <ActivityIndicator IsRunning="{Binding IsLoading}"
+                               IsVisible="{Binding IsLoading}"
+                               Color="{StaticResource Primary}"
+                               VerticalOptions="Center" HorizontalOptions="Center"/>
+
+            <!-- ── MODE RECHERCHE ── -->
+            <Grid IsVisible="{Binding IsSearchMode}">
+
+                <ActivityIndicator IsRunning="{Binding IsSearching}"
+                                   IsVisible="{Binding IsSearching}"
+                                   Color="{StaticResource Primary}"
+                                   VerticalOptions="Center" HorizontalOptions="Center"/>
+
+                <!-- Aucun résultat -->
+                <VerticalStackLayout IsVisible="{Binding NoSearchResults}"
+                                     VerticalOptions="Center" HorizontalOptions="Center"
+                                     Spacing="12" Padding="40,0">
+                    <Label Text="🔍" FontSize="48" HorizontalOptions="Center"/>
+                    <Label Text="{tr:Translate Key=Friends_NoUserFound}"
+                           FontSize="16" TextColor="{StaticResource TextTertiary}" HorizontalOptions="Center"/>
+                </VerticalStackLayout>
+
+                <!-- Résultats de recherche -->
+                <CollectionView ItemsSource="{Binding SearchResults}"
+                                IsVisible="{Binding HasSearchResults}"
+                                Margin="12,8">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="models:UserSearchResult">
+                            <Border BackgroundColor="White" StrokeShape="RoundRectangle 12"
+                                    Stroke="{StaticResource BorderLight}" StrokeThickness="1"
+                                    Margin="0,0,0,8" Padding="14">
+                                <Grid ColumnDefinitions="46,*,Auto" ColumnSpacing="12">
+
+                                    <!-- Avatar -->
+                                    <Border Grid.Column="0" BackgroundColor="{StaticResource Primary}"
+                                            StrokeShape="RoundRectangle 23"
+                                            HeightRequest="46" WidthRequest="46">
+                                        <Grid>
+                                            <Label Text="{Binding AvatarInitial}"
+                                                   TextColor="White" FontSize="18" FontAttributes="Bold"
+                                                   HorizontalOptions="Center" VerticalOptions="Center"
+                                                   IsVisible="{Binding HasAvatar, Converter={StaticResource InverseBoolConverter}}"/>
+                                            <Image Source="{Binding AvatarUrl}" Aspect="AspectFill"
+                                                   IsVisible="{Binding HasAvatar}"/>
+                                        </Grid>
+                                    </Border>
+
+                                    <!-- Nom + statut -->
+                                    <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="3">
+                                        <Label Text="{Binding Username, StringFormat='@{0}'}"
+                                               FontSize="15" FontAttributes="Bold" TextColor="{StaticResource TextPrimary}"/>
+                                        <Label Text="{Binding StatusLabel}"
+                                               FontSize="12"
+                                               TextColor="{Binding StatusColor}"
+                                               IsVisible="{Binding CanAdd, Converter={StaticResource InverseBoolConverter}}"/>
+                                    </VerticalStackLayout>
+
+                                    <!-- Actions -->
+                                    <!-- Ajouter -->
+                                    <Button Grid.Column="2"
+                                            Text="➕ Ajouter"
+                                            IsVisible="{Binding CanAdd}"
+                                            Command="{Binding Source={RelativeSource AncestorType={x:Type vm:FriendsViewModel}},
+                                                              Path=SendFriendRequestCommand}"
+                                            CommandParameter="{Binding .}"
+                                            BackgroundColor="{StaticResource Primary}" TextColor="White"
+                                            FontSize="12" HeightRequest="34"
+                                            CornerRadius="8" Padding="10,0"
+                                            VerticalOptions="Center"/>
+                                    <!-- Accepter demande reçue -->
+                                    <Button Grid.Column="2"
+                                            Text="✅ Accepter"
+                                            IsVisible="{Binding IsPendingReceived}"
+                                            Command="{Binding Source={RelativeSource AncestorType={x:Type vm:FriendsViewModel}},
+                                                              Path=AcceptFromSearchCommand}"
+                                            CommandParameter="{Binding .}"
+                                            BackgroundColor="{StaticResource Success}" TextColor="White"
+                                            FontSize="12" HeightRequest="34"
+                                            CornerRadius="8" Padding="10,0"
+                                            VerticalOptions="Center"/>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </Grid>
+
+            <!-- ── MODE LISTE D'AMIS ── -->
+            <Grid IsVisible="{Binding IsSearchMode, Converter={StaticResource InverseBoolConverter}}">
+
+                <!-- Vide -->
+                <ScrollView IsVisible="{Binding IsEmpty}">
+                    <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center"
+                                         Spacing="16" Padding="40,80,40,0">
+                        <Label Text="👥" FontSize="64" HorizontalOptions="Center"/>
+                        <Label Text="{tr:Translate Key=Friends_Empty}"
+                               FontSize="18" FontAttributes="Bold"
+                               TextColor="{StaticResource TextPrimary}" HorizontalOptions="Center"/>
+                        <Label Text="{tr:Translate Key=Friends_EmptyHint}"
+                               FontSize="14" TextColor="{StaticResource TextTertiary}"
+                               HorizontalOptions="Center" HorizontalTextAlignment="Center"/>
+                        <Button Text="{tr:Translate Key=Friends_InviteButton}"
+                                Command="{Binding InviteFriendCommand}"
+                                BackgroundColor="{StaticResource Primary}" TextColor="White"
+                                CornerRadius="10" HeightRequest="48" Margin="0,8,0,0"/>
+                    </VerticalStackLayout>
+                </ScrollView>
+
+                <!-- Liste amis -->
+                <CollectionView ItemsSource="{Binding Friends}" Margin="12,8"
+                                IsVisible="{Binding IsEmpty, Converter={StaticResource InverseBoolConverter}}">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="models:FriendItem">
+                            <Border BackgroundColor="White" StrokeShape="RoundRectangle 12"
+                                    Stroke="{StaticResource BorderLight}" StrokeThickness="1"
+                                    Margin="0,0,0,10" Padding="14">
+                                <Grid ColumnDefinitions="50,*,Auto" ColumnSpacing="12">
+
+                                    <!-- Avatar + statut en ligne -->
+                                    <Grid Grid.Column="0" HeightRequest="46" WidthRequest="46">
+                                        <Border BackgroundColor="{StaticResource Primary}"
+                                                StrokeShape="RoundRectangle 25"
+                                                HeightRequest="46" WidthRequest="46">
+                                            <Grid>
+                                                <Label Text="{Binding AvatarInitial}"
+                                                       TextColor="White" FontSize="18" FontAttributes="Bold"
+                                                       HorizontalOptions="Center" VerticalOptions="Center"
+                                                       IsVisible="{Binding HasAvatar, Converter={StaticResource InverseBoolConverter}}"/>
+                                                <Image Source="{Binding AvatarUrl}" Aspect="AspectFill"
+                                                       IsVisible="{Binding HasAvatar}"/>
+                                            </Grid>
+                                        </Border>
+                                        <Border StrokeShape="RoundRectangle 6"
+                                                HeightRequest="12" WidthRequest="12"
+                                                BackgroundColor="{Binding OnlineColor}"
+                                                Stroke="White" StrokeThickness="2"
+                                                HorizontalOptions="End" VerticalOptions="End"
+                                                IsVisible="{Binding IsAccepted}"/>
+                                    </Grid>
+
+                                    <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="3">
+                                        <Label Text="{Binding Username, StringFormat='@{0}'}"
+                                               FontSize="15" FontAttributes="Bold" TextColor="{StaticResource TextPrimary}"/>
+                                        <Label Text="{Binding OnlineStatusText}"
+                                               FontSize="11" TextColor="{Binding OnlineColor}"
+                                               IsVisible="{Binding IsAccepted}"/>
+                                        <Label Text="{tr:Translate Key=Friends_PendingReceived}"
+                                               IsVisible="{Binding CanAccept}"
+                                               FontSize="12" TextColor="{StaticResource Primary}"/>
+                                        <Label Text="{tr:Translate Key=Friends_PendingSent}"
+                                               IsVisible="{Binding IsPendingSent}"
+                                               FontSize="12" TextColor="{StaticResource TextTertiary}"/>
+                                    </VerticalStackLayout>
+
+                                    <Button Grid.Column="2"
+                                            Text="{tr:Translate Key=Friends_Accept}"
+                                            IsVisible="{Binding CanAccept}"
+                                            Command="{Binding Source={RelativeSource AncestorType={x:Type vm:FriendsViewModel}},
+                                                              Path=AcceptFriendCommand}"
+                                            CommandParameter="{Binding .}"
+                                            BackgroundColor="{StaticResource Primary}" TextColor="White"
+                                            FontSize="12" HeightRequest="34"
+                                            CornerRadius="8" Padding="12,0"
+                                            VerticalOptions="Center"/>
+                                </Grid>
+
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:FriendsViewModel}},
+                                                          Path=OpenFriendProfileCommand}"
+                                        CommandParameter="{Binding .}"/>
+                                </Border.GestureRecognizers>
+                            </Border>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </Grid>
+
+        </Grid>
+    </Grid>
+</ContentPage>

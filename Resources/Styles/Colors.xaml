@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<?xaml-comp compile="true" ?>
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+
+    <!--
+    ═════════════════════════════════════════════════════════════════════
+      BEAUOUPAS — CHARTE VISUELLE v2 (Mai 2026)
+      Direction artistique : "Parisien moderne" (variante Sézane)
+      
+      RÈGLE D'OR : pour rebrander toute l'app, modifier UNIQUEMENT
+      les variables BRAND ci-dessous. Tout le reste suivra.
+    ═════════════════════════════════════════════════════════════════════
+    -->
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!--  BRAND COLORS — Les 4 valeurs à modifier pour rebrand           -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+
+    <!-- Terracotta : couleur principale, boutons d'action, highlights -->
+    <Color x:Key="Primary">#C2754C</Color>
+    <Color x:Key="PrimaryDark">#A35C36</Color>
+    <Color x:Key="PrimaryLight">#D88A66</Color>
+
+    <!-- Vert sauge : accent, secondaire, cards thématiques -->
+    <Color x:Key="Accent">#6B7F5C</Color>
+    <Color x:Key="AccentDark">#566649</Color>
+    <Color x:Key="AccentLight">#8A9C7C</Color>
+
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!--  NEUTRALS — Fonds, surfaces, bordures, texte                    -->
+    <!--  Tons chauds (crème) pour cohérence avec brand chaude           -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+
+    <!-- Fonds pages -->
+    <Color x:Key="BackgroundPage">#F4EFE6</Color>           <!-- Crème principal -->
+    <Color x:Key="BackgroundPageAlt">#EFEAE0</Color>        <!-- Crème variant (sections) -->
+
+    <!-- Surfaces cartes / inputs -->
+    <Color x:Key="SurfaceCard">#FAF6EF</Color>              <!-- Card sur fond crème -->
+    <Color x:Key="SurfaceCardAlt">#FFFFFF</Color>           <!-- Card emphase (modal, popup) -->
+    <Color x:Key="SurfaceMuted">#E5DCC9</Color>             <!-- Surface effacée (placeholder, disabled bg) -->
+
+    <!-- Bordures -->
+    <Color x:Key="BorderLight">#E5DCC9</Color>              <!-- Bordure subtile -->
+    <Color x:Key="BorderMedium">#D4C7B5</Color>             <!-- Bordure visible (inputs) -->
+    <Color x:Key="BorderStrong">#B8A589</Color>             <!-- Bordure focus -->
+
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!--  TEXT — Hiérarchie typographique                                -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+
+    <Color x:Key="TextPrimary">#3D2817</Color>              <!-- Texte principal (chocolat foncé) -->
+    <Color x:Key="TextSecondary">#6B5234</Color>            <!-- Texte secondaire -->
+    <Color x:Key="TextTertiary">#8A6F4A</Color>             <!-- Placeholder, hints, captions -->
+    <Color x:Key="TextOnPrimary">#FFFFFF</Color>            <!-- Texte sur bouton Primary -->
+    <Color x:Key="TextOnAccent">#FFFFFF</Color>             <!-- Texte sur Accent -->
+    <Color x:Key="TextDisabled">#B8A589</Color>             <!-- Texte désactivé -->
+
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!--  STATES — Feedback utilisateur                                  -->
+    <!--  Calibrés pour s'harmoniser avec terracotta (pas trop vifs)     -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+
+    <Color x:Key="Success">#4A7A52</Color>                  <!-- Vert validation (harmonisé sauge) -->
+    <Color x:Key="SuccessLight">#E8F0E5</Color>             <!-- Fond success card -->
+
+    <Color x:Key="Error">#B5482F</Color>                    <!-- Rouge erreur (terreux, pas vif) -->
+    <Color x:Key="ErrorLight">#F5E3DC</Color>               <!-- Fond error card -->
+
+    <Color x:Key="Warning">#C9943E</Color>                  <!-- Ambre attention -->
+    <Color x:Key="WarningLight">#F5EBD5</Color>             <!-- Fond warning card -->
+
+    <Color x:Key="Info">#5A7A8C</Color>                     <!-- Bleu info (gris-bleu doux) -->
+    <Color x:Key="InfoLight">#E0E8EC</Color>                <!-- Fond info card -->
+
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!--  SELECTION — Pour les toggles, choix multiples                  -->
+    <!--  Utilisés dans ProfileSettingsViewModel                         -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+
+    <Color x:Key="SelectionActive">#C2754C</Color>          <!-- = Primary, bouton choisi -->
+    <Color x:Key="SelectionInactive">#FAF6EF</Color>        <!-- = SurfaceCard, bouton non choisi -->
+    <Color x:Key="SelectionActiveText">#FFFFFF</Color>      <!-- Texte sur bouton choisi -->
+    <Color x:Key="SelectionInactiveText">#3D2817</Color>    <!-- Texte sur bouton non choisi -->
+
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!--  DARK MODE — Adaptation pour mode sombre                        -->
+    <!--  "Crème sombre" plutôt qu'un vrai noir froid                    -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+
+    <Color x:Key="DarkBackground">#1A1612</Color>           <!-- Brun très foncé -->
+    <Color x:Key="DarkSurface">#252019</Color>              <!-- Surface dark -->
+    <Color x:Key="DarkSurfaceAlt">#2F2820</Color>           <!-- Surface variante -->
+    <Color x:Key="DarkTextPrimary">#F4EFE6</Color>          <!-- Crème sur dark -->
+    <Color x:Key="DarkTextSecondary">#C9B89A</Color>        <!-- Texte secondaire dark -->
+    <Color x:Key="DarkBorder">#3F362A</Color>               <!-- Bordure dark -->
+
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!--  LEGACY — Conservation pour compat avec ancien code             -->
+    <!--  Ces variables existaient déjà, on les garde pour ne rien casser-->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+
+    <Color x:Key="White">White</Color>
+    <Color x:Key="Black">Black</Color>
+    <Color x:Key="VoteBackground">#000000</Color>
+
+    <Color x:Key="PrimaryDarkText">#3D2817</Color>          <!-- Refait pour cohérence -->
+    <Color x:Key="Secondary">#E5DCC9</Color>                <!-- Refait : surface muted -->
+    <Color x:Key="SecondaryDarkText">#8A9C7C</Color>        <!-- Refait : accent light -->
+    <Color x:Key="Tertiary">#6B7F5C</Color>                 <!-- Refait : = Accent -->
+    <Color x:Key="Magenta">#C2754C</Color>                  <!-- Refait : = Primary -->
+    <Color x:Key="MidnightBlue">#3D2817</Color>             <!-- Refait : = TextPrimary -->
+    <Color x:Key="OffBlack">#1A1612</Color>                 <!-- Refait : = DarkBackground -->
+
+    <!-- Échelle de gris (gardée pour compat, ajustée vers chaud léger) -->
+    <Color x:Key="Gray100">#F0EBE2</Color>
+    <Color x:Key="Gray200">#D4C7B5</Color>
+    <Color x:Key="Gray300">#B8A589</Color>
+    <Color x:Key="Gray400">#8A6F4A</Color>
+    <Color x:Key="Gray500">#6B5234</Color>
+    <Color x:Key="Gray600">#4F3D26</Color>
+    <Color x:Key="Gray900">#3D2817</Color>
+    <Color x:Key="Gray950">#252019</Color>
+
+</ResourceDictionary>

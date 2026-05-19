@@ -1,0 +1,364 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="BeauOuPas.Views.Home.HomePage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:BeauOuPas.ViewModels.Home"
+    xmlns:tr="clr-namespace:BeauOuPas.Extensions"
+    x:DataType="vm:HomeViewModel"
+    Title="{tr:Translate Key=Home_Title}"
+    BackgroundColor="{StaticResource BackgroundPage}">
+
+    <!-- ⚡ Pastille crédits dans la barre de titre Shell (en haut à droite) -->
+    <Shell.TitleView>
+        <Grid ColumnDefinitions="*,Auto" VerticalOptions="Center">
+            <Label Grid.Column="0"
+                   Text="{tr:Translate Key=Home_Title}"
+                   FontSize="18"
+                   FontAttributes="Bold"
+                   TextColor="{StaticResource TextPrimary}"
+                   VerticalOptions="Center"/>
+            <!-- Pastille cliquable → CreditsPage -->
+            <Border Grid.Column="1"
+                    BackgroundColor="{StaticResource SurfaceMuted}"
+                    StrokeShape="RoundRectangle 999"
+                    Stroke="Transparent"
+                    Padding="10,5"
+                    VerticalOptions="Center"
+                    Margin="0,0,12,0">
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding GoToCreditsCommand}"/>
+                </Border.GestureRecognizers>
+                <HorizontalStackLayout Spacing="4" VerticalOptions="Center">
+                    <Label Text="🪙"
+                           FontSize="14"
+                           VerticalOptions="Center"/>
+                    <Label Text="{Binding Credits}"
+                           FontSize="13"
+                           FontAttributes="Bold"
+                           TextColor="{StaticResource Primary}"
+                           VerticalOptions="Center"/>
+                </HorizontalStackLayout>
+            </Border>
+        </Grid>
+    </Shell.TitleView>
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20,12,20,24" Spacing="0">
+
+            <!-- ═══ ENTÊTE : Bonjour ═══════════════════════════════ -->
+            <VerticalStackLayout HorizontalOptions="Center" Margin="0,8,0,18">
+                <Label Text="{tr:Translate Key=Home_Hello}"
+                       FontSize="13"
+                       TextColor="{StaticResource TextTertiary}"
+                       HorizontalOptions="Center"/>
+                <Label Text="{Binding Username, StringFormat='@{0}'}"
+                       FontSize="22"
+                       FontAttributes="Bold"
+                       TextColor="{StaticResource Primary}"
+                       HorizontalOptions="Center"/>
+            </VerticalStackLayout>
+
+            <!-- ═══ CARTE CODE ═════════════════════════════════════ -->
+            <Border BackgroundColor="{StaticResource Primary}"
+                    StrokeShape="RoundRectangle 18"
+                    Stroke="Transparent"
+                    Padding="16"
+                    Margin="0,0,0,18">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="{tr:Translate Key=Home_JoinSection}"
+                           FontSize="11"
+                           FontAttributes="Bold"
+                           TextColor="{StaticResource TextOnPrimary}"
+                           Opacity="0.9"
+                           CharacterSpacing="0.5"/>
+                    <Border BackgroundColor="{StaticResource SurfaceCardAlt}"
+                            StrokeShape="RoundRectangle 12"
+                            Stroke="Transparent"
+                            Padding="14,10">
+                        <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10">
+                            <Label Grid.Column="0"
+                                   Text="🔑"
+                                   FontSize="18"
+                                   VerticalOptions="Center"/>
+                            <Entry Grid.Column="1"
+                                   Placeholder="{tr:Translate Key=Home_JoinPlaceholder}"
+                                   Text="{Binding JoinCode, Mode=TwoWay}"
+                                   FontSize="14"
+                                   TextColor="{StaticResource TextPrimary}"
+                                   PlaceholderColor="{StaticResource TextDisabled}"
+                                   BackgroundColor="Transparent"
+                                   MaxLength="6"
+                                   Keyboard="Default"
+                                   ReturnCommand="{Binding JoinByCodeCommand}"/>
+                            <Border Grid.Column="2"
+                                    BackgroundColor="{StaticResource Primary}"
+                                    StrokeShape="RoundRectangle 8"
+                                    Stroke="Transparent"
+                                    Padding="14,6"
+                                    VerticalOptions="Center">
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding JoinByCodeCommand}"/>
+                                </Border.GestureRecognizers>
+                                <Label Text="{tr:Translate Key=Home_JoinButton}"
+                                       FontSize="13"
+                                       FontAttributes="Bold"
+                                       TextColor="{StaticResource TextOnPrimary}"
+                                       VerticalOptions="Center"/>
+                            </Border>
+                        </Grid>
+                    </Border>
+                    <Label Text="{Binding JoinError}"
+                           FontSize="12"
+                           TextColor="{StaticResource TextOnPrimary}"
+                           IsVisible="{Binding HasJoinError}"
+                           Margin="4,4,0,0"/>
+                    <ActivityIndicator IsRunning="{Binding IsJoining}"
+                                       IsVisible="{Binding IsJoining}"
+                                       Color="{StaticResource TextOnPrimary}"
+                                       HeightRequest="20"/>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- ═══ GRANDE CARTE : VOTER (terracotta) ═════════════════════ -->
+            <Border BackgroundColor="{StaticResource Primary}"
+                    StrokeShape="RoundRectangle 20"
+                    Stroke="Transparent"
+                    Padding="22"
+                    MinimumHeightRequest="130"
+                    Margin="0,0,0,12">
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding GoToVoteCommand}"/>
+                </Border.GestureRecognizers>
+                <Grid>
+                    <Label Text="🗳️"
+                           FontSize="110"
+                           Opacity="0.18"
+                           HorizontalOptions="End"
+                           VerticalOptions="End"
+                           Margin="0,0,-10,-20"
+                           InputTransparent="True"/>
+                    <VerticalStackLayout Spacing="6">
+                        <Label Text="{tr:Translate Key=Home_VoteCardTitle}"
+                               FontSize="22"
+                               FontAttributes="Bold"
+                               TextColor="{StaticResource TextOnPrimary}"/>
+                        <Label Text="{tr:Translate Key=Home_VoteCardDesc}"
+                               FontSize="12"
+                               TextColor="{StaticResource TextOnPrimary}"
+                               Opacity="0.9"/>
+                        <HorizontalStackLayout Spacing="8" Margin="0,8,0,0">
+                            <Label Text="{tr:Translate Key=Home_VoteCardAction}"
+                                   FontSize="13"
+                                   FontAttributes="Bold"
+                                   TextColor="{StaticResource TextOnPrimary}"
+                                   VerticalOptions="Center"/>
+                            <Label Text="→"
+                                   FontSize="14"
+                                   FontAttributes="Bold"
+                                   TextColor="{StaticResource TextOnPrimary}"
+                                   VerticalOptions="Center"/>
+                        </HorizontalStackLayout>
+                    </VerticalStackLayout>
+                </Grid>
+            </Border>
+
+            <!-- ═══ GRANDE CARTE : CRÉER QUIZ OU PARTIE (vert sauge) ═══════════
+                 ⚡ MODIFIÉ : ne mène plus à JoinSeriesPage (doublon avec le
+                 champ rose au-dessus). Mène désormais à CreateContextPage
+                 qui propose Sans groupe / Nouveau groupe / Groupe existant. -->
+            <Border BackgroundColor="{StaticResource Accent}"
+                    StrokeShape="RoundRectangle 20"
+                    Stroke="Transparent"
+                    Padding="22"
+                    MinimumHeightRequest="130"
+                    Margin="0,0,0,18">
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding GoToCreateCommand}"/>
+                </Border.GestureRecognizers>
+                <Grid>
+                    <Label Text="✨"
+                           FontSize="110"
+                           Opacity="0.18"
+                           HorizontalOptions="End"
+                           VerticalOptions="End"
+                           Margin="0,0,-10,-20"
+                           InputTransparent="True"/>
+                    <VerticalStackLayout Spacing="6">
+                        <Label Text="{tr:Translate Key=Home_CreateCardTitle}"
+                               FontSize="22"
+                               FontAttributes="Bold"
+                               TextColor="{StaticResource TextOnAccent}"/>
+                        <Label Text="{tr:Translate Key=Home_CreateCardDesc}"
+                               FontSize="12"
+                               TextColor="{StaticResource TextOnAccent}"
+                               Opacity="0.9"/>
+                        <HorizontalStackLayout Spacing="8" Margin="0,8,0,0">
+                            <Label Text="{tr:Translate Key=Home_CreateCardAction}"
+                                   FontSize="13"
+                                   FontAttributes="Bold"
+                                   TextColor="{StaticResource TextOnAccent}"
+                                   VerticalOptions="Center"/>
+                            <Label Text="→"
+                                   FontSize="14"
+                                   FontAttributes="Bold"
+                                   TextColor="{StaticResource TextOnAccent}"
+                                   VerticalOptions="Center"/>
+                        </HorizontalStackLayout>
+                    </VerticalStackLayout>
+                </Grid>
+            </Border>
+
+            <!-- ═══ TITRE SECTION : Plus d'options ══════════════════ -->
+            <Label Text="{tr:Translate Key=Home_MoreOptions}"
+                   FontSize="11"
+                   FontAttributes="Bold"
+                   TextColor="{StaticResource TextTertiary}"
+                   CharacterSpacing="0.5"
+                   Margin="4,4,0,10"/>
+
+            <!-- ═══ MINI-CARDS 2x2 ══════════════════════════════════ -->
+            <Grid ColumnDefinitions="*,*" RowDefinitions="*,*"
+                  ColumnSpacing="10" RowSpacing="10">
+
+                <!-- Mes groupes -->
+                <Border Grid.Column="0" Grid.Row="0"
+                        BackgroundColor="{StaticResource SurfaceCardAlt}"
+                        StrokeShape="RoundRectangle 14"
+                        Stroke="{StaticResource BorderLight}"
+                        StrokeThickness="1"
+                        Padding="14">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding GoToGroupsCommand}"/>
+                    </Border.GestureRecognizers>
+                    <VerticalStackLayout HorizontalOptions="Center" Spacing="2">
+                        <Label Text="👥" FontSize="24" HorizontalOptions="Center"/>
+                        <Label Text="{tr:Translate Key=Home_MyGroups}"
+                               FontSize="13"
+                               FontAttributes="Bold"
+                               TextColor="{StaticResource TextPrimary}"
+                               HorizontalOptions="Center"
+                               Margin="0,4,0,0"/>
+                        <Label Text="{Binding GroupsLabel}"
+                               FontSize="11"
+                               TextColor="{StaticResource TextTertiary}"
+                               HorizontalOptions="Center"/>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- ═══════════════════════════════════════════════════════
+                     Invitations reçues (⚡ ex "Mes séries", renommé+badge)
+                     ═══════════════════════════════════════════════════════
+                     Pointe vers MyInvitationsPage. Le badge en haut
+                     droite de l'icône 📩 affiche le nombre d'invitations
+                     en attente (caché si 0, "99+" si > 99). Mis à jour à
+                     chaque OnAppearing via HomeViewModel.LoadAsync. -->
+                <Border Grid.Column="1" Grid.Row="0"
+                        BackgroundColor="{StaticResource SurfaceCardAlt}"
+                        StrokeShape="RoundRectangle 14"
+                        Stroke="{StaticResource BorderLight}"
+                        StrokeThickness="1"
+                        Padding="14">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding GoToInvitationsCommand}"/>
+                    </Border.GestureRecognizers>
+                    <VerticalStackLayout HorizontalOptions="Center" Spacing="2">
+
+                        <!-- Icône avec badge superposé -->
+                        <Grid HorizontalOptions="Center"
+                              WidthRequest="48" HeightRequest="32">
+
+                            <!-- Icône principale (centrée) -->
+                            <Label Text="📩"
+                                   FontSize="24"
+                                   HorizontalOptions="Center"
+                                   VerticalOptions="Center"/>
+
+                            <!-- Badge — visible si > 0 -->
+                            <Border BackgroundColor="{StaticResource Primary}"
+                                    StrokeShape="RoundRectangle 999"
+                                    Stroke="{StaticResource SurfaceCardAlt}"
+                                    StrokeThickness="1.5"
+                                    Padding="5,1"
+                                    MinimumWidthRequest="18"
+                                    MinimumHeightRequest="18"
+                                    HorizontalOptions="End"
+                                    VerticalOptions="Start"
+                                    Margin="0,-2,-2,0"
+                                    IsVisible="{Binding HasPendingInvitations}">
+                                <Label Text="{Binding PendingInvitationsBadge}"
+                                       FontSize="10"
+                                       FontAttributes="Bold"
+                                       TextColor="{StaticResource TextOnPrimary}"
+                                       HorizontalOptions="Center"
+                                       VerticalOptions="Center"/>
+                            </Border>
+                        </Grid>
+
+                        <Label Text="{tr:Translate Key=Home_MyInvitations}"
+                               FontSize="13"
+                               FontAttributes="Bold"
+                               TextColor="{StaticResource TextPrimary}"
+                               HorizontalOptions="Center"
+                               Margin="0,4,0,0"/>
+                        <Label Text="{Binding PendingInvitationsLabel}"
+                               FontSize="11"
+                               TextColor="{StaticResource TextTertiary}"
+                               HorizontalOptions="Center"/>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Mes projets -->
+                <Border Grid.Column="0" Grid.Row="1"
+                        BackgroundColor="{StaticResource SurfaceCardAlt}"
+                        StrokeShape="RoundRectangle 14"
+                        Stroke="{StaticResource BorderLight}"
+                        StrokeThickness="1"
+                        Padding="14">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding GoToMyProjectsCommand}"/>
+                    </Border.GestureRecognizers>
+                    <VerticalStackLayout HorizontalOptions="Center" Spacing="2">
+                        <Label Text="📸" FontSize="24" HorizontalOptions="Center"/>
+                        <Label Text="{tr:Translate Key=Home_MyProjects}"
+                               FontSize="13"
+                               FontAttributes="Bold"
+                               TextColor="{StaticResource TextPrimary}"
+                               HorizontalOptions="Center"
+                               Margin="0,4,0,0"/>
+                        <Label Text="{Binding ProjectsLabel}"
+                               FontSize="11"
+                               TextColor="{StaticResource TextTertiary}"
+                               HorizontalOptions="Center"/>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Mes crédits -->
+                <Border Grid.Column="1" Grid.Row="1"
+                        BackgroundColor="{StaticResource SurfaceCardAlt}"
+                        StrokeShape="RoundRectangle 14"
+                        Stroke="{StaticResource BorderLight}"
+                        StrokeThickness="1"
+                        Padding="14">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding GoToCreditsCommand}"/>
+                    </Border.GestureRecognizers>
+                    <VerticalStackLayout HorizontalOptions="Center" Spacing="2">
+                        <Label Text="🪙" FontSize="24" HorizontalOptions="Center"/>
+                        <Label Text="{tr:Translate Key=Home_MyCredits}"
+                               FontSize="13"
+                               FontAttributes="Bold"
+                               TextColor="{StaticResource TextPrimary}"
+                               HorizontalOptions="Center"
+                               Margin="0,4,0,0"/>
+                        <Label Text="{Binding CreditsLabel}"
+                               FontSize="11"
+                               TextColor="{StaticResource TextTertiary}"
+                               HorizontalOptions="Center"/>
+                    </VerticalStackLayout>
+                </Border>
+            </Grid>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

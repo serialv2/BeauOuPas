@@ -1,0 +1,33 @@
+# Build outputs
+bin/
+obj/
+*.user
+.vs/
+
+# SECRETS — NE JAMAIS VERSIONNER
+*.keystore
+*.jks
+signing.props
+sign_apk.bat
+**/google-services.json
+**/GoogleService-Info.plist
+
+# Backups / archives (Git EST la sauvegarde)
+*.zip
+*.Backup.tmp
+*.csproj.Backup.tmp
+* - Copie.csproj
+* - Backup.csproj.user
+
+# Logs
+*.log
+hs_err_pid*.log
+replay_pid*.log
+
+# Fichiers d'audit / listing temporaires
+audit-cs.txt
+maui-files.txt
+structure.txt
+
+# Mac / OS
+.DS_Store

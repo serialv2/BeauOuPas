@@ -1,0 +1,356 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="BeauOuPas.Views.Groups.SeriesVotePage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:BeauOuPas.ViewModels.Groups"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+        xmlns:tr="clr-namespace:BeauOuPas.Extensions"
+x:DataType="vm:SeriesVoteViewModel"
+    Title="{Binding SeriesTitle}"
+    BackgroundColor="#1A1A2E"
+   Shell.NavBarIsVisible="False"
+    Shell.TabBarIsVisible="False">
+
+    <Grid>
+
+        <!-- ═══ CAMERA INVISIBLE pour capture selfie auto ═══ -->
+        <toolkit:CameraView x:Name="HiddenCamera"
+                            WidthRequest="4" HeightRequest="4"
+                            Opacity="0.01"
+                            InputTransparent="True"
+                            IsVisible="True"
+                            HorizontalOptions="Start"
+                            VerticalOptions="Start"
+                            ZIndex="-1"/>
+
+        <!-- ═══ LOADING ═══ -->
+        <VerticalStackLayout IsVisible="{Binding IsLoading}"
+                             VerticalOptions="Center" HorizontalOptions="Center" Spacing="16">
+            <ActivityIndicator IsRunning="True" Color="{StaticResource Primary}" WidthRequest="50" HeightRequest="50"/>
+            <Label Text="{tr:Translate Key=SeriesVote_Loading}" FontSize="16" TextColor="White"
+                   HorizontalOptions="Center"/>
+        </VerticalStackLayout>
+
+        <!-- ═══ EN ATTENTE DE LA TV ═══ -->
+        <!-- ⚡ NOUVEAU : affiché tant que started_at n'a pas été reçu de la TV.
+             - Au démarrage (TV pas encore commencé) : "Démarrage imminent..."
+             - Après vote, en attendant que la TV avance au projet suivant. -->
+        <VerticalStackLayout IsVisible="{Binding IsWaitingForTv}"
+                             VerticalOptions="Center" HorizontalOptions="Center"
+                             Spacing="20" Padding="40">
+            <Label Text="📺" FontSize="80" HorizontalOptions="Center"/>
+            <Label Text="En attente de la TV..."
+                   FontSize="24" FontAttributes="Bold"
+                   TextColor="White" HorizontalOptions="Center"/>
+            <Label Text="{tr:Translate Key=SeriesVote_AnimatorWaiting}"
+                   FontSize="14" TextColor="{StaticResource TextTertiary}"
+                   HorizontalOptions="Center"
+                   HorizontalTextAlignment="Center"/>
+            <ActivityIndicator IsRunning="True" Color="{StaticResource Primary}"
+                               WidthRequest="32" HeightRequest="32"
+                               Margin="0,10,0,0"/>
+        </VerticalStackLayout>
+
+        <!-- ═══ EN PAUSE ═══ -->
+        <!-- ⚡ NOUVEAU : overlay quand l'animateur a mis en pause -->
+        <Grid IsVisible="{Binding IsPaused}"
+              BackgroundColor="#DD000000"
+              ZIndex="100">
+            <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center" Spacing="16">
+                <Label Text="⏸️" FontSize="80" HorizontalOptions="Center"/>
+                <Label Text="En pause"
+                       FontSize="28" FontAttributes="Bold"
+                       TextColor="White" HorizontalOptions="Center"/>
+                <Label Text="L'animateur a mis la session en pause"
+                       FontSize="14" TextColor="{StaticResource TextDisabled}"
+                       HorizontalOptions="Center"/>
+            </VerticalStackLayout>
+        </Grid>
+
+        <!-- ═══ VOTE EN COURS ═══ -->
+        <Grid IsVisible="{Binding IsVoting}" RowDefinitions="Auto,*,Auto,Auto">
+
+            <!-- Header -->
+            <!-- Header -->
+            <Grid Grid.Row="0" ColumnDefinitions="*,Auto,*" Padding="16,50,16,12">
+                <Label Grid.Column="0"
+                       Text="{Binding ProjectIndexLabel}"
+                       FontSize="14" TextColor="{StaticResource TextTertiary}" VerticalOptions="Center"/>
+
+                <!-- Badge "Voté" affiché uniquement après avoir voté -->
+                <Border Grid.Column="1"
+                        IsVisible="{Binding HasVoted}"
+                        BackgroundColor="{StaticResource Primary}"
+                        StrokeShape="RoundRectangle 40"
+                        Stroke="Transparent"
+                        Padding="20,12">
+                    <Label Text="{tr:Translate Key=SeriesVote_Voted}"
+                           FontSize="16" FontAttributes="Bold"
+                           TextColor="White"
+                           HorizontalOptions="Center"
+                           VerticalOptions="Center"/>
+                </Border>
+
+                <Label Grid.Column="2"
+                       Text="{Binding VoteProgress}"
+                       FontSize="13" TextColor="{StaticResource Primary}"
+                       HorizontalOptions="End" VerticalOptions="Center"/>
+            </Grid>
+
+            <!-- Titre projet -->
+            <Label Grid.Row="1"
+                   Text="{Binding CurrentProjectTitle}"
+                   FontSize="22" FontAttributes="Bold"
+                   TextColor="White"
+                   HorizontalOptions="Center"
+                   HorizontalTextAlignment="Center"
+                   Margin="20,0"
+                   VerticalOptions="Start"/>
+
+            <!-- Contenu selon type -->
+            <Grid Grid.Row="2" Margin="0,10">
+
+                <Grid IsVisible="{Binding IsPhotoType}">
+                    <Image Source="{Binding PhotoUrl}"
+                           Aspect="AspectFit"
+                           HeightRequest="320"
+                           HorizontalOptions="Center"/>
+                </Grid>
+
+                <Grid IsVisible="{Binding IsDuelType}"
+                      ColumnDefinitions="*,*" ColumnSpacing="4" Margin="8,0">
+                    <Border Grid.Column="0" StrokeShape="RoundRectangle 16"
+                            Stroke="Transparent" HeightRequest="300">
+                        <Image Source="{Binding PhotoLeftUrl}" Aspect="AspectFill"/>
+                    </Border>
+                    <Border Grid.Column="1" StrokeShape="RoundRectangle 16"
+                            Stroke="Transparent" HeightRequest="300">
+                        <Image Source="{Binding PhotoRightUrl}" Aspect="AspectFill"/>
+                    </Border>
+                </Grid>
+
+                <VerticalStackLayout IsVisible="{Binding IsPollType}"
+                                     Spacing="10" Padding="20,0">
+                    <CollectionView ItemsSource="{Binding PollOptions}" SelectionMode="None">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="vm:PollOptionItem">
+                                <Border BackgroundColor="#2A2A3E"
+                                        StrokeShape="RoundRectangle 14"
+                                        Stroke="#444466"
+                                        StrokeThickness="1"
+                                        Padding="20,16"
+                                        Margin="0,0,0,8">
+                                    <Border.GestureRecognizers>
+                                        <TapGestureRecognizer
+                                            Command="{Binding Source={RelativeSource AncestorType={x:Type vm:SeriesVoteViewModel}}, Path=VoteCommand}"
+                                            CommandParameter="{Binding Id}"/>
+                                    </Border.GestureRecognizers>
+                                    <Label Text="{Binding Text}"
+                                           FontSize="16" TextColor="White"
+                                           HorizontalOptions="Center"/>
+                                </Border>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </VerticalStackLayout>
+            </Grid>
+
+            <!-- Boutons vote -->
+            <Grid Grid.Row="3" Margin="20,16,20,40">
+
+                <Grid IsVisible="{Binding IsPhotoType}"
+                      ColumnDefinitions="*,*,*" ColumnSpacing="12">
+                    <Border Grid.Column="0"
+                            BackgroundColor="#2A2A3E"
+                            StrokeShape="RoundRectangle 20"
+                            Stroke="#444444"
+                            Padding="0,20">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding VoteCommand}" CommandParameter="dislike"/>
+                        </Border.GestureRecognizers>
+                        <Label Text="👎" FontSize="32" HorizontalOptions="Center"/>
+                    </Border>
+                    <Border Grid.Column="1"
+                            BackgroundColor="#2A2A3E"
+                            StrokeShape="RoundRectangle 20"
+                            Stroke="#444444"
+                            Padding="0,20">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding VoteCommand}" CommandParameter="meh"/>
+                        </Border.GestureRecognizers>
+                        <Label Text="😐" FontSize="32" HorizontalOptions="Center"/>
+                    </Border>
+                    <Border Grid.Column="2"
+                            BackgroundColor="{StaticResource Primary}"
+                            StrokeShape="RoundRectangle 20"
+                            Stroke="Transparent"
+                            Padding="0,20">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding VoteCommand}" CommandParameter="like"/>
+                        </Border.GestureRecognizers>
+                        <Label Text="❤️" FontSize="32" HorizontalOptions="Center"/>
+                    </Border>
+                </Grid>
+
+                <Grid IsVisible="{Binding IsDuelType}"
+                      ColumnDefinitions="*,*" ColumnSpacing="12">
+                    <Border Grid.Column="0"
+                            BackgroundColor="{StaticResource Primary}"
+                            StrokeShape="RoundRectangle 20"
+                            Stroke="Transparent"
+                            Padding="0,20">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding VoteCommand}" CommandParameter="A"/>
+                        </Border.GestureRecognizers>
+                        <Label Text="A" FontSize="28" FontAttributes="Bold"
+                               TextColor="White" HorizontalOptions="Center"/>
+                    </Border>
+                    <Border Grid.Column="1"
+                            BackgroundColor="{StaticResource Accent}"
+                            StrokeShape="RoundRectangle 20"
+                            Stroke="Transparent"
+                            Padding="0,20">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding VoteCommand}" CommandParameter="B"/>
+                        </Border.GestureRecognizers>
+                        <Label Text="B" FontSize="28" FontAttributes="Bold"
+                               TextColor="White" HorizontalOptions="Center"/>
+                    </Border>
+                </Grid>
+
+                <Border IsVisible="{Binding HasVoted}"
+                        BackgroundColor="#2A2A3E"
+                        StrokeShape="RoundRectangle 14"
+                        Stroke="{StaticResource Primary}"
+                        StrokeThickness="1"
+                        Padding="20,16">
+                    <Label Text="{tr:Translate Key=SeriesVote_VoteRecorded}"
+                           FontSize="16" FontAttributes="Bold"
+                           TextColor="{StaticResource Primary}" HorizontalOptions="Center"/>
+                </Border>
+            </Grid>
+        </Grid>
+
+        <!-- ═══ OVERLAY "SELFIE EN COURS" (pendant la capture après vote) ═══ -->
+        <Grid IsVisible="{Binding IsSelfieCapturing}"
+              BackgroundColor="#CC000000">
+            <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center" Spacing="16">
+                <Label Text="📸"
+                       FontSize="80"
+                       HorizontalOptions="Center"/>
+                <Label Text="Selfie en cours..."
+                       FontSize="22" FontAttributes="Bold"
+                       TextColor="White"
+                       HorizontalOptions="Center"/>
+                <ActivityIndicator IsRunning="True" Color="{StaticResource Primary}"
+                                   WidthRequest="40" HeightRequest="40"/>
+            </VerticalStackLayout>
+        </Grid>
+
+        <!-- ═══ RÉSULTATS PROJET ═══ -->
+        <Grid IsVisible="{Binding IsShowingResults}"
+              BackgroundColor="#1A1A2E"
+              RowDefinitions="Auto,*,Auto"
+              Padding="20,50,20,40">
+
+            <Label Grid.Row="0"
+                   Text="{Binding CurrentProjectTitle}"
+                   FontSize="22" FontAttributes="Bold"
+                   TextColor="White" HorizontalOptions="Center"
+                   Margin="0,0,0,20"/>
+
+            <VerticalStackLayout Grid.Row="1" Spacing="16" VerticalOptions="Center">
+
+                <Grid IsVisible="{Binding IsPhotoType}"
+                      ColumnDefinitions="*,*,*" ColumnSpacing="12">
+                    <VerticalStackLayout Grid.Column="0" Spacing="6" HorizontalOptions="Center">
+                        <Label Text="👎" FontSize="36" HorizontalOptions="Center"/>
+                        <Label Text="{Binding CurrentResults.Dislikes}"
+                               FontSize="28" FontAttributes="Bold"
+                               TextColor="White" HorizontalOptions="Center"/>
+                    </VerticalStackLayout>
+                    <VerticalStackLayout Grid.Column="1" Spacing="6" HorizontalOptions="Center">
+                        <Label Text="😐" FontSize="36" HorizontalOptions="Center"/>
+                        <Label Text="{Binding CurrentResults.Mehs}"
+                               FontSize="28" FontAttributes="Bold"
+                               TextColor="White" HorizontalOptions="Center"/>
+                    </VerticalStackLayout>
+                    <VerticalStackLayout Grid.Column="2" Spacing="6" HorizontalOptions="Center">
+                        <Label Text="❤️" FontSize="36" HorizontalOptions="Center"/>
+                        <Label Text="{Binding CurrentResults.Likes}"
+                               FontSize="28" FontAttributes="Bold"
+                               TextColor="{StaticResource Primary}" HorizontalOptions="Center"/>
+                    </VerticalStackLayout>
+                </Grid>
+
+                <Grid IsVisible="{Binding IsDuelType}"
+                      ColumnDefinitions="*,*" ColumnSpacing="12">
+                    <VerticalStackLayout Grid.Column="0" Spacing="6" HorizontalOptions="Center">
+                        <Label Text="A" FontSize="40" FontAttributes="Bold"
+                               TextColor="{StaticResource Primary}" HorizontalOptions="Center"/>
+                        <Label Text="{Binding CurrentResults.VotesA}"
+                               FontSize="28" FontAttributes="Bold"
+                               TextColor="White" HorizontalOptions="Center"/>
+                    </VerticalStackLayout>
+                    <VerticalStackLayout Grid.Column="1" Spacing="6" HorizontalOptions="Center">
+                        <Label Text="B" FontSize="40" FontAttributes="Bold"
+                               TextColor="{StaticResource Accent}" HorizontalOptions="Center"/>
+                        <Label Text="{Binding CurrentResults.VotesB}"
+                               FontSize="28" FontAttributes="Bold"
+                               TextColor="White" HorizontalOptions="Center"/>
+                    </VerticalStackLayout>
+                </Grid>
+
+                <CollectionView ItemsSource="{Binding CurrentResults.SelfieUrls}"
+                                SelectionMode="None"
+                                HeightRequest="100">
+                    <CollectionView.ItemsLayout>
+                        <LinearItemsLayout Orientation="Horizontal" ItemSpacing="8"/>
+                    </CollectionView.ItemsLayout>
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="x:String">
+                            <Border StrokeShape="RoundRectangle 10"
+                                    Stroke="{StaticResource Primary}"
+                                    StrokeThickness="2"
+                                    HeightRequest="90" WidthRequest="90">
+                                <Image Source="{Binding .}" Aspect="AspectFill"/>
+                            </Border>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </VerticalStackLayout>
+
+            <Label Grid.Row="2"
+                   Text="Projet suivant dans quelques secondes..."
+                   FontSize="13" TextColor="{StaticResource TextTertiary}"
+                   HorizontalOptions="Center"/>
+        </Grid>
+
+        <!-- ═══ SÉRIE TERMINÉE ═══ -->
+        <VerticalStackLayout IsVisible="{Binding IsSeriesFinished}"
+                             VerticalOptions="Center" HorizontalOptions="Center"
+                             Spacing="20" Padding="40">
+            <Label Text="🎉" FontSize="80" HorizontalOptions="Center"/>
+            <Label Text="{tr:Translate Key=SeriesVote_SeriesEnded}"
+                   FontSize="28" FontAttributes="Bold"
+                   TextColor="White" HorizontalOptions="Center"/>
+            <Label Text="{tr:Translate Key=SeriesVote_CongratsAll}"
+                   FontSize="16" TextColor="{StaticResource TextTertiary}"
+                   HorizontalOptions="Center"/>
+            <Border BackgroundColor="{StaticResource Primary}"
+                    StrokeShape="RoundRectangle 16"
+                    Stroke="Transparent"
+                    Padding="30,16"
+                    HorizontalOptions="Center">
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding GoToResultsCommand}"/>
+                </Border.GestureRecognizers>
+                <Label Text="{tr:Translate Key=SeriesVote_ViewResults}"
+                       FontSize="16" FontAttributes="Bold"
+                       TextColor="White"/>
+            </Border>
+        </VerticalStackLayout>
+
+    </Grid>
+</ContentPage>

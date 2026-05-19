@@ -1,0 +1,58 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="BeauOuPas.Views.Dating.MatchesPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:BeauOuPas.ViewModels.Dating"
+    xmlns:svc="clr-namespace:BeauOuPas.Services"
+    xmlns:tr="clr-namespace:BeauOuPas.Extensions"
+    x:DataType="vm:MatchesViewModel"
+    Title="{tr:Translate Key=Matches_Title}"
+    BackgroundColor="{StaticResource BackgroundPage}">
+
+    <Grid>
+        <ActivityIndicator IsRunning="{Binding IsLoading}" IsVisible="{Binding IsLoading}"
+                           Color="{StaticResource Primary}" VerticalOptions="Center" HorizontalOptions="Center"/>
+
+        <VerticalStackLayout IsVisible="{Binding IsEmpty}"
+                             VerticalOptions="Center" HorizontalOptions="Center" Spacing="12">
+            <Label Text="💘" FontSize="64" HorizontalOptions="Center"/>
+            <Label Text="{tr:Translate Key=Matches_Empty}" FontSize="18" FontAttributes="Bold"
+                   TextColor="{StaticResource TextPrimary}" HorizontalOptions="Center"/>
+            <Label Text="{tr:Translate Key=Matches_EmptyHint}" FontSize="14"
+                   TextColor="{StaticResource TextTertiary}" HorizontalOptions="Center"/>
+        </VerticalStackLayout>
+
+        <CollectionView ItemsSource="{Binding Matches}" Margin="16">
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="svc:MatchItem">
+                    <Border BackgroundColor="White" StrokeShape="RoundRectangle 12"
+                            Stroke="{StaticResource BorderLight}" StrokeThickness="1" Margin="0,0,0,10" Padding="12">
+                        <Grid ColumnDefinitions="60,*,Auto">
+                            <Border Grid.Column="0" StrokeShape="RoundRectangle 30" BackgroundColor="{StaticResource Primary}"
+                                    HeightRequest="52" WidthRequest="52" HorizontalOptions="Center" VerticalOptions="Center">
+                                <Label Text="{Binding OtherUsername}" TextColor="White" FontSize="22"
+                                       FontAttributes="Bold" HorizontalOptions="Center" VerticalOptions="Center"/>
+                            </Border>
+                            <VerticalStackLayout Grid.Column="1" Margin="12,0,0,0" VerticalOptions="Center" Spacing="2">
+                                <Label Text="{Binding OtherUsername, StringFormat='@{0}'}"
+                                       FontSize="15" FontAttributes="Bold" TextColor="{StaticResource TextPrimary}"/>
+                                <Label Text="{Binding LastMessage}" FontSize="13"
+                                       TextColor="{StaticResource TextTertiary}" LineBreakMode="TailTruncation"/>
+                                <Label Text="{Binding MatchDateLabel, StringFormat='Match le {0}'}"
+                                       FontSize="11" TextColor="{StaticResource Primary}"/>
+                            </VerticalStackLayout>
+                            <Label Grid.Column="2" Text="{Binding LastTimeLabel}" FontSize="11"
+                                   TextColor="{StaticResource TextDisabled}" VerticalOptions="Start"/>
+                        </Grid>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer
+                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:MatchesViewModel}}, Path=OpenChatCommand}"
+                                CommandParameter="{Binding ChatId}"/>
+                        </Border.GestureRecognizers>
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </Grid>
+</ContentPage>

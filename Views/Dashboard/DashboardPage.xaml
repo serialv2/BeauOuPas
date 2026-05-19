@@ -1,0 +1,115 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="BeauOuPas.Views.Dashboard.DashboardPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:BeauOuPas.ViewModels.Dashboard"
+    xmlns:tr="clr-namespace:BeauOuPas.Extensions"
+    x:DataType="vm:DashboardViewModel"
+    Title="{tr:Translate Key=Dashboard_Title}"
+    BackgroundColor="{StaticResource BackgroundPage}">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="16">
+
+            <Border BackgroundColor="White" StrokeShape="RoundRectangle 15"
+                    Stroke="{StaticResource BorderLight}" StrokeThickness="1" Padding="20">
+                <VerticalStackLayout Spacing="8">
+                    <ActivityIndicator IsRunning="{Binding IsLoading}" IsVisible="{Binding IsLoading}" Color="{StaticResource Primary}"/>
+                    <Label Text="{tr:Translate Key=Dashboard_Hello}" FontSize="14" TextColor="{StaticResource TextTertiary}"/>
+                    <Label Text="{Binding Username, StringFormat='@{0}'}"
+                           FontSize="24" FontAttributes="Bold" TextColor="{StaticResource Primary}"/>
+                </VerticalStackLayout>
+            </Border>
+
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                <Border Grid.Column="0" BackgroundColor="White" StrokeShape="RoundRectangle 15"
+                        Stroke="{StaticResource BorderLight}" StrokeThickness="1" Padding="16">
+                    <VerticalStackLayout HorizontalOptions="Center" Spacing="4">
+                        <Label Text="📷" FontSize="28" HorizontalOptions="Center"/>
+                        <Label Text="{Binding TotalProjects}" FontSize="28" FontAttributes="Bold"
+                               TextColor="{StaticResource Primary}" HorizontalOptions="Center"/>
+                        <Label Text="{tr:Translate Key=Dashboard_ProjectsCreated}"
+                               FontSize="12" TextColor="{StaticResource TextTertiary}" HorizontalOptions="Center"/>
+                    </VerticalStackLayout>
+                </Border>
+                <Border Grid.Column="1" BackgroundColor="White" StrokeShape="RoundRectangle 15"
+                        Stroke="{StaticResource BorderLight}" StrokeThickness="1" Padding="16">
+                    <VerticalStackLayout HorizontalOptions="Center" Spacing="4">
+                        <Label Text="💰" FontSize="28" HorizontalOptions="Center"/>
+                        <Label Text="{Binding Credits}" FontSize="28" FontAttributes="Bold"
+                               TextColor="{StaticResource Primary}" HorizontalOptions="Center"/>
+                        <Label Text="{tr:Translate Key=Dashboard_Credits}"
+                               FontSize="12" TextColor="{StaticResource TextTertiary}" HorizontalOptions="Center"/>
+                    </VerticalStackLayout>
+                </Border>
+            </Grid>
+
+            <Border BackgroundColor="White" StrokeShape="RoundRectangle 15"
+                    Stroke="{StaticResource BorderLight}" StrokeThickness="1">
+                <VerticalStackLayout>
+
+                    <Grid Padding="16" ColumnDefinitions="Auto,*,Auto">
+                        <Label Grid.Column="0" Text="📋" FontSize="20" VerticalOptions="Center"/>
+                        <Label Grid.Column="1" Text="{tr:Translate Key=Dashboard_MyProjects}"
+                               FontSize="15" TextColor="{StaticResource TextPrimary}" VerticalOptions="Center" Margin="12,0,0,0"/>
+                        <Label Grid.Column="2" Text="›" FontSize="20" TextColor="{StaticResource TextDisabled}" VerticalOptions="Center"/>
+                        <Grid.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding GoToMyProjectsCommand}"/>
+                        </Grid.GestureRecognizers>
+                    </Grid>
+
+                    <BoxView Color="{StaticResource SurfaceMuted}" HeightRequest="1" Margin="16,0" IsVisible="{Binding MeetVisible}"/>
+
+                    <Grid Padding="16" ColumnDefinitions="Auto,*,Auto"
+                          IsVisible="{Binding MeetVisible}">
+                        <Label Grid.Column="0" Text="💘" FontSize="20" VerticalOptions="Center"/>
+                        <Label Grid.Column="1" Text="{tr:Translate Key=Dashboard_MyMatches}"
+                               FontSize="15" TextColor="{StaticResource TextPrimary}" VerticalOptions="Center" Margin="12,0,0,0"/>
+                        <Label Grid.Column="2" Text="›" FontSize="20" TextColor="{StaticResource TextDisabled}" VerticalOptions="Center"/>
+                        <Grid.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding GoToMatchesCommand}"/>
+                        </Grid.GestureRecognizers>
+                    </Grid>
+
+                    <BoxView Color="{StaticResource SurfaceMuted}" HeightRequest="1" Margin="16,0"/>
+
+                    <Grid Padding="16" ColumnDefinitions="Auto,*,Auto">
+                        <Label Grid.Column="0" Text="💰" FontSize="20" VerticalOptions="Center"/>
+                        <Label Grid.Column="1" Text="{tr:Translate Key=Dashboard_MyCredits}"
+                               FontSize="15" TextColor="{StaticResource TextPrimary}" VerticalOptions="Center" Margin="12,0,0,0"/>
+                        <Label Grid.Column="2" Text="›" FontSize="20" TextColor="{StaticResource TextDisabled}" VerticalOptions="Center"/>
+                        <Grid.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding GoToCreditsCommand}"/>
+                        </Grid.GestureRecognizers>
+                    </Grid>
+
+                    <BoxView Color="{StaticResource SurfaceMuted}" HeightRequest="1" Margin="16,0"/>
+
+                    <Grid Padding="16" ColumnDefinitions="Auto,*,Auto">
+                        <Label Grid.Column="0" Text="⚙️" FontSize="20" VerticalOptions="Center"/>
+                        <Label Grid.Column="1" Text="{tr:Translate Key=Dashboard_Settings}"
+                               FontSize="15" TextColor="{StaticResource TextPrimary}" VerticalOptions="Center" Margin="12,0,0,0"/>
+                        <Label Grid.Column="2" Text="›" FontSize="20" TextColor="{StaticResource TextDisabled}" VerticalOptions="Center"/>
+                        <Grid.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding GoToSettingsCommand}"/>
+                        </Grid.GestureRecognizers>
+                    </Grid>
+
+                    <BoxView Color="{StaticResource SurfaceMuted}" HeightRequest="1" Margin="16,0"/>
+
+                    <Grid Padding="16" ColumnDefinitions="Auto,*">
+                        <Label Grid.Column="0" Text="🚪" FontSize="20" VerticalOptions="Center"/>
+                        <Label Grid.Column="1" Text="{tr:Translate Key=Dashboard_Logout}"
+                               FontSize="15" TextColor="#E53935" VerticalOptions="Center" Margin="12,0,0,0"/>
+                        <Grid.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding LogoutCommand}"/>
+                        </Grid.GestureRecognizers>
+                    </Grid>
+
+                </VerticalStackLayout>
+            </Border>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

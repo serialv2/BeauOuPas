@@ -1,0 +1,169 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="BeauOuPas.Views.Auth.LoginPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:BeauOuPas.ViewModels.Auth"
+    xmlns:tr="clr-namespace:BeauOuPas.Extensions"
+    x:DataType="vm:LoginViewModel"
+    Shell.NavBarIsVisible="False"
+    BackgroundColor="{StaticResource BackgroundPage}">
+
+    <Grid>
+
+        <!-- ═══ CONTENU PRINCIPAL (login form) ═══ -->
+        <ScrollView>
+            <VerticalStackLayout Padding="30,60,30,30" Spacing="0">
+
+                <!-- ⚡ Logo "B" orange (déposé dans Resources/Images/logo.png) -->
+                <Image Source="logo.png"
+                       WidthRequest="120" HeightRequest="120"
+                       HorizontalOptions="Center"
+                       Margin="0,0,0,12"/>
+
+                <!-- ⚡ MAI 2026 — Rebrand Orange : Beau (sombre) + Ou (orange) + Pas (sombre) -->
+                <Label FontSize="36" FontAttributes="Bold"
+                       HorizontalOptions="Center" Margin="0,0,0,8">
+                    <Label.FormattedText>
+                        <FormattedString>
+                            <Span Text="Beau" TextColor="#0F0F14"/>
+                            <Span Text="Ou" TextColor="{StaticResource Primary}"/>
+                            <Span Text="Pas" TextColor="#0F0F14"/>
+                        </FormattedString>
+                    </Label.FormattedText>
+                </Label>
+
+                <Label Text="{tr:Translate Key=Login_Subtitle}" FontSize="14"
+                       TextColor="{StaticResource TextTertiary}" HorizontalOptions="Center" Margin="0,0,0,40"/>
+
+                <Label Text="{tr:Translate Key=Login_Email}" FontSize="13"
+                       TextColor="{StaticResource TextSecondary}" Margin="0,0,0,4"/>
+                <Border Stroke="{StaticResource BorderMedium}" StrokeThickness="1" BackgroundColor="White"
+                        StrokeShape="RoundRectangle 10" Margin="0,0,0,16">
+                    <Entry Text="{Binding Email}" Placeholder="votre@email.com"
+                           Keyboard="Email" PlaceholderColor="{StaticResource TextDisabled}" Margin="12,0"/>
+                </Border>
+
+                <Label Text="{tr:Translate Key=Login_Password}" FontSize="13"
+                       TextColor="{StaticResource TextSecondary}" Margin="0,0,0,4"/>
+                <Border Stroke="{StaticResource BorderMedium}" StrokeThickness="1" BackgroundColor="White"
+                        StrokeShape="RoundRectangle 10" Margin="0,0,0,8">
+                    <Entry Text="{Binding Password}" Placeholder="••••••••"
+                           IsPassword="True" PlaceholderColor="{StaticResource TextDisabled}" Margin="12,0"/>
+                </Border>
+
+                <Label Text="{tr:Translate Key=Login_ForgotPassword}" FontSize="12"
+                       TextColor="{StaticResource Primary}" HorizontalOptions="End" Margin="0,0,0,24">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding ForgotPasswordCommand}"/>
+                    </Label.GestureRecognizers>
+                </Label>
+
+                <Border IsVisible="{Binding HasError}" BackgroundColor="{StaticResource ErrorLight}"
+                        Stroke="{StaticResource ErrorLight}" StrokeThickness="1" StrokeShape="RoundRectangle 8"
+                        Padding="12,8" Margin="0,0,0,16">
+                    <Label Text="{Binding ErrorMessage}" TextColor="{StaticResource Error}" FontSize="13"/>
+                </Border>
+
+                <Button Text="{tr:Translate Key=Login_Button}" Command="{Binding LoginCommand}"
+                        BackgroundColor="{StaticResource Primary}" TextColor="White" FontAttributes="Bold"
+                        FontSize="16" CornerRadius="10" HeightRequest="50" Margin="0,0,0,20"/>
+
+                <ActivityIndicator IsRunning="{Binding IsLoading}" IsVisible="{Binding IsLoading}"
+                                   Color="{StaticResource Primary}" Margin="0,0,0,20"/>
+
+                <Grid Margin="0,0,0,20">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <BoxView Grid.Column="0" Color="{StaticResource BorderMedium}" HeightRequest="1" VerticalOptions="Center"/>
+                    <Label Grid.Column="1" Text="{tr:Translate Key=Common_Or}"
+                           TextColor="{StaticResource TextTertiary}" FontSize="13"/>
+                    <BoxView Grid.Column="2" Color="{StaticResource BorderMedium}" HeightRequest="1" VerticalOptions="Center"/>
+                </Grid>
+
+                <Border Stroke="{StaticResource BorderMedium}" StrokeThickness="1" BackgroundColor="White"
+                        StrokeShape="RoundRectangle 10" Margin="0,0,0,12">
+                    <Button Text="{tr:Translate Key=Login_Google}" Command="{Binding LoginWithGoogleCommand}"
+                            BackgroundColor="Transparent" TextColor="{StaticResource TextPrimary}" FontSize="15" HeightRequest="50"/>
+                </Border>
+
+                <Border Stroke="#000000" StrokeThickness="1" BackgroundColor="Black"
+                        StrokeShape="RoundRectangle 10" Margin="0,0,0,30"
+                        IsVisible="False">
+                    <!-- ⚡ Bouton Apple temporairement masqué : nécessite un compte
+                         Apple Developer payant (99€/an). Changer IsVisible="True"
+                         quand le compte sera actif et Apple Sign-In configuré dans
+                         Supabase Dashboard → Authentication → Providers → Apple. -->
+                    <Button Text="{tr:Translate Key=Login_Apple}" Command="{Binding LoginWithAppleCommand}"
+                            BackgroundColor="Transparent" TextColor="White" FontSize="15" HeightRequest="50"/>
+                </Border>
+
+                <HorizontalStackLayout HorizontalOptions="Center" Spacing="4">
+                    <Label Text="{tr:Translate Key=Login_NoAccount}" TextColor="{StaticResource TextTertiary}" FontSize="14"/>
+                    <Label Text="{tr:Translate Key=Login_Register}" TextColor="{StaticResource Primary}"
+                           FontAttributes="Bold" FontSize="14">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding GoToRegisterCommand}"/>
+                        </Label.GestureRecognizers>
+                    </Label>
+                </HorizontalStackLayout>
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!-- ═══ OVERLAY OAUTH (Google / Apple en cours) ═══ -->
+        <!-- Plein écran, par-dessus tout, bloque les interactions -->
+        <Grid IsVisible="{Binding IsAuthenticating}"
+              BackgroundColor="#1A1A2E"
+              InputTransparent="False">
+            <VerticalStackLayout VerticalOptions="Center"
+                                 HorizontalOptions="Center"
+                                 Spacing="20">
+
+                <!-- ⚡ Logo "B" sur overlay OAuth -->
+                <Image Source="logo.png"
+                       WidthRequest="100" HeightRequest="100"
+                       HorizontalOptions="Center"/>
+
+                <!-- Logo -->
+                <!-- ⚡ Rebrand Orange : sur fond sombre OAuth -->
+                <Label FontSize="36"
+                       FontAttributes="Bold"
+                       HorizontalOptions="Center">
+                    <Label.FormattedText>
+                        <FormattedString>
+                            <Span Text="Beau" TextColor="White"/>
+                            <Span Text="Ou" TextColor="{StaticResource Primary}"/>
+                            <Span Text="Pas" TextColor="White"/>
+                        </FormattedString>
+                    </Label.FormattedText>
+                </Label>
+
+                <!-- Spinner rose -->
+                <ActivityIndicator IsRunning="True"
+                                   Color="{StaticResource Primary}"
+                                   WidthRequest="50"
+                                   HeightRequest="50"
+                                   HorizontalOptions="Center"/>
+
+                <!-- Texte principal -->
+                <Label Text="Connexion en cours..."
+                       FontSize="16"
+                       FontAttributes="Bold"
+                       TextColor="White"
+                       HorizontalOptions="Center"/>
+
+                <!-- Texte secondaire -->
+                <Label Text="Patientez quelques instants"
+                       FontSize="13"
+                       TextColor="{StaticResource TextTertiary}"
+                       HorizontalOptions="Center"/>
+
+            </VerticalStackLayout>
+        </Grid>
+
+    </Grid>
+</ContentPage>

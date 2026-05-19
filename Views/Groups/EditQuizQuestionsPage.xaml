@@ -1,0 +1,342 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="BeauOuPas.Views.Groups.EditQuizQuestionsPage"
+    x:Name="ThisPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:BeauOuPas.ViewModels.Groups"
+    xmlns:tr="clr-namespace:BeauOuPas.Extensions"
+    x:DataType="vm:EditQuizQuestionsViewModel"
+    Title="{tr:Translate Key=EditQuizQuestions_Title}"
+    BackgroundColor="{StaticResource BackgroundPage}">
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="{tr:Translate Key=Common_Cancel}" Command="{Binding CancelCommand}"/>
+    </ContentPage.ToolbarItems>
+
+    <ScrollView>
+        <VerticalStackLayout Spacing="0" Padding="16,12">
+
+            <!-- Header -->
+            <Label Text="{tr:Translate Key=EditQuizQuestions_Header}"
+                   FontSize="22" FontAttributes="Bold"
+                   TextColor="{StaticResource TextPrimary}" Margin="0,0,0,4"/>
+
+            <!-- Sous-header : titre du quiz édité -->
+            <Label Text="{Binding SeriesTitle}"
+                   FontSize="13" TextColor="{StaticResource Primary}"
+                   FontAttributes="Italic"
+                   Margin="0,0,0,16"/>
+
+            <!-- Loader pendant le chargement initial -->
+            <ActivityIndicator IsRunning="{Binding IsLoading}"
+                               IsVisible="{Binding IsLoading}"
+                               Color="{StaticResource Primary}"
+                               HeightRequest="40"
+                               Margin="0,20,0,20"/>
+
+            <!-- Compteur questions -->
+            <Grid ColumnDefinitions="*,Auto" Margin="0,0,0,12">
+                <Label Grid.Column="0"
+                       Text="{tr:Translate Key=CreateQuiz_QuestionsSection}"
+                       FontSize="17" FontAttributes="Bold"
+                       TextColor="{StaticResource TextPrimary}"
+                       VerticalOptions="Center"/>
+                <Border Grid.Column="1"
+                        BackgroundColor="{StaticResource SurfaceMuted}"
+                        StrokeShape="RoundRectangle 10"
+                        Stroke="Transparent"
+                        Padding="10,4"
+                        VerticalOptions="Center">
+                    <Label Text="{Binding QuestionCount, StringFormat='{0} / 50'}"
+                           FontSize="12" FontAttributes="Bold"
+                           TextColor="{StaticResource Primary}"/>
+                </Border>
+            </Grid>
+
+            <!-- Empty state (s'affiche seulement si pas de chargement et 0 questions) -->
+            <Border IsVisible="{Binding NoQuestions}"
+                    BackgroundColor="White"
+                    StrokeShape="RoundRectangle 14"
+                    Stroke="{StaticResource BorderLight}"
+                    StrokeThickness="1"
+                    Padding="20,28"
+                    Margin="0,0,0,12">
+                <VerticalStackLayout Spacing="10" HorizontalOptions="Center">
+                    <Label Text="❓" FontSize="40" HorizontalOptions="Center"/>
+                    <Label Text="{tr:Translate Key=CreateQuiz_NoQuestionsTitle}"
+                           FontSize="14" FontAttributes="Bold"
+                           TextColor="{StaticResource TextPrimary}"
+                           HorizontalOptions="Center"/>
+                    <Label Text="{tr:Translate Key=CreateQuiz_NoQuestionsHint}"
+                           FontSize="12" TextColor="{StaticResource TextTertiary}"
+                           HorizontalTextAlignment="Center"
+                           HorizontalOptions="Center"/>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- ⚡ QW2 : Bouton "✓ Sélectionner" (mode normal seulement, si ≥1 question) -->
+            <Border IsVisible="{Binding ShowSelectButton}"
+                    BackgroundColor="White"
+                    StrokeShape="RoundRectangle 14"
+                    Stroke="{StaticResource Primary}"
+                    StrokeThickness="2"
+                    Padding="0,10"
+                    Margin="0,0,0,12"
+                    HorizontalOptions="End"
+                    WidthRequest="160">
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding StartQuestionSelectionCommand}"/>
+                </Border.GestureRecognizers>
+                <Label Text="{tr:Translate Key=Common_Select}"
+                       FontSize="13" FontAttributes="Bold"
+                       TextColor="{StaticResource Primary}"
+                       HorizontalOptions="Center"/>
+            </Border>
+
+            <!-- ⚡ QW2 : Barre d'actions multi-sélection -->
+            <Border IsVisible="{Binding IsSelectionMode}"
+                    BackgroundColor="{StaticResource Primary}"
+                    StrokeShape="RoundRectangle 14"
+                    Stroke="Transparent"
+                    Padding="12,8"
+                    Margin="0,0,0,12">
+                <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10">
+                    <Border Grid.Column="0"
+                            BackgroundColor="Transparent"
+                            StrokeShape="RoundRectangle 8"
+                            Stroke="White"
+                            StrokeThickness="1"
+                            Padding="12,6"
+                            VerticalOptions="Center">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding ExitQuestionSelectionCommand}"/>
+                        </Border.GestureRecognizers>
+                        <Label Text="✕ Annuler"
+                               FontSize="13" FontAttributes="Bold"
+                               TextColor="White"/>
+                    </Border>
+                    <Label Grid.Column="1"
+                           Text="{Binding SelectedQuestionsCount, StringFormat='{0} sélectionnée(s)'}"
+                           FontSize="14" FontAttributes="Bold"
+                           TextColor="White"
+                           HorizontalOptions="Center"
+                           VerticalOptions="Center"/>
+                    <Border Grid.Column="2"
+                            BackgroundColor="White"
+                            StrokeShape="RoundRectangle 8"
+                            Stroke="Transparent"
+                            Padding="12,6"
+                            Opacity="{Binding HasSelectedQuestions, Converter={StaticResource BoolToOpacityConverter}, FallbackValue=1}"
+                            IsEnabled="{Binding HasSelectedQuestions}"
+                            VerticalOptions="Center">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding DeleteSelectedQuestionsCommand}"/>
+                        </Border.GestureRecognizers>
+                        <Label Text="{Binding SelectionHeaderText}"
+                               FontSize="13" FontAttributes="Bold"
+                               TextColor="{StaticResource Primary}"/>
+                    </Border>
+                </Grid>
+            </Border>
+
+            <!-- Liste des questions -->
+            <CollectionView ItemsSource="{Binding Questions}"
+                            IsVisible="{Binding HasQuestions}"
+                            SelectionMode="None"
+                            Margin="0,0,0,12">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="vm:QuizQuestionItem">
+                        <Border StrokeShape="RoundRectangle 14"
+                                StrokeThickness="2"
+                                Margin="0,0,0,10"
+                                Padding="14">
+                            <Border.Triggers>
+                                <DataTrigger TargetType="Border"
+                                             Binding="{Binding IsSelected}"
+                                             Value="True">
+                                    <Setter Property="BackgroundColor" Value="#FCE4EC"/>
+                                    <Setter Property="Stroke" Value="#C2754C"/>
+                                </DataTrigger>
+                                <DataTrigger TargetType="Border"
+                                             Binding="{Binding IsSelected}"
+                                             Value="False">
+                                    <Setter Property="BackgroundColor" Value="White"/>
+                                    <Setter Property="Stroke" Value="#EEEEEE"/>
+                                </DataTrigger>
+                            </Border.Triggers>
+                            <Border.GestureRecognizers>
+                                <!-- ⚡ QW2 : tap centralisé code-behind (mode normal = ouvrir édit ;
+                                     mode select = toggle coche). Géré dans le code-behind. -->
+                                <TapGestureRecognizer Tapped="OnQuestionItemTapped"/>
+                            </Border.GestureRecognizers>
+                            <Grid RowDefinitions="Auto,Auto" RowSpacing="10">
+
+                                <!-- Ligne 1 : checkbox + badge + titre + flèches -->
+                                <Grid Grid.Row="0" ColumnDefinitions="Auto,Auto,*,Auto,Auto" ColumnSpacing="10">
+                                    <!-- ⚡ QW2 : Checkbox visible en mode sélection -->
+                                    <Border Grid.Column="0"
+                                            IsVisible="{Binding Source={RelativeSource AncestorType={x:Type vm:EditQuizQuestionsViewModel}}, Path=IsSelectionMode}"
+                                            WidthRequest="28"
+                                            HeightRequest="28"
+                                            StrokeShape="RoundRectangle 14"
+                                            StrokeThickness="2"
+                                            VerticalOptions="Center">
+                                        <Border.Triggers>
+                                            <DataTrigger TargetType="Border"
+                                                         Binding="{Binding IsSelected}"
+                                                         Value="True">
+                                                <Setter Property="BackgroundColor" Value="#C2754C"/>
+                                                <Setter Property="Stroke" Value="#C2754C"/>
+                                            </DataTrigger>
+                                            <DataTrigger TargetType="Border"
+                                                         Binding="{Binding IsSelected}"
+                                                         Value="False">
+                                                <Setter Property="BackgroundColor" Value="White"/>
+                                                <Setter Property="Stroke" Value="#BBBBBB"/>
+                                            </DataTrigger>
+                                        </Border.Triggers>
+                                        <Label Text="✓"
+                                               FontSize="14" FontAttributes="Bold"
+                                               TextColor="White"
+                                               HorizontalOptions="Center"
+                                               VerticalOptions="Center"
+                                               IsVisible="{Binding IsSelected}"/>
+                                    </Border>
+                                    <Border Grid.Column="1"
+                                            BackgroundColor="{StaticResource Primary}"
+                                            StrokeShape="RoundRectangle 8"
+                                            Stroke="Transparent"
+                                            Padding="8,4"
+                                            VerticalOptions="Center">
+                                        <Label Text="{Binding PositionLabel}"
+                                               FontSize="12" FontAttributes="Bold"
+                                               TextColor="White"/>
+                                    </Border>
+
+                                    <VerticalStackLayout Grid.Column="2" Spacing="2" VerticalOptions="Center">
+                                        <Label Text="{Binding Title}"
+                                               FontSize="14" FontAttributes="Bold"
+                                               TextColor="{StaticResource TextPrimary}"
+                                               LineBreakMode="TailTruncation"/>
+                                        <Label Text="{Binding QuestionText}"
+                                               FontSize="11"
+                                               TextColor="{StaticResource TextTertiary}"
+                                               LineBreakMode="TailTruncation"
+                                               MaxLines="1"/>
+                                    </VerticalStackLayout>
+
+                                    <Border Grid.Column="3"
+                                            BackgroundColor="{StaticResource SurfaceMuted}"
+                                            StrokeShape="RoundRectangle 8"
+                                            Stroke="Transparent"
+                                            Padding="8,6"
+                                            Opacity="{Binding CanMoveUp, Converter={StaticResource BoolToOpacityConverter}, FallbackValue=1}"
+                                            IsEnabled="{Binding CanMoveUp}">
+                                        <Border.GestureRecognizers>
+                                            <TapGestureRecognizer
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:EditQuizQuestionsViewModel}}, Path=MoveQuestionUpCommand}"
+                                                CommandParameter="{Binding .}"/>
+                                        </Border.GestureRecognizers>
+                                        <Label Text="⬆" FontSize="14"
+                                               TextColor="{StaticResource TextTertiary}"
+                                               HorizontalOptions="Center"/>
+                                    </Border>
+
+                                    <Border Grid.Column="4"
+                                            BackgroundColor="{StaticResource SurfaceMuted}"
+                                            StrokeShape="RoundRectangle 8"
+                                            Stroke="Transparent"
+                                            Padding="8,6"
+                                            Opacity="{Binding CanMoveDown, Converter={StaticResource BoolToOpacityConverter}, FallbackValue=1}"
+                                            IsEnabled="{Binding CanMoveDown}">
+                                        <Border.GestureRecognizers>
+                                            <TapGestureRecognizer
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:EditQuizQuestionsViewModel}}, Path=MoveQuestionDownCommand}"
+                                                CommandParameter="{Binding .}"/>
+                                        </Border.GestureRecognizers>
+                                        <Label Text="⬇" FontSize="14"
+                                               TextColor="{StaticResource TextTertiary}"
+                                               HorizontalOptions="Center"/>
+                                    </Border>
+                                </Grid>
+
+                                <!-- Ligne 2 : actions modifier / supprimer (cachée en mode sélection) -->
+                                <Grid Grid.Row="1" ColumnDefinitions="*,*" ColumnSpacing="8"
+                                      IsVisible="{Binding Source={RelativeSource AncestorType={x:Type vm:EditQuizQuestionsViewModel}}, Path=IsSelectionMode, Converter={StaticResource InverseBoolConverter}}">
+                                    <Border Grid.Column="0"
+                                            BackgroundColor="{StaticResource SurfaceMuted}"
+                                            StrokeShape="RoundRectangle 10"
+                                            Stroke="Transparent"
+                                            Padding="0,8">
+                                        <Border.GestureRecognizers>
+                                            <TapGestureRecognizer
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:EditQuizQuestionsViewModel}}, Path=EditQuestionCommand}"
+                                                CommandParameter="{Binding .}"/>
+                                        </Border.GestureRecognizers>
+                                        <Label Text="{tr:Translate Key=CreateQuiz_EditQuestion}"
+                                               FontSize="12" FontAttributes="Bold"
+                                               TextColor="{StaticResource Primary}"
+                                               HorizontalOptions="Center"/>
+                                    </Border>
+
+                                    <Border Grid.Column="1"
+                                            BackgroundColor="White"
+                                            StrokeShape="RoundRectangle 10"
+                                            Stroke="{StaticResource Error}"
+                                            StrokeThickness="1"
+                                            Padding="0,8">
+                                        <Border.GestureRecognizers>
+                                            <TapGestureRecognizer
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:EditQuizQuestionsViewModel}}, Path=DeleteQuestionCommand}"
+                                                CommandParameter="{Binding .}"/>
+                                        </Border.GestureRecognizers>
+                                        <Label Text="{tr:Translate Key=CreateQuiz_DeleteQuestion}"
+                                               FontSize="12" FontAttributes="Bold"
+                                               TextColor="{StaticResource Error}"
+                                               HorizontalOptions="Center"/>
+                                    </Border>
+                                </Grid>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <!-- Bouton "+ Ajouter une question" -->
+            <Border BackgroundColor="White"
+                    StrokeShape="RoundRectangle 14"
+                    Stroke="{StaticResource Primary}"
+                    StrokeThickness="2"
+                    Padding="0,14"
+                    Margin="0,0,0,20"
+                    IsEnabled="{Binding CanAddQuestion}"
+                    Opacity="{Binding CanAddQuestion, Converter={StaticResource BoolToOpacityConverter}, FallbackValue=1}">
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding AddQuestionCommand}"/>
+                </Border.GestureRecognizers>
+                <Label Text="{tr:Translate Key=CreateQuiz_AddQuestion}"
+                       FontSize="14" FontAttributes="Bold"
+                       TextColor="{StaticResource Primary}"
+                       HorizontalOptions="Center"/>
+            </Border>
+
+            <!-- Bouton "💾 Mettre à jour" -->
+            <Border BackgroundColor="{StaticResource Primary}" StrokeShape="RoundRectangle 16"
+                    Stroke="Transparent" Padding="0,16" Margin="0,0,0,40">
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding SaveCommand}"/>
+                </Border.GestureRecognizers>
+                <Grid>
+                    <ActivityIndicator IsRunning="{Binding IsSaving}"
+                                       IsVisible="{Binding IsSaving}" Color="White"/>
+                    <Label Text="{tr:Translate Key=EditQuizQuestions_SaveButton}"
+                           IsVisible="{Binding IsSaving, Converter={StaticResource InverseBoolConverter}}"
+                           FontSize="16" FontAttributes="Bold"
+                           TextColor="White" HorizontalOptions="Center"/>
+                </Grid>
+            </Border>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

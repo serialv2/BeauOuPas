@@ -1,0 +1,86 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="BeauOuPas.Views.Groups.JoinSeriesPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:BeauOuPas.ViewModels.Groups"
+        xmlns:tr="clr-namespace:BeauOuPas.Extensions"
+x:DataType="vm:JoinSeriesViewModel"
+    Title="{tr:Translate Key=Home_JoinSection}"
+    BackgroundColor="{StaticResource BackgroundPage}">
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Annuler" Command="{Binding CancelCommand}"/>
+    </ContentPage.ToolbarItems>
+
+    <VerticalStackLayout Padding="32,40" Spacing="0" VerticalOptions="Center">
+
+        <!-- Icône -->
+        <Label Text="🎟️" FontSize="72"
+               HorizontalOptions="Center" Margin="0,0,0,16"/>
+
+        <!-- Titre -->
+        <Label Text="{tr:Translate Key=Home_JoinSection}"
+               FontSize="26" FontAttributes="Bold"
+               TextColor="{StaticResource TextPrimary}" HorizontalOptions="Center"
+               Margin="0,0,0,8"/>
+        <Label Text="{tr:Translate Key=JoinSeries_CodeHint}"
+               FontSize="14" TextColor="{StaticResource TextTertiary}"
+               HorizontalOptions="Center" HorizontalTextAlignment="Center"
+               Margin="0,0,0,40"/>
+
+        <!-- Champ code -->
+        <Border BackgroundColor="White"
+                StrokeShape="RoundRectangle 16"
+                Stroke="{StaticResource Primary}"
+                StrokeThickness="2"
+                Padding="20,16"
+                Margin="0,0,0,16">
+            <Entry Placeholder="Ex: AB3X7K"
+                   Text="{Binding Code}"
+                   FontSize="28"
+                   FontAttributes="Bold"
+                   TextColor="{StaticResource TextPrimary}"
+                   PlaceholderColor="{StaticResource BorderMedium}"
+                   BackgroundColor="Transparent"
+                   HorizontalTextAlignment="Center"
+                   MaxLength="6"
+                   TextTransform="Uppercase"
+                   Keyboard="Text"/>
+        </Border>
+
+        <!-- Erreur -->
+        <Border IsVisible="{Binding HasError}"
+                BackgroundColor="{StaticResource ErrorLight}"
+                StrokeShape="RoundRectangle 10"
+                Stroke="{StaticResource ErrorLight}"
+                StrokeThickness="1"
+                Padding="14,10"
+                Margin="0,0,0,16">
+            <Label Text="{Binding ErrorMessage}"
+                   FontSize="13" TextColor="{StaticResource Error}"
+                   HorizontalOptions="Center"/>
+        </Border>
+
+        <!-- Bouton rejoindre -->
+        <Border BackgroundColor="{StaticResource Primary}"
+                StrokeShape="RoundRectangle 16"
+                Stroke="Transparent"
+                Padding="0,18"
+                Margin="0,8,0,0">
+            <Border.GestureRecognizers>
+                <TapGestureRecognizer Command="{Binding JoinCommand}"/>
+            </Border.GestureRecognizers>
+            <Grid>
+                <ActivityIndicator IsRunning="{Binding IsLoading}"
+                                   IsVisible="{Binding IsLoading}"
+                                   Color="White"/>
+                <Label Text="🎟️ Rejoindre"
+                       IsVisible="{Binding IsLoading, Converter={StaticResource InverseBoolConverter}}"
+                       FontSize="18" FontAttributes="Bold"
+                       TextColor="White" HorizontalOptions="Center"/>
+            </Grid>
+        </Border>
+
+    </VerticalStackLayout>
+</ContentPage>

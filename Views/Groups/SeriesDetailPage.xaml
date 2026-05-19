@@ -1,0 +1,828 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="BeauOuPas.Views.Groups.SeriesDetailPage"
+    x:Name="SeriesDetailPageRoot"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:BeauOuPas.ViewModels.Groups"
+    xmlns:models="clr-namespace:BeauOuPas.Models"
+        xmlns:tr="clr-namespace:BeauOuPas.Extensions"
+x:DataType="vm:SeriesDetailViewModel"
+    Title="{Binding SeriesTitle}"
+    BackgroundColor="{StaticResource BackgroundPage}">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="16,12" Spacing="0">
+
+            <ActivityIndicator IsRunning="{Binding IsLoading}"
+                               IsVisible="{Binding IsLoading}"
+                               Color="{StaticResource Primary}" Margin="0,40"/>
+
+            <!-- ─── Infos série ─────────────────────────────────── -->
+            <Border BackgroundColor="White"
+                    StrokeShape="RoundRectangle 16"
+                    Stroke="{StaticResource BorderLight}"
+                    StrokeThickness="1"
+                    Padding="16"
+                    Margin="0,0,0,16">
+                <Grid RowDefinitions="Auto,Auto,Auto" RowSpacing="10">
+                    <Grid Grid.Row="0" ColumnDefinitions="*,Auto">
+                        <Label Grid.Column="0"
+                               Text="{Binding SeriesTitle}"
+                               FontSize="18"
+                               FontAttributes="Bold"
+                               TextColor="{StaticResource TextPrimary}"/>
+                        <Border Grid.Column="1"
+                                BackgroundColor="{StaticResource SurfaceMuted}"
+                                StrokeShape="RoundRectangle 10"
+                                Stroke="Transparent"
+                                Padding="10,6">
+                            <Label Text="{Binding StatusLabel}"
+                                   FontSize="12"
+                                   FontAttributes="Bold"
+                                   TextColor="{Binding StatusColor}"/>
+                        </Border>
+                    </Grid>
+
+                    <!-- ⚡ LOT 1 : ligne d'info adaptée selon le type -->
+                    <!-- Mode VOTE : nombre de projets -->
+                    <Label Grid.Row="1"
+                           IsVisible="{Binding IsVoteMode}"
+                           Text="{Binding ProjectCount, StringFormat='{0} projet(s) ajouté(s)'}"
+                           FontSize="13"
+                           TextColor="{StaticResource TextTertiary}"/>
+                    <!-- Mode QUIZ : nombre de questions -->
+                    <Label Grid.Row="1"
+                           IsVisible="{Binding IsQuizMode}"
+                           Text="{Binding QuestionCount, StringFormat='🧠 {0} question(s)'}"
+                           FontSize="13"
+                           TextColor="{StaticResource TextTertiary}"/>
+
+                    <Grid Grid.Row="2"
+                          ColumnDefinitions="*,Auto"
+                          ColumnSpacing="8">
+                        <Border Grid.Column="0"
+                                BackgroundColor="{StaticResource SurfaceMuted}"
+                                StrokeShape="RoundRectangle 10"
+                                Stroke="Transparent"
+                                Padding="12,8"
+                                HorizontalOptions="Start">
+                            <Label Text="{Binding AccessCode, StringFormat='🔑 Code : {0}'}"
+                                   FontSize="14"
+                                   FontAttributes="Bold"
+                                   TextColor="{StaticResource Primary}"/>
+                        </Border>
+                        <Border Grid.Column="1"
+                                BackgroundColor="{StaticResource SurfaceMuted}"
+                                StrokeShape="RoundRectangle 10"
+                                Stroke="Transparent"
+                                Padding="12,8"
+                                HorizontalOptions="End">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding CopyAccessCodeCommand}"/>
+                            </Border.GestureRecognizers>
+                            <Label Text="📋 Copier"
+                                   FontSize="12"
+                                   FontAttributes="Bold"
+                                   TextColor="{StaticResource Primary}"/>
+                        </Border>
+                    </Grid>
+                </Grid>
+            </Border>
+
+            <!-- ─── Boutons principaux ─────────────────────────── -->
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="10" Margin="0,0,0,10">
+
+                <!-- ⚡ LOT 1 : "Créer un projet" visible uniquement en mode vote -->
+                <Border Grid.Column="0"
+                        IsVisible="{Binding CanAddProjects}"
+                        BackgroundColor="{StaticResource Primary}"
+                        StrokeShape="RoundRectangle 12"
+                        Stroke="Transparent"
+                        Padding="0,14">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding AddProjectCommand}"/>
+                    </Border.GestureRecognizers>
+                    <Label Text="{tr:Translate Key=Create_Title}"
+                           FontSize="14"
+                           FontAttributes="Bold"
+                           TextColor="White"
+                           HorizontalOptions="Center"/>
+                </Border>
+
+                <!-- ⚡ LOT 1 : "Modifier les questions" visible uniquement en mode quiz (créateur+preparing) -->
+                <Border Grid.Column="0"
+                        IsVisible="{Binding CanEditQuiz}"
+                        BackgroundColor="{StaticResource Primary}"
+                        StrokeShape="RoundRectangle 12"
+                        Stroke="Transparent"
+                        Padding="0,14">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding EditQuizQuestionsCommand}"/>
+                    </Border.GestureRecognizers>
+                    <Label Text="✏️ Modifier les questions"
+                           FontSize="14"
+                           FontAttributes="Bold"
+                           TextColor="White"
+                           HorizontalOptions="Center"/>
+                </Border>
+
+                <Border Grid.Column="1"
+                        IsVisible="{Binding CanStart}"
+                        BackgroundColor="{StaticResource Success}"
+                        StrokeShape="RoundRectangle 12"
+                        Stroke="Transparent"
+                        Padding="0,14">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding StartSeriesCommand}"/>
+                    </Border.GestureRecognizers>
+                    <Label Text="{tr:Translate Key=SeriesDetail_Start}"
+                           FontSize="14"
+                           FontAttributes="Bold"
+                           TextColor="White"
+                           HorizontalOptions="Center"/>
+                </Border>
+
+                <Border Grid.Column="1"
+                        IsVisible="{Binding CanStop}"
+                        BackgroundColor="{StaticResource Error}"
+                        StrokeShape="RoundRectangle 12"
+                        Stroke="Transparent"
+                        Padding="0,14">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding StopSeriesCommand}"/>
+                    </Border.GestureRecognizers>
+                    <Label Text="⏹ Terminer"
+                           FontSize="14"
+                           FontAttributes="Bold"
+                           TextColor="White"
+                           HorizontalOptions="Center"/>
+                </Border>
+            </Grid>
+
+            <!-- ─── ⚡ Lot Mode TV ────────────────────────────── -->
+
+            <Border IsVisible="{Binding CanActivateTv}"
+                    BackgroundColor="{StaticResource Accent}"
+                    StrokeShape="RoundRectangle 14"
+                    Stroke="Transparent"
+                    Padding="0,16"
+                    Margin="0,0,0,10">
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding ActivateTvModeCommand}"/>
+                </Border.GestureRecognizers>
+                <VerticalStackLayout Spacing="2" HorizontalOptions="Center">
+                    <Label Text="📺 Activer mode TV"
+                           FontSize="16"
+                           FontAttributes="Bold"
+                           TextColor="White"
+                           HorizontalOptions="Center"/>
+                    <Label Text="{tr:Translate Key=SeriesDetail_EventHint}"
+                           FontSize="11"
+                           TextColor="White"
+                           Opacity="0.85"
+                           HorizontalOptions="Center"/>
+                </VerticalStackLayout>
+            </Border>
+
+            <Border IsVisible="{Binding CanStartTv}"
+                    BackgroundColor="White"
+                    StrokeShape="RoundRectangle 16"
+                    Stroke="{StaticResource Accent}"
+                    StrokeThickness="2"
+                    Padding="20,18"
+                    Margin="0,0,0,10">
+                <VerticalStackLayout Spacing="14">
+                    <Label Text="{tr:Translate Key=SeriesDetail_TvModeOn}"
+                           FontSize="17"
+                           FontAttributes="Bold"
+                           TextColor="{StaticResource Accent}"
+                           HorizontalOptions="Center"/>
+                    <Label Text="Sur la TV (PC, Chromecast, Smart TV), tape le code ci-dessous :"
+                           FontSize="12"
+                           TextColor="{StaticResource TextSecondary}"
+                           HorizontalTextAlignment="Center"
+                           HorizontalOptions="Center"/>
+                    <Border BackgroundColor="#F3E5F5"
+                            StrokeShape="RoundRectangle 12"
+                            Stroke="Transparent"
+                            Padding="20,14"
+                            HorizontalOptions="Center">
+                        <Label Text="{Binding AccessCode}"
+                               FontSize="32"
+                               FontAttributes="Bold"
+                               TextColor="{StaticResource Accent}"
+                               CharacterSpacing="6"
+                               HorizontalOptions="Center"/>
+                    </Border>
+                    <Border BackgroundColor="{StaticResource Success}"
+                            StrokeShape="RoundRectangle 12"
+                            Stroke="Transparent"
+                            Padding="0,14"
+                            Margin="0,4,0,0">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding StartTvSeriesCommand}"/>
+                        </Border.GestureRecognizers>
+                        <Label Text="{tr:Translate Key=SeriesDetail_StartSeries}"
+                               FontSize="15"
+                               FontAttributes="Bold"
+                               TextColor="White"
+                               HorizontalOptions="Center"/>
+                    </Border>
+                    <Border BackgroundColor="White"
+                            StrokeShape="RoundRectangle 12"
+                            Stroke="{StaticResource Accent}"
+                            StrokeThickness="1"
+                            Padding="0,12">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding DeactivateTvModeCommand}"/>
+                        </Border.GestureRecognizers>
+                        <Label Text="{tr:Translate Key=SeriesDetail_DisableTvMode}"
+                               FontSize="13"
+                               FontAttributes="Bold"
+                               TextColor="{StaticResource Accent}"
+                               HorizontalOptions="Center"/>
+                    </Border>
+                </VerticalStackLayout>
+            </Border>
+
+            <Border IsVisible="{Binding CanControlTv}"
+                    BackgroundColor="White"
+                    StrokeShape="RoundRectangle 16"
+                    Stroke="{StaticResource Accent}"
+                    StrokeThickness="2"
+                    Padding="20,18"
+                    Margin="0,0,0,10">
+                <VerticalStackLayout Spacing="12">
+                    <Grid ColumnDefinitions="*,Auto">
+                        <VerticalStackLayout Grid.Column="0" Spacing="4">
+                            <Label Text="📺 Mode TV en cours"
+                                   FontSize="15"
+                                   FontAttributes="Bold"
+                                   TextColor="{StaticResource Accent}"/>
+                            <Label Text="{Binding AccessCode, StringFormat='Code : {0}'}"
+                                   FontSize="12"
+                                   TextColor="{StaticResource TextSecondary}"/>
+                        </VerticalStackLayout>
+                    </Grid>
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
+                        <Border Grid.Column="0"
+                                BackgroundColor="{StaticResource Warning}"
+                                StrokeShape="RoundRectangle 12"
+                                Stroke="Transparent"
+                                Padding="0,12">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding ToggleTvPauseCommand}"/>
+                            </Border.GestureRecognizers>
+                            <Label Text="{Binding TvPauseLabel}"
+                                   FontSize="13"
+                                   FontAttributes="Bold"
+                                   TextColor="White"
+                                   HorizontalOptions="Center"/>
+                        </Border>
+                        <Border Grid.Column="1"
+                                BackgroundColor="White"
+                                StrokeShape="RoundRectangle 12"
+                                Stroke="{StaticResource Accent}"
+                                StrokeThickness="1"
+                                Padding="0,12">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding DeactivateTvModeCommand}"/>
+                            </Border.GestureRecognizers>
+                            <Label Text="{tr:Translate Key=Common_Disable}"
+                                   FontSize="13"
+                                   FontAttributes="Bold"
+                                   TextColor="{StaticResource Accent}"
+                                   HorizontalOptions="Center"/>
+                        </Border>
+                    </Grid>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- ─── Inviter des amis ─ -->
+            <Border IsVisible="{Binding CanInvite}"
+                    BackgroundColor="{StaticResource Accent}"
+                    StrokeShape="RoundRectangle 12"
+                    Stroke="Transparent"
+                    Padding="0,12"
+                    Margin="0,0,0,10">
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding InviteFriendsCommand}"/>
+                </Border.GestureRecognizers>
+                <Label Text="👥 Inviter des amis"
+                       FontSize="14"
+                       FontAttributes="Bold"
+                       TextColor="White"
+                       HorizontalOptions="Center"/>
+            </Border>
+
+            <!-- ─── ⚡ LOT 1 : "Voter / Jouer" libellé dynamique selon mode ─── -->
+            <Border IsVisible="{Binding CanVote}"
+                    BackgroundColor="{StaticResource Primary}"
+                    StrokeShape="RoundRectangle 14"
+                    Stroke="Transparent"
+                    Padding="0,16"
+                    Margin="0,0,0,10">
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding GoToVoteCommand}"/>
+                </Border.GestureRecognizers>
+                <Label Text="{Binding PlayButtonLabel}"
+                       FontSize="16"
+                       FontAttributes="Bold"
+                       TextColor="White"
+                       HorizontalOptions="Center"/>
+            </Border>
+
+            <!-- ─── Boutons secondaires ────────────────────────── -->
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="10" Margin="0,0,0,16">
+
+                <Border Grid.Column="0"
+                        IsVisible="{Binding CanReset}"
+                        BackgroundColor="{StaticResource Warning}"
+                        StrokeShape="RoundRectangle 12"
+                        Stroke="Transparent"
+                        Padding="0,12">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding ResetSeriesCommand}"/>
+                    </Border.GestureRecognizers>
+                    <Label Text="{tr:Translate Key=SeriesDetail_Reprepare}"
+                           FontSize="13"
+                           FontAttributes="Bold"
+                           TextColor="White"
+                           HorizontalOptions="Center"/>
+                </Border>
+
+                <Border Grid.Column="1"
+                        IsVisible="{Binding CanDelete}"
+                        BackgroundColor="White"
+                        StrokeShape="RoundRectangle 12"
+                        Stroke="{StaticResource Error}"
+                        StrokeThickness="1"
+                        Padding="0,12">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding DeleteSeriesCommand}"/>
+                    </Border.GestureRecognizers>
+                    <Label Text="🗑️ Supprimer"
+                           FontSize="13"
+                           FontAttributes="Bold"
+                           TextColor="{StaticResource Error}"
+                           HorizontalOptions="Center"/>
+                </Border>
+            </Grid>
+
+            <!-- ═══════════════════════════════════════════════════════
+                 ⚡ LOT 1 : SECTION QUIZ (visible si IsQuizMode)
+                 Liste des questions en lecture seule + photo + énoncé.
+                 Pas d'options affichées (juste le titre/énoncé + photo)
+
+                 🔧 BUG C : visible UNIQUEMENT pour le créateur (CanViewQuizQuestions),
+                 pour ne pas spoiler les énoncés aux participants avant le quiz.
+                 ═══════════════════════════════════════════════════════ -->
+            <VerticalStackLayout IsVisible="{Binding CanViewQuizQuestions}" Spacing="14">
+
+                <Label Text="🧠 Questions du quiz"
+                       FontSize="17"
+                       FontAttributes="Bold"
+                       TextColor="{StaticResource TextPrimary}"
+                       Margin="0,0,0,4"/>
+
+                <CollectionView ItemsSource="{Binding Questions}"
+                                IsVisible="{Binding HasQuestions}"
+                                SelectionMode="None">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="vm:QuizQuestionDisplayItem">
+                            <Border BackgroundColor="White"
+                                    StrokeShape="RoundRectangle 14"
+                                    Stroke="{StaticResource BorderLight}"
+                                    StrokeThickness="1"
+                                    Margin="0,0,0,10"
+                                    Padding="14">
+                                <VerticalStackLayout Spacing="10">
+
+                                    <!-- En-tête : numéro de la question -->
+                                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                                        <Border Grid.Column="0"
+                                                BackgroundColor="{StaticResource SurfaceMuted}"
+                                                StrokeShape="RoundRectangle 8"
+                                                Stroke="Transparent"
+                                                Padding="10,6"
+                                                VerticalOptions="Center">
+                                            <Label Text="{Binding PositionLabel}"
+                                                   FontSize="12"
+                                                   FontAttributes="Bold"
+                                                   TextColor="{StaticResource Primary}"/>
+                                        </Border>
+                                        <Label Grid.Column="1"
+                                               Text="{Binding Title}"
+                                               FontSize="15"
+                                               FontAttributes="Bold"
+                                               TextColor="{StaticResource TextPrimary}"
+                                               LineBreakMode="WordWrap"
+                                               VerticalOptions="Center"/>
+                                    </Grid>
+
+                                    <!-- Photo (si présente) -->
+                                    <Border IsVisible="{Binding HasPhoto}"
+                                            BackgroundColor="{StaticResource SurfaceMuted}"
+                                            StrokeShape="RoundRectangle 10"
+                                            Stroke="Transparent"
+                                            Padding="0">
+                                        <Image Source="{Binding PhotoUrl}"
+                                               Aspect="AspectFill"
+                                               HeightRequest="160"/>
+                                    </Border>
+
+                                    <!-- Énoncé -->
+                                    <Label IsVisible="{Binding HasQuestionText}"
+                                           Text="{Binding QuestionText}"
+                                           FontSize="13"
+                                           TextColor="{StaticResource TextSecondary}"
+                                           LineBreakMode="WordWrap"/>
+
+                                </VerticalStackLayout>
+                            </Border>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+
+                <!-- Aucune question -->
+                <VerticalStackLayout IsVisible="{Binding NoQuestions}"
+                                     HorizontalOptions="Center"
+                                     Spacing="10"
+                                     Padding="20,20">
+                    <Label Text="🧠" FontSize="48" HorizontalOptions="Center"/>
+                    <Label Text="Aucune question pour l'instant"
+                           FontSize="14"
+                           TextColor="{StaticResource TextTertiary}"
+                           HorizontalOptions="Center"/>
+                    <Label Text="Tape « Modifier les questions » pour en ajouter !"
+                           IsVisible="{Binding CanEditQuiz}"
+                           FontSize="12"
+                           TextColor="{StaticResource TextDisabled}"
+                           HorizontalOptions="Center"
+                           HorizontalTextAlignment="Center"/>
+                </VerticalStackLayout>
+
+            </VerticalStackLayout>
+
+            <!-- ═══════════════════════════════════════════════════════
+                 ⚡ LOT 1 : SALLE D'ATTENTE (lobby) — VOTE UNIQUEMENT
+                 Visible uniquement si ShowLobbyVote=true
+                 (un quiz ne passe pas par le lobby projets/votes)
+                 ═══════════════════════════════════════════════════════ -->
+            <VerticalStackLayout IsVisible="{Binding ShowLobbyVote}" Spacing="14">
+
+                <!-- Bloc compteurs par type -->
+                <Border BackgroundColor="White"
+                        StrokeShape="RoundRectangle 16"
+                        Stroke="{StaticResource BorderLight}"
+                        StrokeThickness="1"
+                        Padding="20,18">
+                    <VerticalStackLayout Spacing="14">
+                        <Label Text="🎯 Salle d'attente"
+                               FontSize="17"
+                               FontAttributes="Bold"
+                               TextColor="{StaticResource TextPrimary}"/>
+                        <Label Text="{Binding TotalProjectCount, StringFormat='{0} projet(s) prêt(s) pour le démarrage'}"
+                               FontSize="14"
+                               TextColor="{StaticResource TextTertiary}"/>
+
+                        <VerticalStackLayout Spacing="8" Margin="0,4,0,0">
+                            <Grid IsVisible="{Binding HasPhotoVote}"
+                                  ColumnDefinitions="Auto,Auto"
+                                  ColumnSpacing="10">
+                                <Label Grid.Column="0" Text="📷" FontSize="18"
+                                       VerticalOptions="Center"/>
+                                <Label Grid.Column="1"
+                                       Text="{Binding PhotoVoteCount, StringFormat='{0} vote(s) photo'}"
+                                       FontSize="14"
+                                       TextColor="{StaticResource TextPrimary}"
+                                       VerticalOptions="Center"/>
+                            </Grid>
+                            <Grid IsVisible="{Binding HasDuel}"
+                                  ColumnDefinitions="Auto,Auto"
+                                  ColumnSpacing="10">
+                                <Label Grid.Column="0" Text="⚖️" FontSize="18"
+                                       VerticalOptions="Center"/>
+                                <Label Grid.Column="1"
+                                       Text="{Binding DuelCount, StringFormat='{0} duel(s)'}"
+                                       FontSize="14"
+                                       TextColor="{StaticResource TextPrimary}"
+                                       VerticalOptions="Center"/>
+                            </Grid>
+                            <Grid IsVisible="{Binding HasPoll}"
+                                  ColumnDefinitions="Auto,Auto"
+                                  ColumnSpacing="10">
+                                <Label Grid.Column="0" Text="📊" FontSize="18"
+                                       VerticalOptions="Center"/>
+                                <Label Grid.Column="1"
+                                       Text="{Binding PollCount, StringFormat='{0} sondage(s)'}"
+                                       FontSize="14"
+                                       TextColor="{StaticResource TextPrimary}"
+                                       VerticalOptions="Center"/>
+                            </Grid>
+                        </VerticalStackLayout>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Bloc participants -->
+                <Border IsVisible="{Binding HasParticipants}"
+                        BackgroundColor="White"
+                        StrokeShape="RoundRectangle 16"
+                        Stroke="{StaticResource BorderLight}"
+                        StrokeThickness="1"
+                        Padding="20,18">
+                    <VerticalStackLayout Spacing="12">
+                        <Label Text="{Binding ParticipantCount, StringFormat='👥 {0} participant(s)'}"
+                               FontSize="17"
+                               FontAttributes="Bold"
+                               TextColor="{StaticResource TextPrimary}"/>
+
+                        <CollectionView ItemsSource="{Binding Participants}"
+                                        SelectionMode="None">
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate x:DataType="models:SeriesParticipantStat">
+                                    <Grid ColumnDefinitions="Auto,*,Auto"
+                                          ColumnSpacing="12"
+                                          Padding="0,6">
+                                        <Border Grid.Column="0"
+                                                BackgroundColor="{StaticResource SurfaceMuted}"
+                                                StrokeShape="RoundRectangle 18"
+                                                Stroke="Transparent"
+                                                WidthRequest="36"
+                                                HeightRequest="36">
+                                            <Label Text="👤"
+                                                   FontSize="16"
+                                                   HorizontalOptions="Center"
+                                                   VerticalOptions="Center"/>
+                                        </Border>
+                                        <Label Grid.Column="1"
+                                               Text="{Binding Username}"
+                                               FontSize="14"
+                                               FontAttributes="Bold"
+                                               TextColor="{StaticResource TextPrimary}"
+                                               VerticalOptions="Center"/>
+                                        <Label Grid.Column="2"
+                                               Text="{Binding ProjectCountLabel}"
+                                               FontSize="12"
+                                               TextColor="{StaticResource Primary}"
+                                               VerticalOptions="Center"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Bloc "mes projets" : tap sur la carte = modifier, bouton 🗑️ = supprimer -->
+                <Border IsVisible="{Binding HasMyProjects}"
+                        BackgroundColor="White"
+                        StrokeShape="RoundRectangle 16"
+                        Stroke="{StaticResource BorderLight}"
+                        StrokeThickness="1"
+                        Padding="20,18">
+                    <VerticalStackLayout Spacing="10">
+                        <Label Text="✨ Mes projets"
+                               FontSize="17"
+                               FontAttributes="Bold"
+                               TextColor="{StaticResource TextPrimary}"/>
+                        <Label Text="Touche un projet pour le modifier, ou utilise 🗑️ pour le supprimer."
+                               FontSize="11"
+                               TextColor="{StaticResource TextTertiary}"/>
+
+                        <CollectionView ItemsSource="{Binding MyProjects}"
+                                        SelectionMode="None">
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate x:DataType="vm:SeriesProjectItem">
+                                    <Border BackgroundColor="{StaticResource BackgroundPage}"
+                                            StrokeShape="RoundRectangle 12"
+                                            Stroke="{StaticResource BorderLight}"
+                                            StrokeThickness="1"
+                                            Margin="0,4,0,0"
+                                            Padding="12,10">
+                                        <!-- ✏️ Tap sur la carte entière = ouvrir la modification -->
+                                        <Border.GestureRecognizers>
+                                            <TapGestureRecognizer Tapped="OnEditProjectTapped"/>
+                                        </Border.GestureRecognizers>
+                                        <Grid ColumnDefinitions="Auto,*,Auto"
+                                              ColumnSpacing="6">
+                                            <Label Grid.Column="0"
+                                                   Text="{Binding TypeLabel}"
+                                                   FontSize="20"
+                                                   VerticalOptions="Center"/>
+                                            <Label Grid.Column="1"
+                                                   Text="{Binding Title}"
+                                                   FontSize="14"
+                                                   TextColor="{StaticResource TextPrimary}"
+                                                   LineBreakMode="TailTruncation"
+                                                   VerticalOptions="Center"/>
+                                            <!-- 🗑️ Supprimer -->
+                                            <Border Grid.Column="2"
+                                                    BackgroundColor="{StaticResource ErrorLight}"
+                                                    StrokeShape="RoundRectangle 8"
+                                                    Stroke="Transparent"
+                                                    Padding="8,6"
+                                                    WidthRequest="36"
+                                                    HeightRequest="36">
+                                                <Border.GestureRecognizers>
+                                                    <TapGestureRecognizer Tapped="OnDeleteProjectTapped"/>
+                                                </Border.GestureRecognizers>
+                                                <Label Text="🗑️"
+                                                       FontSize="14"
+                                                       HorizontalOptions="Center"
+                                                       VerticalOptions="Center"/>
+                                            </Border>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Bloc "modération" — visible uniquement pour le créateur -->
+                <Border IsVisible="{Binding HasOtherProjects}"
+                        BackgroundColor="White"
+                        StrokeShape="RoundRectangle 16"
+                        Stroke="#FFCC80"
+                        StrokeThickness="2"
+                        Padding="20,18">
+                    <VerticalStackLayout Spacing="10">
+                        <Label Text="{tr:Translate Key=SeriesDetail_Moderation}"
+                               FontSize="17"
+                               FontAttributes="Bold"
+                               TextColor="{StaticResource Warning}"/>
+                        <Label Text="{tr:Translate Key=SeriesDetail_ModerationHint}"
+                               FontSize="11"
+                               TextColor="{StaticResource TextTertiary}"/>
+
+                        <CollectionView ItemsSource="{Binding OtherProjects}"
+                                        SelectionMode="None">
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate x:DataType="vm:SeriesProjectItem">
+                                    <Border BackgroundColor="#FFF8E1"
+                                            StrokeShape="RoundRectangle 12"
+                                            Stroke="{StaticResource WarningLight}"
+                                            StrokeThickness="1"
+                                            Margin="0,4,0,0"
+                                            Padding="12,10">
+                                        <Grid ColumnDefinitions="Auto,*,Auto"
+                                              ColumnSpacing="8">
+                                            <Label Grid.Column="0"
+                                                   Text="{Binding TypeLabel}"
+                                                   FontSize="20"
+                                                   VerticalOptions="Center"/>
+                                            <VerticalStackLayout Grid.Column="1"
+                                                                 Spacing="2"
+                                                                 VerticalOptions="Center">
+                                                <Label Text="{Binding Title}"
+                                                       FontSize="14"
+                                                       FontAttributes="Bold"
+                                                       TextColor="{StaticResource TextPrimary}"
+                                                       LineBreakMode="TailTruncation"/>
+                                                <Label Text="{Binding AuthorUsername, StringFormat='par {0}'}"
+                                                       FontSize="11"
+                                                       TextColor="{StaticResource TextTertiary}"/>
+                                            </VerticalStackLayout>
+                                            <!-- 🗑️ Supprimer (modération) -->
+                                            <Border Grid.Column="2"
+                                                    BackgroundColor="{StaticResource ErrorLight}"
+                                                    StrokeShape="RoundRectangle 8"
+                                                    Stroke="Transparent"
+                                                    Padding="8,6"
+                                                    WidthRequest="36"
+                                                    HeightRequest="36">
+                                                <Border.GestureRecognizers>
+                                                    <TapGestureRecognizer Tapped="OnDeleteProjectTapped"/>
+                                                </Border.GestureRecognizers>
+                                                <Label Text="🗑️"
+                                                       FontSize="14"
+                                                       HorizontalOptions="Center"
+                                                       VerticalOptions="Center"/>
+                                            </Border>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Vide : aucun projet du tout -->
+                <VerticalStackLayout IsVisible="{Binding NoProjects}"
+                                     HorizontalOptions="Center"
+                                     Spacing="10"
+                                     Padding="20,30">
+                    <Label Text="⏳" FontSize="48" HorizontalOptions="Center"/>
+                    <Label Text="En attente des premiers projets..."
+                           FontSize="14"
+                           TextColor="{StaticResource TextTertiary}"
+                           HorizontalOptions="Center"/>
+                    <Label Text="{tr:Translate Key=SeriesDetail_BeFirstToAdd}"
+                           IsVisible="{Binding CanAddProjects}"
+                           FontSize="12"
+                           TextColor="{StaticResource TextDisabled}"
+                           HorizontalOptions="Center"/>
+                </VerticalStackLayout>
+
+            </VerticalStackLayout>
+
+            <!-- ═══════════════════════════════════════════════════════
+                 ⚡ LOT 1 : LISTE DÉTAILLÉE PROJETS — VOTE UNIQUEMENT
+                 Visible uniquement si ShowProjectsListVote=true
+                 ═══════════════════════════════════════════════════════ -->
+            <VerticalStackLayout IsVisible="{Binding ShowProjectsListVote}">
+
+                <Label Text="{tr:Translate Key=SeriesDetail_ProjectsHeader}"
+                       FontSize="17"
+                       FontAttributes="Bold"
+                       TextColor="{StaticResource TextPrimary}"
+                       Margin="0,0,0,10"/>
+
+                <CollectionView ItemsSource="{Binding Projects}"
+                IsVisible="{Binding HasProjects}"
+                SelectionMode="None">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="vm:SeriesProjectItem">
+                            <Border BackgroundColor="White"
+                    StrokeShape="RoundRectangle 14"
+                    Stroke="{StaticResource BorderLight}"
+                    StrokeThickness="1"
+                    Margin="0,0,0,10"
+                    Padding="14">
+                                <!-- ⚡ NOUVEAU : tap pour modifier (filtré dans le code-behind via CanExecute) -->
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="OnEditProjectTapped"/>
+                                </Border.GestureRecognizers>
+                                <Grid ColumnDefinitions="Auto,*,Auto,Auto" ColumnSpacing="10">
+                                    <Border Grid.Column="0"
+                            BackgroundColor="{StaticResource SurfaceMuted}"
+                            StrokeShape="RoundRectangle 8"
+                            Stroke="Transparent"
+                            Padding="8,6"
+                            WidthRequest="40"
+                            HeightRequest="40">
+                                        <Label Text="{Binding TypeLabel}"
+                               FontSize="18"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"/>
+                                    </Border>
+                                    <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
+                                        <Label Text="{Binding Title}"
+                               FontSize="14"
+                               FontAttributes="Bold"
+                               TextColor="{StaticResource TextPrimary}"
+                               LineBreakMode="TailTruncation"/>
+                                        <Label Text="{Binding Position, StringFormat='Projet n°{0}'}"
+                               FontSize="12"
+                               TextColor="{StaticResource TextTertiary}"/>
+                                    </VerticalStackLayout>
+                                    <Label Grid.Column="2"
+                           Text="✓"
+                           IsVisible="{Binding IsRevealed}"
+                           FontSize="18"
+                           TextColor="{StaticResource Success}"
+                           VerticalOptions="Center"/>
+                                    <!-- ⚡ NOUVEAU : bouton 🗑️ visible seulement si CanEdit (mon projet + preparing) -->
+                                    <Border Grid.Column="3"
+                            IsVisible="{Binding CanEdit}"
+                            BackgroundColor="{StaticResource ErrorLight}"
+                            StrokeShape="RoundRectangle 8"
+                            Stroke="Transparent"
+                            Padding="8,6"
+                            WidthRequest="36"
+                            HeightRequest="36">
+                                        <Border.GestureRecognizers>
+                                            <TapGestureRecognizer Tapped="OnDeleteProjectTapped"/>
+                                        </Border.GestureRecognizers>
+                                        <Label Text="🗑️"
+                               FontSize="14"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"/>
+                                    </Border>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+
+                <VerticalStackLayout IsVisible="{Binding NoProjects}"
+                                     HorizontalOptions="Center"
+                                     Spacing="10"
+                                     Padding="20,20">
+                    <Label Text="📋" FontSize="48" HorizontalOptions="Center"/>
+                    <Label Text="Aucun projet pour l'instant"
+                           FontSize="14"
+                           TextColor="{StaticResource TextTertiary}"
+                           HorizontalOptions="Center"/>
+                    <Label Text="{tr:Translate Key=SeriesDetail_CreateEventProjectsHint}"
+                           IsVisible="{Binding CanAddProjects}"
+                           FontSize="12"
+                           TextColor="{StaticResource TextDisabled}"
+                           HorizontalOptions="Center"/>
+                </VerticalStackLayout>
+            </VerticalStackLayout>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

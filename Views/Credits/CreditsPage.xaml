@@ -1,0 +1,338 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="BeauOuPas.Views.Credits.CreditsPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:BeauOuPas.ViewModels.Credits"
+    xmlns:tr="clr-namespace:BeauOuPas.Extensions"
+    xmlns:models="clr-namespace:BeauOuPas.Models"
+    x:DataType="vm:CreditsViewModel"
+    Title="{tr:Translate Key=Home_MyCredits}"
+    BackgroundColor="{StaticResource BackgroundPage}">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="16">
+
+            <!-- Chargement -->
+            <ActivityIndicator
+                IsRunning="{Binding IsLoading}"
+                IsVisible="{Binding IsLoading}"
+                Color="{StaticResource Primary}"/>
+
+            <!-- ── Solde ── -->
+            <Border BackgroundColor="{StaticResource Primary}"
+                    StrokeShape="RoundRectangle 15"
+                    Stroke="Transparent"
+                    Padding="20">
+                <VerticalStackLayout
+                    HorizontalOptions="Center"
+                    Spacing="8">
+                    <Label Text="{tr:Translate Key=Credits_Title}"
+                           FontSize="16"
+                           TextColor="White"
+                           HorizontalOptions="Center"/>
+                    <Label Text="{Binding Credits}"
+                           FontSize="48"
+                           FontAttributes="Bold"
+                           TextColor="White"
+                           HorizontalOptions="Center"/>
+                    <Label Text="{tr:Translate Key=Credits_Available}"
+                           FontSize="13"
+                           TextColor="#FFB3D1"
+                           HorizontalOptions="Center"/>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- ── Gagner des crédits ── -->
+            <Border BackgroundColor="White"
+                    StrokeShape="RoundRectangle 12"
+                    Stroke="{StaticResource BorderLight}"
+                    StrokeThickness="1"
+                    Padding="16">
+                <VerticalStackLayout Spacing="12">
+
+                    <Label Text="{tr:Translate Key=Credits_HowToEarn}"
+                           FontSize="15"
+                           FontAttributes="Bold"
+                           TextColor="{StaticResource TextPrimary}"/>
+
+                    <Grid ColumnDefinitions="Auto,*,Auto">
+                        <Label Grid.Column="0" Text="🗳️" FontSize="20" VerticalOptions="Center"/>
+                        <Label Grid.Column="1" Text="{tr:Translate Key=Credits_Vote}"
+                               FontSize="14" TextColor="{StaticResource TextPrimary}"
+                               VerticalOptions="Center" Margin="12,0,0,0"/>
+                        <Label Grid.Column="2"
+                               Text="{Binding GainVote, StringFormat='+{0} crédit'}"
+                               FontSize="14" TextColor="{StaticResource Success}"
+                               FontAttributes="Bold" VerticalOptions="Center"/>
+                    </Grid>
+
+                    <BoxView Color="{StaticResource SurfaceMuted}" HeightRequest="1"/>
+
+                    <Grid ColumnDefinitions="Auto,*,Auto">
+                        <Label Grid.Column="0" Text="📢" FontSize="20" VerticalOptions="Center"/>
+                        <Label Grid.Column="1" Text="{tr:Translate Key=Credits_AdBanner}"
+                               FontSize="14" TextColor="{StaticResource TextPrimary}"
+                               VerticalOptions="Center" Margin="12,0,0,0"/>
+                        <Label Grid.Column="2"
+                               Text="{Binding GainAdBanner, StringFormat='+{0} crédit'}"
+                               FontSize="14" TextColor="{StaticResource Success}"
+                               FontAttributes="Bold" VerticalOptions="Center"/>
+                    </Grid>
+
+                    <BoxView Color="{StaticResource SurfaceMuted}" HeightRequest="1"/>
+
+                    <Grid ColumnDefinitions="Auto,*,Auto">
+                        <Label Grid.Column="0" Text="🎬" FontSize="20" VerticalOptions="Center"/>
+                        <Label Grid.Column="1" Text="{tr:Translate Key=Credits_AdReward}"
+                               FontSize="14" TextColor="{StaticResource TextPrimary}"
+                               VerticalOptions="Center" Margin="12,0,0,0"/>
+                        <Label Grid.Column="2"
+                               Text="{Binding GainAdReward, StringFormat='+{0} crédits'}"
+                               FontSize="14" TextColor="{StaticResource Success}"
+                               FontAttributes="Bold" VerticalOptions="Center"/>
+                    </Grid>
+
+                    <BoxView Color="{StaticResource SurfaceMuted}" HeightRequest="1"/>
+
+                    <!-- Gain ami -->
+                    <Grid ColumnDefinitions="Auto,*,Auto">
+                        <Label Grid.Column="0" Text="🤝" FontSize="20" VerticalOptions="Center"/>
+                        <Label Grid.Column="1" Text="{tr:Translate Key=Credits_GainFriend}"
+                               FontSize="14" TextColor="{StaticResource TextPrimary}"
+                               VerticalOptions="Center" Margin="12,0,0,0"/>
+                        <Label Grid.Column="2"
+                               Text="{Binding GainFriend, StringFormat='+{0} crédits'}"
+                               FontSize="14" TextColor="{StaticResource Success}"
+                               FontAttributes="Bold" VerticalOptions="Center"/>
+                    </Grid>
+
+                    <Button Text="{tr:Translate Key=Credits_WatchAd}"
+                            Command="{Binding WatchAdCommand}"
+                            BackgroundColor="{StaticResource Success}"
+                            TextColor="White"
+                            CornerRadius="10"
+                            HeightRequest="45"
+                            FontSize="14"/>
+
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- ── Coût des actions (avec scroll interne) ── -->
+            <Border BackgroundColor="White"
+                    StrokeShape="RoundRectangle 12"
+                    Stroke="{StaticResource BorderLight}"
+                    StrokeThickness="1"
+                    Padding="16">
+                <VerticalStackLayout Spacing="12">
+
+                    <Label Text="{tr:Translate Key=Credits_CostTitle}"
+                           FontSize="15"
+                           FontAttributes="Bold"
+                           TextColor="{StaticResource TextPrimary}"/>
+
+                    <ScrollView HeightRequest="320"
+                                Orientation="Vertical">
+                        <VerticalStackLayout Spacing="12">
+
+                            <!-- Soumettre un projet -->
+                            <Grid ColumnDefinitions="Auto,*,Auto">
+                                <Label Grid.Column="0" Text="📷" FontSize="20" VerticalOptions="Center"/>
+                                <Label Grid.Column="1" Text="{tr:Translate Key=Credits_CostProject}"
+                                       FontSize="14" TextColor="{StaticResource TextPrimary}"
+                                       VerticalOptions="Center" Margin="12,0,0,0"/>
+                                <Label Grid.Column="2"
+                                       Text="{Binding CostProject, StringFormat='-{0} crédits'}"
+                                       FontSize="14" TextColor="{StaticResource Error}"
+                                       FontAttributes="Bold" VerticalOptions="Center"/>
+                            </Grid>
+
+                            <BoxView Color="{StaticResource SurfaceMuted}" HeightRequest="1"/>
+
+                            <!-- Booster un projet -->
+                            <Grid ColumnDefinitions="Auto,*,Auto">
+                                <Label Grid.Column="0" Text="🚀" FontSize="20" VerticalOptions="Center"/>
+                                <Label Grid.Column="1" Text="{tr:Translate Key=Credits_CostBoost}"
+                                       FontSize="14" TextColor="{StaticResource TextPrimary}"
+                                       VerticalOptions="Center" Margin="12,0,0,0"/>
+                                <Label Grid.Column="2"
+                                       Text="{Binding CostBoost, StringFormat='-{0} crédits'}"
+                                       FontSize="14" TextColor="{StaticResource Error}"
+                                       FontAttributes="Bold" VerticalOptions="Center"/>
+                            </Grid>
+
+                            <BoxView Color="{StaticResource SurfaceMuted}" HeightRequest="1"/>
+
+                            <!-- Rewind -->
+                            <Grid ColumnDefinitions="Auto,*,Auto">
+                                <Label Grid.Column="0" Text="↩️" FontSize="20" VerticalOptions="Center"/>
+                                <Label Grid.Column="1" Text="{tr:Translate Key=Credits_CostRewind}"
+                                       FontSize="14" TextColor="{StaticResource TextPrimary}"
+                                       VerticalOptions="Center" Margin="12,0,0,0"/>
+                                <Label Grid.Column="2"
+                                       Text="{Binding CostRewind, StringFormat='-{0} crédits'}"
+                                       FontSize="14" TextColor="{StaticResource Error}"
+                                       FontAttributes="Bold" VerticalOptions="Center"/>
+                            </Grid>
+
+                            <BoxView Color="{StaticResource SurfaceMuted}" HeightRequest="1"
+                                     IsVisible="{Binding MeetVisible}"/>
+
+                            <!-- Demander une rencontre (masqué si meet désactivé) -->
+                            <Grid ColumnDefinitions="Auto,*,Auto"
+                                  IsVisible="{Binding MeetVisible}">
+                                <Label Grid.Column="0" Text="💘" FontSize="20" VerticalOptions="Center"/>
+                                <Label Grid.Column="1" Text="{tr:Translate Key=Credits_CostMeet}"
+                                       FontSize="14" TextColor="{StaticResource TextPrimary}"
+                                       VerticalOptions="Center" Margin="12,0,0,0"/>
+                                <Label Grid.Column="2"
+                                       Text="{Binding CostMeet, StringFormat='-{0} crédits'}"
+                                       FontSize="14" TextColor="{StaticResource Error}"
+                                       FontAttributes="Bold" VerticalOptions="Center"/>
+                            </Grid>
+
+                            <BoxView Color="{StaticResource SurfaceMuted}" HeightRequest="1"
+                                     IsVisible="{Binding MeetVisible}"/>
+
+                            <!-- Super Meet (masqué si meet désactivé) -->
+                            <Grid ColumnDefinitions="Auto,*,Auto"
+                                  IsVisible="{Binding MeetVisible}">
+                                <Label Grid.Column="0" Text="⭐" FontSize="20" VerticalOptions="Center"/>
+                                <Label Grid.Column="1" Text="{tr:Translate Key=Credits_CostSuperMeet}"
+                                       FontSize="14" TextColor="{StaticResource TextPrimary}"
+                                       VerticalOptions="Center" Margin="12,0,0,0"/>
+                                <Label Grid.Column="2"
+                                       Text="{Binding CostSuperMeet, StringFormat='-{0} crédits'}"
+                                       FontSize="14" TextColor="{StaticResource Error}"
+                                       FontAttributes="Bold" VerticalOptions="Center"/>
+                            </Grid>
+
+                            <BoxView Color="{StaticResource SurfaceMuted}" HeightRequest="1"/>
+
+                            <!-- Créer série depuis template -->
+                            <Grid ColumnDefinitions="Auto,*,Auto">
+                                <Label Grid.Column="0" Text="🎮" FontSize="20" VerticalOptions="Center"/>
+                                <Label Grid.Column="1" Text="{tr:Translate Key=Credits_CostSeriesFromTemplate}"
+                                       FontSize="14" TextColor="{StaticResource TextPrimary}"
+                                       VerticalOptions="Center" Margin="12,0,0,0"/>
+                                <Label Grid.Column="2"
+                                       Text="{Binding CostSeriesTemplate, StringFormat='-{0} crédits'}"
+                                       FontSize="14" TextColor="{StaticResource Error}"
+                                       FontAttributes="Bold" VerticalOptions="Center"/>
+                            </Grid>
+
+                            <BoxView Color="{StaticResource SurfaceMuted}" HeightRequest="1"/>
+
+                            <!-- Ajouter projet à une série -->
+                            <Grid ColumnDefinitions="Auto,*,Auto">
+                                <Label Grid.Column="0" Text="➕" FontSize="20" VerticalOptions="Center"/>
+                                <Label Grid.Column="1" Text="{tr:Translate Key=Credits_CostAddProjectToSeries}"
+                                       FontSize="14" TextColor="{StaticResource TextPrimary}"
+                                       VerticalOptions="Center" Margin="12,0,0,0"/>
+                                <Label Grid.Column="2"
+                                       Text="{Binding CostSeriesProject, StringFormat='-{0} crédits'}"
+                                       FontSize="14" TextColor="{StaticResource Error}"
+                                       FontAttributes="Bold" VerticalOptions="Center"/>
+                            </Grid>
+
+                            <BoxView Color="{StaticResource SurfaceMuted}" HeightRequest="1"/>
+
+                            <!-- Thème visuel TV/quiz -->
+                            <Grid ColumnDefinitions="Auto,*,Auto">
+                                <Label Grid.Column="0" Text="🎨" FontSize="20" VerticalOptions="Center"/>
+                                <Label Grid.Column="1" Text="{tr:Translate Key=Credits_CostVisualTheme}"
+                                       FontSize="14" TextColor="{StaticResource TextPrimary}"
+                                       VerticalOptions="Center" Margin="12,0,0,0"/>
+                                <Label Grid.Column="2"
+                                       Text="{Binding CostVisualTheme, StringFormat='-{0} crédits'}"
+                                       FontSize="14" TextColor="{StaticResource Error}"
+                                       FontAttributes="Bold" VerticalOptions="Center"/>
+                            </Grid>
+
+                            <BoxView Color="{StaticResource SurfaceMuted}" HeightRequest="1"/>
+
+                            <!-- Vote reçu (créateur paye) -->
+                            <Grid ColumnDefinitions="Auto,*,Auto">
+                                <Label Grid.Column="0" Text="📥" FontSize="20" VerticalOptions="Center"/>
+                                <Label Grid.Column="1" Text="{tr:Translate Key=Credits_RewardVoteReceived}"
+                                       FontSize="14" TextColor="{StaticResource TextPrimary}"
+                                       VerticalOptions="Center" Margin="12,0,0,0"/>
+                                <Label Grid.Column="2"
+                                       Text="{Binding CostVoteReceived, StringFormat='-{0} crédits'}"
+                                       FontSize="14" TextColor="{StaticResource Error}"
+                                       FontAttributes="Bold" VerticalOptions="Center"/>
+                            </Grid>
+
+                        </VerticalStackLayout>
+                    </ScrollView>
+
+                    <!-- Hint scroll si beaucoup de contenu -->
+                    <Label Text="{tr:Translate Key=Credits_ScrollHint}"
+                           FontSize="11"
+                           TextColor="{StaticResource TextDisabled}"
+                           FontAttributes="Italic"
+                           HorizontalOptions="Center"
+                           Margin="0,4,0,0"/>
+
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- ── Historique ── -->
+            <Border BackgroundColor="White"
+                    StrokeShape="RoundRectangle 12"
+                    Stroke="{StaticResource BorderLight}"
+                    StrokeThickness="1"
+                    Padding="16">
+                <VerticalStackLayout Spacing="12">
+
+                    <Label Text="{tr:Translate Key=Credits_History}"
+                           FontSize="15"
+                           FontAttributes="Bold"
+                           TextColor="{StaticResource TextPrimary}"/>
+
+                    <CollectionView ItemsSource="{Binding Transactions}">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="models:CreditTransaction">
+                                <Grid ColumnDefinitions="Auto,*,Auto"
+                                      Padding="0,6">
+
+                                    <Label Grid.Column="0"
+                                           Text="{Binding TypeLabel}"
+                                           FontSize="13"
+                                           VerticalOptions="Center"/>
+
+                                    <Label Grid.Column="1"
+                                           Text="{Binding Description}"
+                                           FontSize="12"
+                                           TextColor="{StaticResource TextTertiary}"
+                                           VerticalOptions="Center"
+                                           Margin="8,0,0,0"
+                                           LineBreakMode="TailTruncation"/>
+
+                                    <!-- Montant : négatif rouge par défaut, positif vert -->
+                                    <Label Grid.Column="2"
+                                           Text="{Binding AmountLabel}"
+                                           FontSize="13"
+                                           FontAttributes="Bold"
+                                           VerticalOptions="Center"
+                                           TextColor="#FF3B30">
+                                        <Label.Triggers>
+                                            <DataTrigger TargetType="Label"
+                                                         Binding="{Binding IsGain}"
+                                                         Value="True">
+                                                <Setter Property="TextColor" Value="#2ECC71"/>
+                                            </DataTrigger>
+                                        </Label.Triggers>
+                                    </Label>
+
+                                </Grid>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+
+                </VerticalStackLayout>
+            </Border>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

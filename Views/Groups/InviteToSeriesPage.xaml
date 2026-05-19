@@ -1,0 +1,145 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="BeauOuPas.Views.Groups.InviteToSeriesPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:BeauOuPas.ViewModels.Groups"
+        xmlns:tr="clr-namespace:BeauOuPas.Extensions"
+x:DataType="vm:InviteToSeriesViewModel"
+    Title="Inviter"
+    BackgroundColor="{StaticResource BackgroundPage}">
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Fermer" Command="{Binding CloseCommand}"/>
+    </ContentPage.ToolbarItems>
+
+    <Grid RowDefinitions="Auto,Auto,Auto,*" Padding="16,12">
+
+        <!-- Titre -->
+        <VerticalStackLayout Grid.Row="0" Spacing="2" Margin="0,0,0,16">
+            <Label Text="{tr:Translate Key=InviteToSeries_Title}"
+                   FontSize="22" FontAttributes="Bold"
+                   TextColor="{StaticResource TextPrimary}"/>
+            <Label Text="{Binding SeriesTitle}"
+                   FontSize="14" TextColor="{StaticResource Primary}"/>
+        </VerticalStackLayout>
+
+        <!-- Recherche -->
+        <Border Grid.Row="1"
+                BackgroundColor="White"
+                StrokeShape="RoundRectangle 14"
+                Stroke="{StaticResource BorderLight}"
+                StrokeThickness="1"
+                Padding="14,4"
+                Margin="0,0,0,8">
+            <Grid ColumnDefinitions="Auto,*,Auto">
+                <Label Grid.Column="0" Text="🔍" FontSize="16"
+                       VerticalOptions="Center" Margin="0,0,8,0"/>
+                <Entry Grid.Column="1"
+                       Placeholder="Rechercher par nom d'utilisateur..."
+                       Text="{Binding SearchQuery, Mode=TwoWay}"
+                       FontSize="15" TextColor="{StaticResource TextPrimary}"
+                       PlaceholderColor="{StaticResource TextDisabled}"
+                       BackgroundColor="Transparent"
+                       VerticalOptions="Center"/>
+                <ActivityIndicator Grid.Column="2"
+                                   IsRunning="{Binding IsSearching}"
+                                   IsVisible="{Binding IsSearching}"
+                                   Color="{StaticResource Primary}"
+                                   WidthRequest="20" HeightRequest="20"/>
+            </Grid>
+        </Border>
+
+        <!-- Status / hint -->
+        <Label Grid.Row="2"
+               Text="{Binding StatusMessage}"
+               FontSize="13" TextColor="{StaticResource TextTertiary}"
+               IsVisible="{Binding StatusMessage, Converter={StaticResource StringToBoolConverter}}"
+               Margin="4,0,0,8"/>
+
+        <!-- Résultats -->
+        <CollectionView Grid.Row="3"
+                        ItemsSource="{Binding Results}"
+                        SelectionMode="None">
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="vm:UserInviteItem">
+                    <Border BackgroundColor="White"
+                            StrokeShape="RoundRectangle 12"
+                            Stroke="{StaticResource BorderLight}"
+                            StrokeThickness="1"
+                            Margin="0,0,0,8"
+                            Padding="12,10">
+                        <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+
+                            <!-- Avatar -->
+                            <Border Grid.Column="0"
+                                    StrokeShape="RoundRectangle 22"
+                                    Stroke="Transparent"
+                                    BackgroundColor="{StaticResource Primary}"
+                                    HeightRequest="44" WidthRequest="44">
+                                <Grid>
+                                    <Image Source="{Binding AvatarUrl}"
+                                           IsVisible="{Binding HasAvatar}"
+                                           Aspect="AspectFill"/>
+                                    <Label Text="{Binding AvatarInitial}"
+                                           IsVisible="{Binding HasAvatar, Converter={StaticResource InverseBoolConverter}}"
+                                           FontSize="18" FontAttributes="Bold"
+                                           TextColor="White"
+                                           HorizontalOptions="Center"
+                                           VerticalOptions="Center"/>
+                                </Grid>
+                            </Border>
+
+                            <!-- Username + flag ami -->
+                            <VerticalStackLayout Grid.Column="1" Spacing="2"
+                                                 VerticalOptions="Center">
+                                <Label Text="{Binding Username}"
+                                       FontSize="15" FontAttributes="Bold"
+                                       TextColor="{StaticResource TextPrimary}"/>
+                                <Label Text="✅ Ami"
+                                       FontSize="12" TextColor="{StaticResource Success}"
+                                       IsVisible="{Binding IsFriend}"/>
+                            </VerticalStackLayout>
+
+                            <!-- Bouton inviter -->
+                            <Border Grid.Column="2"
+                                    StrokeShape="RoundRectangle 18"
+                                    Stroke="Transparent"
+                                    Padding="14,8"
+                                    Opacity="{Binding CanInvite, Converter={StaticResource BoolToOpacityConverter}}">
+                                <Border.Triggers>
+                                    <DataTrigger TargetType="Border"
+                                                 Binding="{Binding IsInvited}"
+                                                 Value="True">
+                                        <Setter Property="BackgroundColor" Value="#4CAF50"/>
+                                    </DataTrigger>
+                                    <DataTrigger TargetType="Border"
+                                                 Binding="{Binding IsInvited}"
+                                                 Value="False">
+                                        <Setter Property="BackgroundColor" Value="#C2754C"/>
+                                    </DataTrigger>
+                                </Border.Triggers>
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:InviteToSeriesViewModel}}, Path=InviteCommand}"
+                                        CommandParameter="{Binding .}"/>
+                                </Border.GestureRecognizers>
+                                <Grid>
+                                    <ActivityIndicator IsRunning="{Binding IsInviting}"
+                                                       IsVisible="{Binding IsInviting}"
+                                                       Color="White"
+                                                       WidthRequest="18" HeightRequest="18"/>
+                                    <Label Text="{Binding StatusLabel}"
+                                           IsVisible="{Binding IsInviting, Converter={StaticResource InverseBoolConverter}}"
+                                           FontSize="13" FontAttributes="Bold"
+                                           TextColor="White"/>
+                                </Grid>
+                            </Border>
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+    </Grid>
+</ContentPage>

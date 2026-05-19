@@ -1,0 +1,568 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="BeauOuPas.Views.Projects.ProjectDetailPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:BeauOuPas.ViewModels"
+    xmlns:models="clr-namespace:BeauOuPas.Models"
+    xmlns:tr="clr-namespace:BeauOuPas.Extensions"
+    x:DataType="vm:ProjectDetailViewModel"
+    Title="{Binding Title}"
+    BackgroundColor="{StaticResource BackgroundPage}">
+
+    <ScrollView>
+        <VerticalStackLayout Spacing="0">
+
+            <ActivityIndicator IsRunning="{Binding IsLoading}"
+                               IsVisible="{Binding IsLoading}"
+                               Color="{StaticResource Primary}"
+                               Margin="0,40"/>
+
+            <!-- Photo simple -->
+            <Border IsVisible="{Binding IsPhoto}"
+                    HeightRequest="300"
+                    StrokeThickness="0">
+                <Image Source="{Binding PhotoUrl}" Aspect="AspectFill"/>
+            </Border>
+
+            <!-- Vote photo -->
+            <VerticalStackLayout IsVisible="{Binding CanVotePhoto}"
+                                 Padding="16"
+                                 Spacing="12">
+
+                <Label Text="Donne ton avis"
+                       FontSize="18"
+                       FontAttributes="Bold"
+                       TextColor="{StaticResource TextPrimary}"
+                       HorizontalOptions="Center"/>
+
+                <Grid ColumnDefinitions="*,*,*" ColumnSpacing="12">
+
+                    <Border Grid.Column="0"
+                            BackgroundColor="{StaticResource SurfaceCardAlt}"
+                            Stroke="{StaticResource BorderLight}"
+                            StrokeThickness="1"
+                            StrokeShape="RoundRectangle 16"
+                            Padding="10">
+                        <VerticalStackLayout Spacing="4" HorizontalOptions="Center">
+                            <Label Text="❤️" FontSize="34" HorizontalOptions="Center"/>
+                            <Label Text="J'aime"
+                                   FontSize="12"
+                                   TextColor="{StaticResource Success}"
+                                   HorizontalOptions="Center"/>
+                        </VerticalStackLayout>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding VotePhotoCommand}"
+                                                  CommandParameter="like"/>
+                        </Border.GestureRecognizers>
+                    </Border>
+
+                    <Border Grid.Column="1"
+                            BackgroundColor="{StaticResource SurfaceCardAlt}"
+                            Stroke="{StaticResource BorderLight}"
+                            StrokeThickness="1"
+                            StrokeShape="RoundRectangle 16"
+                            Padding="10">
+                        <VerticalStackLayout Spacing="4" HorizontalOptions="Center">
+                            <Label Text="😐" FontSize="34" HorizontalOptions="Center"/>
+                            <Label Text="Moyen"
+                                   FontSize="12"
+                                   TextColor="{StaticResource Warning}"
+                                   HorizontalOptions="Center"/>
+                        </VerticalStackLayout>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding VotePhotoCommand}"
+                                                  CommandParameter="neutral"/>
+                        </Border.GestureRecognizers>
+                    </Border>
+
+                    <Border Grid.Column="2"
+                            BackgroundColor="{StaticResource SurfaceCardAlt}"
+                            Stroke="{StaticResource BorderLight}"
+                            StrokeThickness="1"
+                            StrokeShape="RoundRectangle 16"
+                            Padding="10">
+                        <VerticalStackLayout Spacing="4" HorizontalOptions="Center">
+                            <Label Text="👎" FontSize="34" HorizontalOptions="Center"/>
+                            <Label Text="Pas fan"
+                                   FontSize="12"
+                                   TextColor="{StaticResource Error}"
+                                   HorizontalOptions="Center"/>
+                        </VerticalStackLayout>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding VotePhotoCommand}"
+                                                  CommandParameter="dislike"/>
+                        </Border.GestureRecognizers>
+                    </Border>
+
+                </Grid>
+            </VerticalStackLayout>
+
+            <!-- Duel -->
+            <Grid IsVisible="{Binding IsDuel}"
+                  ColumnDefinitions="*,*"
+                  HeightRequest="300"
+                  ColumnSpacing="4"
+                  Margin="4">
+
+                <Border Grid.Column="0"
+                        StrokeShape="RoundRectangle 10"
+                        Stroke="Transparent">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding VoteDuelCommand}"
+                                              CommandParameter="A"/>
+                    </Border.GestureRecognizers>
+
+                    <Grid>
+                        <Image Source="{Binding PhotoLeftUrl}" Aspect="AspectFill"/>
+
+                        <Border BackgroundColor="#CC000000"
+                                StrokeShape="RoundRectangle 0,0,10,10"
+                                Padding="8,4"
+                                VerticalOptions="End">
+                            <Label Text="A"
+                                   TextColor="White"
+                                   FontSize="18"
+                                   FontAttributes="Bold"
+                                   HorizontalOptions="Center"/>
+                        </Border>
+
+                        <Border IsVisible="{Binding CanVoteDuel}"
+                                BackgroundColor="#99000000"
+                                StrokeShape="RoundRectangle 10"
+                                Padding="8"
+                                HorizontalOptions="Center"
+                                VerticalOptions="Center">
+                            <Label Text="Appuie pour voter A"
+                                   TextColor="White"
+                                   FontSize="13"
+                                   FontAttributes="Bold"/>
+                        </Border>
+                    </Grid>
+                </Border>
+
+                <Border Grid.Column="1"
+                        StrokeShape="RoundRectangle 10"
+                        Stroke="Transparent">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding VoteDuelCommand}"
+                                              CommandParameter="B"/>
+                    </Border.GestureRecognizers>
+
+                    <Grid>
+                        <Image Source="{Binding PhotoRightUrl}" Aspect="AspectFill"/>
+
+                        <Border BackgroundColor="#CC000000"
+                                StrokeShape="RoundRectangle 0,0,10,10"
+                                Padding="8,4"
+                                VerticalOptions="End">
+                            <Label Text="B"
+                                   TextColor="White"
+                                   FontSize="18"
+                                   FontAttributes="Bold"
+                                   HorizontalOptions="Center"/>
+                        </Border>
+
+                        <Border IsVisible="{Binding CanVoteDuel}"
+                                BackgroundColor="#99000000"
+                                StrokeShape="RoundRectangle 10"
+                                Padding="8"
+                                HorizontalOptions="Center"
+                                VerticalOptions="Center">
+                            <Label Text="Appuie pour voter B"
+                                   TextColor="White"
+                                   FontSize="13"
+                                   FontAttributes="Bold"/>
+                        </Border>
+                    </Grid>
+                </Border>
+            </Grid>
+
+            <!-- ── SONDAGE : options avant vote ── NOUVEAU -->
+            <VerticalStackLayout x:Name="PollVoteSection"
+                                 IsVisible="{Binding CanVotePoll}"
+                                 Padding="16"
+                                 Spacing="12">
+
+                <Border BackgroundColor="{StaticResource Accent}"
+                        StrokeShape="RoundRectangle 20"
+                        Padding="12,6"
+                        HorizontalOptions="Start">
+                    <Label Text="📊 Sondage"
+                           TextColor="{StaticResource TextOnAccent}"
+                           FontSize="13"
+                           FontAttributes="Bold"/>
+                </Border>
+
+                <Label Text="Choisis une option"
+                       FontSize="18"
+                       FontAttributes="Bold"
+                       TextColor="{StaticResource TextPrimary}"/>
+
+                <CollectionView x:Name="PollOptionsView"
+                                ItemsSource="{Binding PollStats}">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="models:PollOption">
+                            <Border BackgroundColor="{StaticResource SurfaceCardAlt}"
+                                    StrokeShape="RoundRectangle 14"
+                                    Stroke="{StaticResource BorderLight}"
+                                    StrokeThickness="1"
+                                    Margin="0,0,0,10"
+                                    Padding="18,16">
+                                <Label Text="{Binding Text}"
+                                       FontSize="16"
+                                       FontAttributes="Bold"
+                                       TextColor="{StaticResource TextPrimary}"
+                                       VerticalOptions="Center"/>
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer
+                                        Command="{Binding Source={x:Reference PollOptionsView},
+                                                          Path=BindingContext.VotePollCommand}"
+                                        CommandParameter="{Binding Id}"/>
+                                </Border.GestureRecognizers>
+                            </Border>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+
+                <Label Text="👆 Appuie sur une option pour voter"
+                       FontSize="13"
+                       TextColor="{StaticResource TextTertiary}"
+                       HorizontalOptions="Center"/>
+
+            </VerticalStackLayout>
+
+            <!-- Infos projet -->
+            <Border BackgroundColor="{StaticResource SurfaceCardAlt}"
+                    StrokeShape="RoundRectangle 0"
+                    Stroke="{StaticResource BorderLight}"
+                    StrokeThickness="1"
+                    Padding="20,16">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="{Binding Title}"
+                           FontSize="22"
+                           FontAttributes="Bold"
+                           TextColor="{StaticResource TextPrimary}"/>
+                    <Label Text="{Binding OwnerUsername, StringFormat='par @{0}'}"
+                           FontSize="14"
+                           TextColor="{StaticResource TextTertiary}"/>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Message après vote si stats masquées (photo/duel uniquement) -->
+            <VerticalStackLayout IsVisible="{Binding VoteDoneStatsHidden}"
+                                 Padding="40"
+                                 Spacing="12"
+                                 HorizontalOptions="Center">
+                <Label Text="✅"
+                       FontSize="48"
+                       HorizontalOptions="Center"/>
+                <Label Text="Merci pour ton vote !"
+                       FontSize="18"
+                       FontAttributes="Bold"
+                       TextColor="{StaticResource TextPrimary}"
+                       HorizontalOptions="Center"/>
+                <Label Text="{tr:Translate Key=ProjectDetail_StatsHiddenAfterVote}"
+                       FontSize="14"
+                       TextColor="{StaticResource TextTertiary}"
+                       HorizontalTextAlignment="Center"
+                       HorizontalOptions="Center"/>
+            </VerticalStackLayout>
+
+            <!-- Stats photo -->
+            <VerticalStackLayout IsVisible="{Binding HasPhotoStats}"
+                                 Padding="16"
+                                 Spacing="12">
+
+                <Label Text="{tr:Translate Key=Stats_Title}"
+                       FontSize="18"
+                       FontAttributes="Bold"
+                       TextColor="{StaticResource TextPrimary}"/>
+
+                <Border BackgroundColor="{StaticResource SurfaceCardAlt}"
+                        StrokeShape="RoundRectangle 12"
+                        Stroke="{StaticResource BorderLight}"
+                        StrokeThickness="1"
+                        Padding="16">
+                    <Grid ColumnDefinitions="*,Auto">
+                        <VerticalStackLayout Grid.Column="0" Spacing="4">
+                            <Label Text="{tr:Translate Key=Stats_AverageScore}"
+                                   FontSize="14"
+                                   TextColor="{StaticResource TextSecondary}"/>
+                            <Label Text="{Binding PhotoStats.ScoreMoyen, StringFormat='{0:F1}/3'}"
+                                   FontSize="28"
+                                   FontAttributes="Bold"
+                                   TextColor="{StaticResource Primary}"/>
+                        </VerticalStackLayout>
+
+                        <Label Grid.Column="1"
+                               Text="{Binding PhotoStats.TotalVotes, StringFormat='{0} votes'}"
+                               FontSize="13"
+                               TextColor="{StaticResource TextTertiary}"
+                               VerticalOptions="Center"/>
+                    </Grid>
+                </Border>
+
+                <Border BackgroundColor="{StaticResource SurfaceCardAlt}"
+                        StrokeShape="RoundRectangle 12"
+                        Stroke="{StaticResource BorderLight}"
+                        StrokeThickness="1"
+                        Padding="16">
+                    <VerticalStackLayout Spacing="12">
+                        <Label Text="{tr:Translate Key=Stats_Votes}"
+                               FontSize="14"
+                               FontAttributes="Bold"
+                               TextColor="{StaticResource TextSecondary}"/>
+
+                        <Grid ColumnDefinitions="*,*,*" ColumnSpacing="8">
+                            <VerticalStackLayout Grid.Column="0" HorizontalOptions="Center" Spacing="4">
+                                <Label Text="❤️" FontSize="28" HorizontalOptions="Center"/>
+                                <Label Text="{Binding PhotoStats.TotalJaime}"
+                                       FontSize="20"
+                                       FontAttributes="Bold"
+                                       TextColor="{StaticResource Success}"
+                                       HorizontalOptions="Center"/>
+                                <Label Text="{tr:Translate Key=Stats_Like}"
+                                       FontSize="11"
+                                       TextColor="{StaticResource TextTertiary}"
+                                       HorizontalOptions="Center"/>
+                            </VerticalStackLayout>
+
+                            <VerticalStackLayout Grid.Column="1" HorizontalOptions="Center" Spacing="4">
+                                <Label Text="😐" FontSize="28" HorizontalOptions="Center"/>
+                                <Label Text="{Binding PhotoStats.TotalMoyen}"
+                                       FontSize="20"
+                                       FontAttributes="Bold"
+                                       TextColor="{StaticResource Warning}"
+                                       HorizontalOptions="Center"/>
+                                <Label Text="{tr:Translate Key=Stats_Neutral}"
+                                       FontSize="11"
+                                       TextColor="{StaticResource TextTertiary}"
+                                       HorizontalOptions="Center"/>
+                            </VerticalStackLayout>
+
+                            <VerticalStackLayout Grid.Column="2" HorizontalOptions="Center" Spacing="4">
+                                <Label Text="👎" FontSize="28" HorizontalOptions="Center"/>
+                                <Label Text="{Binding PhotoStats.TotalPasFan}"
+                                       FontSize="20"
+                                       FontAttributes="Bold"
+                                       TextColor="{StaticResource Error}"
+                                       HorizontalOptions="Center"/>
+                                <Label Text="{tr:Translate Key=Stats_Dislike}"
+                                       FontSize="11"
+                                       TextColor="{StaticResource TextTertiary}"
+                                       HorizontalOptions="Center"/>
+                            </VerticalStackLayout>
+                        </Grid>
+                    </VerticalStackLayout>
+                </Border>
+
+                <Border BackgroundColor="{StaticResource SurfaceCardAlt}"
+                        StrokeShape="RoundRectangle 12"
+                        Stroke="{StaticResource BorderLight}"
+                        StrokeThickness="1"
+                        Padding="16">
+                    <VerticalStackLayout Spacing="12">
+                        <Label Text="{tr:Translate Key=Stats_Gender}"
+                               FontSize="14"
+                               FontAttributes="Bold"
+                               TextColor="{StaticResource TextSecondary}"/>
+
+                        <Grid ColumnDefinitions="*,*,*" ColumnSpacing="8">
+                            <VerticalStackLayout Grid.Column="0" HorizontalOptions="Center" Spacing="4">
+                                <Label Text="👨" FontSize="24" HorizontalOptions="Center"/>
+                                <Label Text="{Binding PhotoStats.VotesHommes}"
+                                       FontSize="18"
+                                       FontAttributes="Bold"
+                                       TextColor="{StaticResource Info}"
+                                       HorizontalOptions="Center"/>
+                                <Label Text="{tr:Translate Key=Common_Male}"
+                                       FontSize="11"
+                                       TextColor="{StaticResource TextTertiary}"
+                                       HorizontalOptions="Center"/>
+                            </VerticalStackLayout>
+
+                            <VerticalStackLayout Grid.Column="1" HorizontalOptions="Center" Spacing="4">
+                                <Label Text="👩" FontSize="24" HorizontalOptions="Center"/>
+                                <Label Text="{Binding PhotoStats.VotesFemmes}"
+                                       FontSize="18"
+                                       FontAttributes="Bold"
+                                       TextColor="{StaticResource Primary}"
+                                       HorizontalOptions="Center"/>
+                                <Label Text="{tr:Translate Key=Common_Female}"
+                                       FontSize="11"
+                                       TextColor="{StaticResource TextTertiary}"
+                                       HorizontalOptions="Center"/>
+                            </VerticalStackLayout>
+
+                            <VerticalStackLayout Grid.Column="2" HorizontalOptions="Center" Spacing="4">
+                                <Label Text="🧑" FontSize="24" HorizontalOptions="Center"/>
+                                <Label Text="{Binding PhotoStats.VotesAutres}"
+                                       FontSize="18"
+                                       FontAttributes="Bold"
+                                       TextColor="{StaticResource TextTertiary}"
+                                       HorizontalOptions="Center"/>
+                                <Label Text="{tr:Translate Key=Common_Other}"
+                                       FontSize="11"
+                                       TextColor="{StaticResource TextTertiary}"
+                                       HorizontalOptions="Center"/>
+                            </VerticalStackLayout>
+                        </Grid>
+                    </VerticalStackLayout>
+                </Border>
+
+            </VerticalStackLayout>
+
+            <!-- Stats duel -->
+            <VerticalStackLayout IsVisible="{Binding HasDuelStats}"
+                                 Padding="16"
+                                 Spacing="12">
+
+                <Label Text="{tr:Translate Key=Stats_Title}"
+                       FontSize="18"
+                       FontAttributes="Bold"
+                       TextColor="{StaticResource TextPrimary}"/>
+
+                <Border BackgroundColor="{StaticResource SurfaceCardAlt}"
+                        StrokeShape="RoundRectangle 12"
+                        Stroke="{StaticResource BorderLight}"
+                        StrokeThickness="1"
+                        Padding="16">
+                    <VerticalStackLayout Spacing="12">
+                        <Label Text="{tr:Translate Key=Stats_DuelResult}"
+                               FontSize="14"
+                               FontAttributes="Bold"
+                               TextColor="{StaticResource TextSecondary}"/>
+
+                        <Grid ColumnDefinitions="*,*" ColumnSpacing="8">
+                            <VerticalStackLayout Grid.Column="0" HorizontalOptions="Center" Spacing="4">
+                                <Label Text="A"
+                                       FontSize="32"
+                                       FontAttributes="Bold"
+                                       TextColor="{StaticResource Primary}"
+                                       HorizontalOptions="Center"/>
+                                <Label Text="{Binding DuelStats.VotesLeft}"
+                                       FontSize="24"
+                                       FontAttributes="Bold"
+                                       TextColor="{StaticResource TextPrimary}"
+                                       HorizontalOptions="Center"/>
+                                <Label Text="{tr:Translate Key=Stats_Votes}"
+                                       FontSize="11"
+                                       TextColor="{StaticResource TextTertiary}"
+                                       HorizontalOptions="Center"/>
+                            </VerticalStackLayout>
+
+                            <VerticalStackLayout Grid.Column="1" HorizontalOptions="Center" Spacing="4">
+                                <Label Text="B"
+                                       FontSize="32"
+                                       FontAttributes="Bold"
+                                       TextColor="{StaticResource Accent}"
+                                       HorizontalOptions="Center"/>
+                                <Label Text="{Binding DuelStats.VotesRight}"
+                                       FontSize="24"
+                                       FontAttributes="Bold"
+                                       TextColor="{StaticResource TextPrimary}"
+                                       HorizontalOptions="Center"/>
+                                <Label Text="{tr:Translate Key=Stats_Votes}"
+                                       FontSize="11"
+                                       TextColor="{StaticResource TextTertiary}"
+                                       HorizontalOptions="Center"/>
+                            </VerticalStackLayout>
+                        </Grid>
+                    </VerticalStackLayout>
+                </Border>
+
+            </VerticalStackLayout>
+
+            <!-- ── Stats sondage ── NOUVEAU -->
+            <VerticalStackLayout IsVisible="{Binding HasPollStats}"
+                                 Padding="16"
+                                 Spacing="12">
+
+                <Label Text="{tr:Translate Key=ProjectDetail_PollResults}"
+                       FontSize="18"
+                       FontAttributes="Bold"
+                       TextColor="{StaticResource TextPrimary}"/>
+
+                <CollectionView ItemsSource="{Binding PollStats}">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="models:PollOption">
+                            <Border BackgroundColor="{StaticResource SurfaceCardAlt}"
+                                    StrokeShape="RoundRectangle 12"
+                                    Stroke="{StaticResource BorderLight}"
+                                    StrokeThickness="1"
+                                    Margin="0,0,0,10"
+                                    Padding="16,14">
+                                <VerticalStackLayout Spacing="8">
+
+                                    <!-- Texte + pourcentage -->
+                                    <Grid ColumnDefinitions="*,Auto">
+                                        <Label Grid.Column="0"
+                                               Text="{Binding Text}"
+                                               FontSize="15"
+                                               FontAttributes="Bold"
+                                               TextColor="{StaticResource TextPrimary}"
+                                               VerticalOptions="Center"/>
+                                        <Label Grid.Column="1"
+                                               Text="{Binding Percentage, StringFormat='{0:F1}%'}"
+                                               FontSize="15"
+                                               FontAttributes="Bold"
+                                               TextColor="{StaticResource Primary}"
+                                               VerticalOptions="Center"/>
+                                    </Grid>
+
+                                    <!-- Barre de progression -->
+                                    <ProgressBar
+                                        Progress="{Binding Percentage, Converter={StaticResource PctToProgressConverter}}"
+                                        ProgressColor="{StaticResource Primary}"
+                                        BackgroundColor="{StaticResource SurfaceMuted}"
+                                        HeightRequest="8"/>
+
+                                    <!-- Nombre de votes -->
+                                    <Label Text="{Binding VoteCount, StringFormat='{0} votes'}"
+                                           FontSize="12"
+                                           TextColor="{StaticResource TextTertiary}"/>
+
+                                </VerticalStackLayout>
+                            </Border>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+
+            </VerticalStackLayout>
+
+            <!-- Stats masquées par l'admin -->
+            <VerticalStackLayout IsVisible="{Binding StatsHiddenByAdmin}"
+                                 VerticalOptions="Center"
+                                 HorizontalOptions="Center"
+                                 Spacing="12"
+                                 Padding="40">
+                <Label Text="🔒"
+                       FontSize="48"
+                       HorizontalOptions="Center"/>
+                <Label Text="Les statistiques ne sont pas disponibles pour ce projet."
+                       FontSize="16"
+                       TextColor="{StaticResource TextTertiary}"
+                       HorizontalOptions="Center"
+                       HorizontalTextAlignment="Center"/>
+            </VerticalStackLayout>
+
+            <!-- Pas de stats -->
+            <VerticalStackLayout IsVisible="{Binding NoStats}"
+                                 VerticalOptions="Center"
+                                 HorizontalOptions="Center"
+                                 Spacing="12"
+                                 Padding="40">
+                <Label Text="📊"
+                       FontSize="48"
+                       HorizontalOptions="Center"/>
+                <Label Text="{tr:Translate Key=Stats_NoVotes}"
+                       FontSize="16"
+                       TextColor="{StaticResource TextTertiary}"
+                       HorizontalOptions="Center"
+                       HorizontalTextAlignment="Center"/>
+            </VerticalStackLayout>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

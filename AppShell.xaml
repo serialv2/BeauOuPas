@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell
+    x:Class="BeauOuPas.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:auth="clr-namespace:BeauOuPas.Views.Auth"
+    xmlns:home="clr-namespace:BeauOuPas.Views.Home"
+    xmlns:dashboard="clr-namespace:BeauOuPas.Views.Dashboard"
+    xmlns:projects="clr-namespace:BeauOuPas.Views.Projects"
+    xmlns:vote="clr-namespace:BeauOuPas.Views.Vote"
+    xmlns:friends="clr-namespace:BeauOuPas.Views.Friends"
+    xmlns:groups="clr-namespace:BeauOuPas.Views.Groups"
+    Shell.FlyoutBehavior="Disabled"
+    Shell.TabBarBackgroundColor="#FAF6EF"
+    Shell.TabBarForegroundColor="#C2754C"
+    Shell.TabBarUnselectedColor="#8A6F4A"
+    Shell.TabBarTitleColor="Transparent">
+    <ShellContent x:Name="LoginShell" Route="LoginPage"
+                  ContentTemplate="{DataTemplate auth:LoginPage}" />
+    <ShellContent x:Name="RegisterShell" Route="RegisterPage"
+                  ContentTemplate="{DataTemplate auth:RegisterPage}"
+                  IsVisible="False"/>
+    <TabBar x:Name="MainTabBar" IsVisible="False">
+
+        <!-- 🏠 ACCUEIL : icon_home.svg fournie dans Resources/Images -->
+        <ShellContent Title="" Route="HomePage" Icon="icon_home.svg"
+                      ContentTemplate="{DataTemplate home:HomePage}"/>
+
+        <!-- 🗳️ Votes : feed photo/duel -->
+        <ShellContent Title="" Route="VoteFeedPage" Icon="icon_vote.png"
+                      ContentTemplate="{DataTemplate vote:VoteFeedPage}"/>
+
+        <!-- ➕ Créer projet -->
+        <ShellContent Title="" Route="CreateProjectPage" Icon="icon_add.png"
+                      ContentTemplate="{DataTemplate projects:CreateProjectPage}"/>
+
+        <!-- 👥 AMIS (changé : c'était GroupsPage avant) -->
+        <ShellContent Title="" Route="FriendsPage" Icon="icon_friends.svg"
+                      ContentTemplate="{DataTemplate friends:FriendsPage}"/>
+
+        <!-- 👤 Compte (l'ex-page d'accueil "Mon compte") -->
+        <ShellContent Title="" Route="DashboardPage" Icon="icon_profile.png"
+                      ContentTemplate="{DataTemplate dashboard:DashboardPage}"/>
+
+        <!-- ⚠️ ANCIENS ONGLETS hors TabBar mais routes toujours valides :
+             - MyProjectsPage (accessible via mini-card "Mes projets")
+             - GroupsPage (accessible via mini-card "Mes groupes")
+             Les routes restent enregistrées dans AppShell.xaml.cs. -->
+
+    </TabBar>
+</Shell>

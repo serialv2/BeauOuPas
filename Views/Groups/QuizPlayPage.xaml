@@ -1,0 +1,731 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="BeauOuPas.Views.Groups.QuizPlayPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:BeauOuPas.ViewModels.Groups"
+    xmlns:tr="clr-namespace:BeauOuPas.Extensions"
+    x:DataType="vm:QuizPlayViewModel"
+    Title="{tr:Translate Key=Quiz_Page_Title}"
+    BackgroundColor="{Binding StylePageBackground}"
+    Shell.NavBarIsVisible="False"
+    Shell.TabBarIsVisible="False">
+
+    <!--
+    PHASE 2 — Player mobile QUIZ (avec style adaptatif aux 4 thèmes TV)
+    Tous les écrans cohabitent dans le Grid root, contrôlés par IsLobby/IsIntro/...
+    Le ViewModel gère une machine à états qui n'active qu'un seul écran à la fois.
+    
+    🎨 Style adaptatif :
+    - Les couleurs sont bindées sur les propriétés StyleXxx du ViewModel
+    - Quand QuizStyle change (au démarrage), tout le visuel se rafraîchit
+    - 4 styles supportés : kahoot / millionaire / burger / weakest
+    -->
+
+    <Grid>
+
+        <!-- ═══════════════════════════════════════════════════════ -->
+        <!-- LOADING (initial)                                        -->
+        <!-- ═══════════════════════════════════════════════════════ -->
+        <Grid IsVisible="{Binding IsLoading}"
+              BackgroundColor="{Binding StylePageBackground}">
+            <ActivityIndicator IsRunning="True"
+                               Color="{Binding StyleAccent}"
+                               HorizontalOptions="Center" VerticalOptions="Center"/>
+        </Grid>
+
+        <!-- ═══════════════════════════════════════════════════════ -->
+        <!-- ÉCRAN 1 — LOBBY (status = preparing)                     -->
+        <!-- ═══════════════════════════════════════════════════════ -->
+        <ScrollView IsVisible="{Binding IsLobby}">
+            <VerticalStackLayout Padding="24,40" Spacing="20"
+                                 HorizontalOptions="Center" VerticalOptions="Center">
+                <Label Text="🎮"
+                       FontSize="64" HorizontalTextAlignment="Center"/>
+                <Label Text="{tr:Translate Key=Quiz_Lobby_Title}"
+                       FontSize="22" FontAttributes="Bold"
+                       TextColor="{Binding StyleQuestionTextColor}"
+                       HorizontalTextAlignment="Center"/>
+                <Label Text="{Binding QuizTitle}"
+                       FontSize="18"
+                       TextColor="{Binding StyleAccent}"
+                       HorizontalTextAlignment="Center" Margin="0,0,0,8"/>
+                <Border StrokeShape="RoundRectangle 14"
+                        Stroke="{Binding StyleAccentLight}"
+                        BackgroundColor="{Binding StyleHeaderBg}"
+                        Padding="20">
+                    <VerticalStackLayout Spacing="12">
+                        <Label Text="{Binding TotalQuestions, StringFormat='📋 {0} questions'}"
+                               FontSize="16"
+                               TextColor="{Binding StyleQuestionTextColor}"
+                               HorizontalTextAlignment="Center"/>
+                        <Label Text="{Binding ParticipantCount, StringFormat='👥 {0} joueurs'}"
+                               FontSize="16"
+                               TextColor="{Binding StyleQuestionTextColor}"
+                               HorizontalTextAlignment="Center"/>
+                    </VerticalStackLayout>
+                </Border>
+                <Label Text="{tr:Translate Key=Quiz_Lobby_Subtitle}"
+                       FontSize="14"
+                       TextColor="{Binding StyleSecondaryText}"
+                       HorizontalTextAlignment="Center"
+                       Margin="0,16,0,0"/>
+                <ActivityIndicator IsRunning="True"
+                                   Color="{Binding StyleAccent}"
+                                   HorizontalOptions="Center"/>
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!-- ═══════════════════════════════════════════════════════ -->
+        <!-- ÉCRAN 2 — INTRO (status = active, Q[0].started_at null)  -->
+        <!-- 🔧 BUG D : on n'affiche PLUS le countdown numérique car il    -->
+        <!-- était souvent désynchro avec la TV. À la place : juste un    -->
+        <!-- loader. Quand la TV pose Q[0].started_at, le realtime nous   -->
+        <!-- bascule automatiquement sur l'écran QUESTION.                -->
+        <!-- ═══════════════════════════════════════════════════════ -->
+        <Grid IsVisible="{Binding IsIntro}"
+              BackgroundColor="{Binding StyleIntroBg}">
+            <VerticalStackLayout Padding="24" Spacing="16"
+                                 HorizontalOptions="Center" VerticalOptions="Center">
+                <Label Text="{tr:Translate Key=Quiz_Intro_Tag}"
+                       FontSize="14" FontAttributes="Bold"
+                       TextColor="{Binding StyleIntroAccent}"
+                       HorizontalTextAlignment="Center"
+                       CharacterSpacing="2"/>
+                <Label Text="{Binding QuizTitle}"
+                       FontSize="28" FontAttributes="Bold"
+                       TextColor="White"
+                       HorizontalTextAlignment="Center"/>
+                <Label Text="{Binding QuizDescription}"
+                       FontSize="14"
+                       TextColor="{Binding StyleIntroSubAccent}"
+                       HorizontalTextAlignment="Center"
+                       IsVisible="{Binding QuizDescription, Converter={StaticResource StringToBoolConverter}}"
+                       Margin="0,0,0,24"/>
+
+                <ActivityIndicator IsRunning="True" Color="White"
+                                   HorizontalOptions="Center"
+                                   Margin="0,16,0,0"
+                                   WidthRequest="40" HeightRequest="40"/>
+                <Label Text="{tr:Translate Key=Quiz_Intro_WaitingFirst}"
+                       FontSize="14"
+                       TextColor="{Binding StyleIntroAccent}"
+                       HorizontalTextAlignment="Center"
+                       Margin="0,8,0,0"/>
+            </VerticalStackLayout>
+        </Grid>
+
+        <!-- ═══════════════════════════════════════════════════════ -->
+        <!-- ÉCRAN 3 — QUESTION (4 options tappables)                 -->
+        <!-- ═══════════════════════════════════════════════════════ -->
+        <Grid IsVisible="{Binding IsQuestion}"
+              BackgroundColor="{Binding StylePageBackground}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- Header : position uniquement (countdown retiré, c'est la TV qui pilote)
+                 🔧 Le visuel 20s/19s/... avait tendance à se désynchro avec la TV
+                 et n'apportait rien au joueur (il subit le rythme de la TV). -->
+            <Grid Grid.Row="0" Padding="16,12"
+                  BackgroundColor="{Binding StyleHeaderBg}">
+                <Label Text="{Binding QuestionPositionLabel}"
+                       FontSize="14" FontAttributes="Bold"
+                       TextColor="{Binding StyleSecondaryText}"
+                       VerticalOptions="Center"/>
+            </Grid>
+
+            <!-- Body : titre + énoncé + photo + options -->
+            <ScrollView Grid.Row="1">
+                <VerticalStackLayout Padding="16" Spacing="12">
+
+                    <Label Text="{Binding QuestionTitle}"
+                           FontSize="13" FontAttributes="Bold"
+                           TextColor="{Binding StyleAccent}"
+                           IsVisible="{Binding QuestionTitle, Converter={StaticResource StringToBoolConverter}}"
+                           CharacterSpacing="1"/>
+
+                    <Label Text="{Binding QuestionText}"
+                           FontSize="20" FontAttributes="Bold"
+                           TextColor="{Binding StyleQuestionTextColor}"
+                           Margin="0,0,0,4"/>
+
+                    <Image Source="{Binding QuestionPhotoUrl}"
+                           Aspect="AspectFit"
+                           HeightRequest="200"
+                           IsVisible="{Binding QuestionPhotoUrl, Converter={StaticResource NullToBoolConverter}}"/>
+
+                    <!-- Options -->
+                    <CollectionView x:Name="OptionsCollection"
+                                    ItemsSource="{Binding Options}"
+                                    SelectionMode="None"
+                                    Margin="0,8,0,0">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="vm:QuizPlayOptionItem">
+                                <Border StrokeShape="RoundRectangle 14"
+                                        Stroke="{Binding IsSelected, Converter={StaticResource BoolToSelectedBgConverter}}"
+                                        StrokeThickness="2"
+                                        BackgroundColor="{Binding BindingContext.StyleOptionBg, Source={x:Reference OptionsCollection}}"
+                                        Padding="16"
+                                        Margin="0,0,0,10">
+                                    <Border.GestureRecognizers>
+                                        <TapGestureRecognizer
+                                            Command="{Binding BindingContext.SelectOptionCommand, Source={x:Reference OptionsCollection}}"
+                                            CommandParameter="{Binding .}"/>
+                                    </Border.GestureRecognizers>
+                                    <Grid ColumnSpacing="14">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="40"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Border Grid.Column="0"
+                                                StrokeShape="RoundRectangle 100"
+                                                BackgroundColor="{Binding BindingContext.StyleOptionLetterBg, Source={x:Reference OptionsCollection}}"
+                                                Padding="10,4"
+                                                HorizontalOptions="Center"
+                                                VerticalOptions="Center">
+                                            <Label Text="{Binding Letter}"
+                                                   FontSize="18" FontAttributes="Bold"
+                                                   TextColor="{Binding BindingContext.StyleOptionLetterColor, Source={x:Reference OptionsCollection}}"
+                                                   HorizontalTextAlignment="Center"/>
+                                        </Border>
+                                        <Label Grid.Column="1"
+                                               Text="{Binding Text}"
+                                               FontSize="16"
+                                               TextColor="{Binding BindingContext.StyleOptionTextColor, Source={x:Reference OptionsCollection}}"
+                                               VerticalOptions="Center"/>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+
+                </VerticalStackLayout>
+            </ScrollView>
+
+            <!-- Footer : compteur de réponses -->
+            <VerticalStackLayout Grid.Row="2" Padding="16,8,16,12"
+                                 BackgroundColor="{Binding StyleHeaderBg}"
+                                 Spacing="4">
+                <Label Text="{Binding AnswerCountLabel}"
+                       FontSize="13"
+                       TextColor="{Binding StyleSecondaryText}"
+                       HorizontalTextAlignment="Center"/>
+            </VerticalStackLayout>
+        </Grid>
+
+        <!-- ═══════════════════════════════════════════════════════ -->
+        <!-- ÉCRAN 3' — ANSWERED (réponse envoyée, en attente)        -->
+        <!-- 🔧 Compteur 20s retiré — la TV pilote, l'attente est libre. -->
+        <!-- ═══════════════════════════════════════════════════════ -->
+        <Grid IsVisible="{Binding IsAnswered}"
+              BackgroundColor="{Binding StylePageBackground}">
+            <VerticalStackLayout Padding="24" Spacing="20"
+                                 HorizontalOptions="Center" VerticalOptions="Center">
+                <Label Text="✅"
+                       FontSize="64"
+                       HorizontalTextAlignment="Center"/>
+                <Label Text="{tr:Translate Key=Quiz_Answered_Title}"
+                       FontSize="22" FontAttributes="Bold"
+                       TextColor="{Binding StyleQuestionTextColor}"
+                       HorizontalTextAlignment="Center"/>
+                <Label Text="{tr:Translate Key=Quiz_Answered_Subtitle}"
+                       FontSize="14"
+                       TextColor="{Binding StyleSecondaryText}"
+                       HorizontalTextAlignment="Center"/>
+                <ActivityIndicator IsRunning="True"
+                                   Color="{Binding StyleAccent}"
+                                   HorizontalOptions="Center"
+                                   Margin="0,16,0,0"
+                                   WidthRequest="36" HeightRequest="36"/>
+                <Label Text="{Binding AnswerCountLabel}"
+                       FontSize="13"
+                       TextColor="{Binding StyleSecondaryText}"
+                       HorizontalTextAlignment="Center"
+                       Margin="0,8,0,0"/>
+            </VerticalStackLayout>
+        </Grid>
+
+        <!-- ═══════════════════════════════════════════════════════ -->
+        <!-- ÉCRAN 4 — REVEAL (bonne réponse révélée)                 -->
+        <!-- ═══════════════════════════════════════════════════════ -->
+        <Grid IsVisible="{Binding IsReveal}"
+              BackgroundColor="{Binding StylePageBackground}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <!-- Header verdict -->
+            <VerticalStackLayout Grid.Row="0" Padding="20"
+                                 BackgroundColor="{Binding StyleHeaderBg}"
+                                 Spacing="6">
+                <Label Text="{Binding RevealTitle}"
+                       FontSize="24" FontAttributes="Bold"
+                       TextColor="{Binding StyleQuestionTextColor}"
+                       HorizontalTextAlignment="Center"/>
+                <Label Text="{Binding RevealMessage}"
+                       FontSize="14"
+                       TextColor="{Binding StyleSecondaryText}"
+                       HorizontalTextAlignment="Center"/>
+            </VerticalStackLayout>
+
+            <!-- Body : options avec is_correct révélé -->
+            <ScrollView Grid.Row="1">
+                <VerticalStackLayout Padding="16" Spacing="10">
+                    <Label Text="{Binding QuestionText}"
+                           FontSize="16"
+                           TextColor="{Binding StyleQuestionTextColor}"
+                           Margin="0,4,0,12"/>
+
+                    <CollectionView x:Name="RevealOptionsCollection"
+                                    ItemsSource="{Binding Options}"
+                                    SelectionMode="None">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="vm:QuizPlayOptionItem">
+                                <!-- 🔧 Sujet 1 : on n'indique plus la bonne réponse au joueur
+                                     ni par couleur ni par ✓. L'écran reveal est juste un
+                                     rappel visuel des options pendant que la TV pilote
+                                     l'affichage des stats. -->
+                                <Border StrokeShape="RoundRectangle 14"
+                                        Stroke="{StaticResource BorderLight}" StrokeThickness="2"
+                                        BackgroundColor="{Binding BindingContext.StyleOptionBg, Source={x:Reference RevealOptionsCollection}}"
+                                        Padding="14"
+                                        Margin="0,0,0,8">
+                                    <Grid ColumnSpacing="12">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="36"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Label Grid.Column="0"
+                                               Text="{Binding Letter}"
+                                               FontSize="18" FontAttributes="Bold"
+                                               TextColor="{Binding BindingContext.StyleOptionLetterColor, Source={x:Reference RevealOptionsCollection}}"
+                                               VerticalOptions="Center"
+                                               HorizontalTextAlignment="Center"/>
+                                        <Label Grid.Column="1"
+                                               Text="{Binding Text}"
+                                               FontSize="15"
+                                               TextColor="{Binding BindingContext.StyleOptionTextColor, Source={x:Reference RevealOptionsCollection}}"
+                                               VerticalOptions="Center"/>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+
+                    <Label Text="{tr:Translate Key=Quiz_Reveal_WaitingNext}"
+                           FontSize="13"
+                           TextColor="{Binding StyleSecondaryText}"
+                           HorizontalTextAlignment="Center"
+                           Margin="0,16,0,8"/>
+                </VerticalStackLayout>
+            </ScrollView>
+        </Grid>
+
+        <!-- ═══════════════════════════════════════════════════════ -->
+        <!-- ÉCRAN 5 — FINISH (leaderboard final)                     -->
+        <!-- ═══════════════════════════════════════════════════════ -->
+        <ScrollView IsVisible="{Binding IsFinish}"
+                    BackgroundColor="{Binding StylePageBackground}">
+            <VerticalStackLayout Padding="20" Spacing="16">
+
+                <!-- Header : winner -->
+                <Border StrokeShape="RoundRectangle 16"
+                        BackgroundColor="{Binding StyleFinishWinnerBg}"
+                        Padding="24"
+                        Margin="0,8,0,4">
+                    <VerticalStackLayout Spacing="4" HorizontalOptions="Center">
+                        <Label Text="🏆"
+                               FontSize="48" HorizontalTextAlignment="Center"/>
+                        <Label Text="{tr:Translate Key=Quiz_Finish_Winner}"
+                               FontSize="13" FontAttributes="Bold"
+                               TextColor="{Binding StyleIntroSubAccent}"
+                               CharacterSpacing="2"
+                               HorizontalTextAlignment="Center"/>
+                        <Label Text="{Binding WinnerName}"
+                               FontSize="22" FontAttributes="Bold"
+                               TextColor="White"
+                               HorizontalTextAlignment="Center"/>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Mes stats -->
+                <Border StrokeShape="RoundRectangle 14" Stroke="{StaticResource BorderLight}"
+                        BackgroundColor="{Binding StyleAccentLight}"
+                        Padding="16">
+                    <Grid ColumnSpacing="16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <VerticalStackLayout Grid.Column="0" Spacing="4">
+                            <Label Text="{tr:Translate Key=Quiz_Finish_YourRankLabel}"
+                                   FontSize="11"
+                                   TextColor="{Binding StyleSecondaryText}"
+                                   CharacterSpacing="1"/>
+                            <Label Text="{Binding MyRankLabel}"
+                                   FontSize="22" FontAttributes="Bold"
+                                   TextColor="{Binding StyleAccent}"/>
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Column="1" Spacing="4">
+                            <Label Text="{tr:Translate Key=Quiz_Finish_YourScoreLabel}"
+                                   FontSize="11"
+                                   TextColor="{Binding StyleSecondaryText}"
+                                   CharacterSpacing="1"/>
+                            <Label Text="{Binding MyScoreLabel}"
+                                   FontSize="22" FontAttributes="Bold"
+                                   TextColor="{Binding StyleAccent}"/>
+                        </VerticalStackLayout>
+                    </Grid>
+                </Border>
+
+                <!-- Leaderboard complet -->
+                <Label Text="{tr:Translate Key=Quiz_Finish_LeaderboardHeader}"
+                       FontSize="13" FontAttributes="Bold"
+                       TextColor="{Binding StyleSecondaryText}"
+                       CharacterSpacing="1"
+                       Margin="4,12,0,4"/>
+
+                <CollectionView x:Name="LeaderboardCollection"
+                                ItemsSource="{Binding Leaderboard}"
+                                SelectionMode="None">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="vm:QuizPlayLeaderItem">
+                            <Border StrokeShape="RoundRectangle 12"
+                                    Stroke="{StaticResource BorderLight}"
+                                    BackgroundColor="{Binding BindingContext.StyleHeaderBg, Source={x:Reference LeaderboardCollection}}"
+                                    Padding="12" Margin="0,0,0,6">
+                                <Grid ColumnSpacing="12">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="36"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Label Grid.Column="0"
+                                           Text="{Binding Rank}"
+                                           FontSize="16" FontAttributes="Bold"
+                                           TextColor="{Binding BindingContext.StyleSecondaryText, Source={x:Reference LeaderboardCollection}}"
+                                           VerticalOptions="Center"
+                                           HorizontalTextAlignment="Center"/>
+                                    <Label Grid.Column="1"
+                                           Text="{Binding Username}"
+                                           FontSize="15"
+                                           TextColor="{Binding BindingContext.StyleQuestionTextColor, Source={x:Reference LeaderboardCollection}}"
+                                           VerticalOptions="Center"/>
+                                    <Label Grid.Column="2"
+                                           Text="{Binding Score, StringFormat='{0} pts'}"
+                                           FontSize="14" FontAttributes="Bold"
+                                           TextColor="{Binding BindingContext.StyleAccent, Source={x:Reference LeaderboardCollection}}"
+                                           VerticalOptions="Center"/>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+
+                <!-- ═════════════════════════════════════════════════════ -->
+                <!-- 📊 SECTION STATS DÉTAILLÉES (sujet 3)                  -->
+                <!-- Affichée si HasStats == true (au moins quelques votes) -->
+                <!-- ═════════════════════════════════════════════════════ -->
+                <VerticalStackLayout IsVisible="{Binding HasStats}"
+                                     Spacing="14"
+                                     Margin="0,16,0,0">
+
+                    <!-- Titre de section -->
+                    <Label Text="{tr:Translate Key=Quiz_Stats_SectionTitle}"
+                           FontSize="14" FontAttributes="Bold"
+                           TextColor="{Binding StyleAccent}"
+                           CharacterSpacing="3"/>
+
+                    <!-- Cartes : 4 totaux -->
+                    <Grid ColumnSpacing="8" RowSpacing="8">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <Border Grid.Row="0" Grid.Column="0"
+                                StrokeShape="RoundRectangle 12" Stroke="{StaticResource BorderLight}"
+                                BackgroundColor="{Binding StyleAccentLight}"
+                                Padding="12">
+                            <VerticalStackLayout Spacing="2">
+                                <Label Text="{Binding StatsTotalPlayers}"
+                                       FontSize="22" FontAttributes="Bold"
+                                       TextColor="{Binding StyleAccent}"/>
+                                <Label Text="{tr:Translate Key=Quiz_Stats_TotalPlayers}"
+                                       FontSize="11"
+                                       TextColor="{Binding StyleSecondaryText}"
+                                       CharacterSpacing="1"/>
+                            </VerticalStackLayout>
+                        </Border>
+
+                        <Border Grid.Row="0" Grid.Column="1"
+                                StrokeShape="RoundRectangle 12" Stroke="{StaticResource BorderLight}"
+                                BackgroundColor="{Binding StyleAccentLight}"
+                                Padding="12">
+                            <VerticalStackLayout Spacing="2">
+                                <Label Text="{Binding StatsTotalQuestions}"
+                                       FontSize="22" FontAttributes="Bold"
+                                       TextColor="{Binding StyleAccent}"/>
+                                <Label Text="{tr:Translate Key=Quiz_Stats_TotalQuestions}"
+                                       FontSize="11"
+                                       TextColor="{Binding StyleSecondaryText}"
+                                       CharacterSpacing="1"/>
+                            </VerticalStackLayout>
+                        </Border>
+
+                        <Border Grid.Row="1" Grid.Column="0"
+                                StrokeShape="RoundRectangle 12" Stroke="{StaticResource BorderLight}"
+                                BackgroundColor="{Binding StyleAccentLight}"
+                                Padding="12">
+                            <VerticalStackLayout Spacing="2">
+                                <Label Text="{Binding StatsTotalAnswers}"
+                                       FontSize="22" FontAttributes="Bold"
+                                       TextColor="{Binding StyleAccent}"/>
+                                <Label Text="{tr:Translate Key=Quiz_Stats_TotalAnswers}"
+                                       FontSize="11"
+                                       TextColor="{Binding StyleSecondaryText}"
+                                       CharacterSpacing="1"/>
+                            </VerticalStackLayout>
+                        </Border>
+
+                        <Border Grid.Row="1" Grid.Column="1"
+                                StrokeShape="RoundRectangle 12" Stroke="{StaticResource BorderLight}"
+                                BackgroundColor="{Binding StyleAccentLight}"
+                                Padding="12">
+                            <VerticalStackLayout Spacing="2">
+                                <Label Text="{Binding StatsSuccessRate, StringFormat='{0}%'}"
+                                       FontSize="22" FontAttributes="Bold"
+                                       TextColor="{Binding StyleAccent}"/>
+                                <Label Text="{tr:Translate Key=Quiz_Stats_SuccessRate}"
+                                       FontSize="11"
+                                       TextColor="{Binding StyleSecondaryText}"
+                                       CharacterSpacing="1"/>
+                            </VerticalStackLayout>
+                        </Border>
+                    </Grid>
+
+                    <!-- Question la + difficile -->
+                    <Border IsVisible="{Binding HasHardestQuestion}"
+                            StrokeShape="RoundRectangle 12" Stroke="{StaticResource ErrorLight}"
+                            BackgroundColor="{StaticResource ErrorLight}" Padding="12">
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="{tr:Translate Key=Quiz_Stats_HardestQuestion}"
+                                   FontSize="11" FontAttributes="Bold"
+                                   TextColor="{StaticResource Error}"
+                                   CharacterSpacing="2"/>
+                            <Label Text="{Binding HardestQuestionText}"
+                                   FontSize="14"
+                                   TextColor="{StaticResource TextPrimary}"
+                                   LineBreakMode="WordWrap"/>
+                            <Label Text="{Binding HardestQuestionRate, StringFormat='✓ {0}%'}"
+                                   FontSize="13" FontAttributes="Bold"
+                                   TextColor="{StaticResource Error}"/>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- Question la + facile -->
+                    <Border IsVisible="{Binding HasEasiestQuestion}"
+                            StrokeShape="RoundRectangle 12" Stroke="{StaticResource SuccessLight}"
+                            BackgroundColor="{StaticResource SuccessLight}" Padding="12">
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="{tr:Translate Key=Quiz_Stats_EasiestQuestion}"
+                                   FontSize="11" FontAttributes="Bold"
+                                   TextColor="{StaticResource Success}"
+                                   CharacterSpacing="2"/>
+                            <Label Text="{Binding EasiestQuestionText}"
+                                   FontSize="14"
+                                   TextColor="{StaticResource TextPrimary}"
+                                   LineBreakMode="WordWrap"/>
+                            <Label Text="{Binding EasiestQuestionRate, StringFormat='✓ {0}%'}"
+                                   FontSize="13" FontAttributes="Bold"
+                                   TextColor="{StaticResource Success}"/>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- Répartition par GENRE -->
+                    <Label Text="{tr:Translate Key=Quiz_Stats_GenderBreakdown}"
+                           IsVisible="{Binding HasGenderBars}"
+                           FontSize="13" FontAttributes="Bold"
+                           TextColor="{Binding StyleSecondaryText}"
+                           CharacterSpacing="2"
+                           Margin="0,8,0,0"/>
+                    <CollectionView x:Name="GenderBarsCollection"
+                                    IsVisible="{Binding HasGenderBars}"
+                                    ItemsSource="{Binding GenderBars}"
+                                    SelectionMode="None">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="vm:QuizPlayStatBarItem">
+                                <Border StrokeShape="RoundRectangle 8"
+                                        Stroke="{StaticResource BorderLight}"
+                                        BackgroundColor="White"
+                                        Padding="12,8" Margin="0,0,0,4">
+                                    <VerticalStackLayout Spacing="4">
+                                        <Grid ColumnSpacing="8">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Label Grid.Column="0"
+                                                   Text="{Binding Label}"
+                                                   FontSize="14" FontAttributes="Bold"
+                                                   TextColor="{StaticResource TextPrimary}"/>
+                                            <Label Grid.Column="1"
+                                                   Text="{Binding SuccessRateText}"
+                                                   FontSize="12" FontAttributes="Bold"
+                                                   TextColor="{StaticResource TextTertiary}"/>
+                                        </Grid>
+                                        <!-- Barre horizontale avec chiffre dedans -->
+                                        <Grid HeightRequest="24" RowSpacing="0" ColumnSpacing="0">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="{Binding FilledWidth}"/>
+                                                <ColumnDefinition Width="{Binding EmptyWidth}"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Border Grid.Column="0"
+                                                    StrokeShape="RoundRectangle 4"
+                                                    BackgroundColor="{Binding BindingContext.StyleAccent, Source={x:Reference GenderBarsCollection}}"
+                                                    Padding="8,2">
+                                                <Label Text="{Binding BarText}"
+                                                       FontSize="12" FontAttributes="Bold"
+                                                       TextColor="White"
+                                                       VerticalOptions="Center"
+                                                       HorizontalOptions="Start"
+                                                       LineBreakMode="NoWrap"/>
+                                            </Border>
+                                            <BoxView Grid.Column="1"
+                                                     BackgroundColor="{StaticResource SurfaceMuted}"/>
+                                        </Grid>
+                                    </VerticalStackLayout>
+                                </Border>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+
+                    <!-- Répartition par TRANCHE D'ÂGE -->
+                    <Label Text="{tr:Translate Key=Quiz_Stats_AgeBreakdown}"
+                           IsVisible="{Binding HasAgeBars}"
+                           FontSize="13" FontAttributes="Bold"
+                           TextColor="{Binding StyleSecondaryText}"
+                           CharacterSpacing="2"
+                           Margin="0,8,0,0"/>
+                    <CollectionView x:Name="AgeBarsCollection"
+                                    IsVisible="{Binding HasAgeBars}"
+                                    ItemsSource="{Binding AgeBars}"
+                                    SelectionMode="None">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="vm:QuizPlayStatBarItem">
+                                <Border StrokeShape="RoundRectangle 8"
+                                        Stroke="{StaticResource BorderLight}"
+                                        BackgroundColor="White"
+                                        Padding="12,8" Margin="0,0,0,4">
+                                    <VerticalStackLayout Spacing="4">
+                                        <Grid ColumnSpacing="8">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Label Grid.Column="0"
+                                                   Text="{Binding Label}"
+                                                   FontSize="14" FontAttributes="Bold"
+                                                   TextColor="{StaticResource TextPrimary}"/>
+                                            <Label Grid.Column="1"
+                                                   Text="{Binding SuccessRateText}"
+                                                   FontSize="12" FontAttributes="Bold"
+                                                   TextColor="{StaticResource TextTertiary}"/>
+                                        </Grid>
+                                        <Grid HeightRequest="24" RowSpacing="0" ColumnSpacing="0">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="{Binding FilledWidth}"/>
+                                                <ColumnDefinition Width="{Binding EmptyWidth}"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Border Grid.Column="0"
+                                                    StrokeShape="RoundRectangle 4"
+                                                    BackgroundColor="{Binding BindingContext.StyleAccent, Source={x:Reference AgeBarsCollection}}"
+                                                    Padding="8,2">
+                                                <Label Text="{Binding BarText}"
+                                                       FontSize="12" FontAttributes="Bold"
+                                                       TextColor="White"
+                                                       VerticalOptions="Center"
+                                                       HorizontalOptions="Start"
+                                                       LineBreakMode="NoWrap"/>
+                                            </Border>
+                                            <BoxView Grid.Column="1"
+                                                     BackgroundColor="{StaticResource SurfaceMuted}"/>
+                                        </Grid>
+                                    </VerticalStackLayout>
+                                </Border>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </VerticalStackLayout>
+
+                <!-- Bouton "Quitter" -->
+                <Button Text="{tr:Translate Key=Quiz_Finish_LeaveButton}"
+                        Command="{Binding LeaveCommand}"
+                        BackgroundColor="{Binding StyleAccent}"
+                        TextColor="White"
+                        FontAttributes="Bold"
+                        CornerRadius="100"
+                        HeightRequest="50"
+                        Margin="0,20,0,8"/>
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!-- ═══════════════════════════════════════════════════════ -->
+        <!-- ÉCRAN ERROR                                              -->
+        <!-- ═══════════════════════════════════════════════════════ -->
+        <Grid IsVisible="{Binding IsError}"
+              BackgroundColor="{Binding StylePageBackground}">
+            <VerticalStackLayout Padding="24" Spacing="16"
+                                 HorizontalOptions="Center" VerticalOptions="Center">
+                <Label Text="⚠️"
+                       FontSize="64" HorizontalTextAlignment="Center"/>
+                <Label Text="{Binding ErrorTitle}"
+                       FontSize="22" FontAttributes="Bold"
+                       TextColor="{StaticResource Error}"
+                       HorizontalTextAlignment="Center"/>
+                <Label Text="{Binding ErrorMessage}"
+                       FontSize="14"
+                       TextColor="{Binding StyleSecondaryText}"
+                       HorizontalTextAlignment="Center"/>
+                <Button Text="{tr:Translate Key=Common_Back}"
+                        Command="{Binding LeaveCommand}"
+                        BackgroundColor="{Binding StyleAccent}"
+                        TextColor="White"
+                        FontAttributes="Bold"
+                        CornerRadius="100"
+                        HeightRequest="46"
+                        WidthRequest="200"
+                        Margin="0,16,0,0"/>
+            </VerticalStackLayout>
+        </Grid>
+
+        <!-- ═══════════════════════════════════════════════════════ -->
+        <!-- PAUSE OVERLAY (par-dessus tout)                          -->
+        <!-- ═══════════════════════════════════════════════════════ -->
+        <Grid IsVisible="{Binding IsPaused}"
+              BackgroundColor="#CC000000">
+            <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center"
+                                 Spacing="12">
+                <Label Text="⏸️" FontSize="64"
+                       HorizontalTextAlignment="Center"/>
+                <Label Text="{tr:Translate Key=Quiz_Paused_Title}"
+                       FontSize="22" FontAttributes="Bold"
+                       TextColor="White"
+                       HorizontalTextAlignment="Center"/>
+                <Label Text="{tr:Translate Key=Quiz_Paused_Subtitle}"
+                       FontSize="14" TextColor="#FFFFFFB0"
+                       HorizontalTextAlignment="Center"/>
+            </VerticalStackLayout>
+        </Grid>
+
+    </Grid>
+</ContentPage>

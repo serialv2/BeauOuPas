@@ -1,0 +1,303 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="BeauOuPas.Views.Vote.VoteFeedPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:BeauOuPas.ViewModels.Vote"
+    xmlns:models="clr-namespace:BeauOuPas.Models"
+    xmlns:tr="clr-namespace:BeauOuPas.Extensions"
+    x:DataType="vm:VoteFeedViewModel"
+    Title=""
+    BackgroundColor="{StaticResource VoteBackground}">
+
+    <Grid RowDefinitions="*,Auto">
+
+        <!-- ZONE CARTES -->
+        <Grid Grid.Row="0">
+
+            <ActivityIndicator IsRunning="{Binding IsLoading}"
+                               IsVisible="{Binding IsLoading}"
+                               Color="{StaticResource Primary}"
+                               VerticalOptions="Center"
+                               HorizontalOptions="Center"/>
+
+            <VerticalStackLayout IsVisible="{Binding IsEmpty}"
+                                 VerticalOptions="Center"
+                                 HorizontalOptions="Center"
+                                 Spacing="16">
+                <Label Text="🎉" FontSize="64" HorizontalOptions="Center"/>
+                <Label Text="{tr:Translate Key=Vote_AllVoted}"
+                       FontSize="20" FontAttributes="Bold"
+                       TextColor="White" HorizontalOptions="Center"/>
+                <Label Text="{tr:Translate Key=Vote_ComeBack}"
+                       FontSize="14" TextColor="#E8DDCC" HorizontalOptions="Center"/>
+                <Button Text="{tr:Translate Key=Vote_Refresh}"
+                        Command="{Binding LoadFeedCommand}"
+                        BackgroundColor="{StaticResource Primary}"
+                        TextColor="{StaticResource TextOnPrimary}"
+                        CornerRadius="10" HeightRequest="45" Margin="20,0"/>
+            </VerticalStackLayout>
+
+            <!-- ── CARTE PHOTO VOTE ── -->
+            <Grid x:Name="PhotoVoteCard" IsVisible="False" BackgroundColor="Black">
+                <!-- ⚡ Background flou : utilise la THUMBNAIL (300px) au lieu de PhotoUrl (1080px) -->
+                <!-- Économise ~13× la RAM, et l'image est invisible (Opacity 0.35 + voile noir) -->
+                <Image Source="{Binding CurrentProject.PhotoThumbUrl}" Aspect="AspectFill" Opacity="0.35"/>
+                <BoxView Color="#66000000"/>
+                <!-- Photo principale : reste en HD (1080px) pour la qualité d'affichage -->
+                <Image Source="{Binding CurrentProject.PhotoUrl}"
+                       Aspect="AspectFit" HorizontalOptions="Fill"
+                       VerticalOptions="Fill" Margin="0,0,0,110"/>
+                <BoxView VerticalOptions="End" HeightRequest="210" Color="#CC000000"/>
+                <VerticalStackLayout VerticalOptions="End" Padding="20,0,20,120" Spacing="6">
+                    <!-- Titre : 24 Bold White -->
+                    <Label Text="{Binding CurrentProject.Title}"
+                           FontSize="24" FontAttributes="Bold" TextColor="White"/>
+                    <!-- Description : 16 crème claire, lisible sur fond sombre -->
+                    <Label Text="{Binding CurrentProject.Description}"
+                           FontSize="20" TextColor="#E8DDCC"
+                           IsVisible="{Binding CurrentProject.HasDescription}"/>
+                    <!-- Auteur : 13 PrimaryLight (terracotta clair Sézane) -->
+                    <Label Text="{Binding CurrentProject.OwnerUsername, StringFormat='@{0}'}"
+                           FontSize="13" TextColor="{StaticResource PrimaryLight}"/>
+                </VerticalStackLayout>
+                <Border BackgroundColor="#80000000" StrokeShape="RoundRectangle 20"
+                        Padding="8,4" HorizontalOptions="End" VerticalOptions="Start" Margin="0,12,12,0">
+                    <Label Text="🚨" FontSize="20">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding ReportCommand}"/>
+                        </Label.GestureRecognizers>
+                    </Label>
+                </Border>
+                <Border IsVisible="{Binding ShowAnimation}"
+                        BackgroundColor="#CC000000" StrokeShape="RoundRectangle 20"
+                        Padding="20,10" HorizontalOptions="Center" VerticalOptions="Center">
+                    <Label Text="{Binding VoteAnimation}" FontSize="80" HorizontalOptions="Center"/>
+                </Border>
+                <Grid.GestureRecognizers>
+                    <SwipeGestureRecognizer Direction="Left" Command="{Binding VoteCommand}" CommandParameter="1"/>
+                    <SwipeGestureRecognizer Direction="Right" Command="{Binding VoteCommand}" CommandParameter="3"/>
+                    <SwipeGestureRecognizer Direction="Down" Command="{Binding VoteCommand}" CommandParameter="2"/>
+                </Grid.GestureRecognizers>
+            </Grid>
+
+            <!-- ── CARTE DUEL ── -->
+            <Grid x:Name="DuelCard" IsVisible="False"
+                  RowDefinitions="Auto,*" Padding="16" BackgroundColor="Black">
+
+                <VerticalStackLayout Grid.Row="0" HorizontalOptions="Center"
+                                     Margin="0,35,0,14" Spacing="6">
+                    <!-- Titre : 24 Bold White (uniformisé avec Photo & Sondage) -->
+                    <Label Text="{Binding CurrentProject.Title}"
+                           FontSize="24" FontAttributes="Bold" TextColor="White"
+                           HorizontalOptions="Center" HorizontalTextAlignment="Center"/>
+                    <!-- Description : 16 crème claire, lisible sur fond sombre -->
+                    <Label Text="{Binding CurrentProject.Description}"
+                           FontSize="20" TextColor="#E8DDCC"
+                           HorizontalOptions="Center" HorizontalTextAlignment="Center"
+                           Margin="20,2,20,0"
+                           IsVisible="{Binding CurrentProject.HasDescription}"/>
+                    <!-- Auteur : 13 PrimaryLight (terracotta clair Sézane) -->
+                    <Label Text="{Binding CurrentProject.OwnerUsername, StringFormat='@{0}'}"
+                           FontSize="13" TextColor="{StaticResource PrimaryLight}" HorizontalOptions="Center"/>
+                </VerticalStackLayout>
+
+                <Border Grid.Row="0" BackgroundColor="#80000000"
+                        StrokeShape="RoundRectangle 20" Padding="8,4"
+                        HorizontalOptions="End" VerticalOptions="Start" Margin="0,10,0,0">
+                    <Label Text="🚨" FontSize="20">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding ReportCommand}"/>
+                        </Label.GestureRecognizers>
+                    </Label>
+                </Border>
+
+                <Grid Grid.Row="1" RowDefinitions="*,*" RowSpacing="12">
+                    <!-- PHOTO A -->
+                    <Border Grid.Row="0" StrokeShape="RoundRectangle 18"
+                            Stroke="Transparent" BackgroundColor="#111111">
+                        <Grid>
+                            <!-- ⚡ Background flou : THUMBNAIL au lieu de PhotoLeftUrl HD -->
+                            <Image Source="{Binding CurrentProject.PhotoLeftThumbUrl}" Aspect="AspectFill" Opacity="0.28"/>
+                            <BoxView Color="#66000000"/>
+                            <!-- Photo principale : reste en HD -->
+                            <Image Source="{Binding CurrentProject.PhotoLeftUrl}" Aspect="AspectFit" Margin="8"/>
+                            <Border BackgroundColor="#CC000000" StrokeShape="RoundRectangle 0,0,18,0"
+                                    Padding="14,6" HorizontalOptions="Start" VerticalOptions="Start">
+                                <Label Text="A" TextColor="White" FontSize="20" FontAttributes="Bold"/>
+                            </Border>
+                            <Border BackgroundColor="#99000000" StrokeShape="RoundRectangle 20"
+                                    Padding="12,6" HorizontalOptions="Center" VerticalOptions="End" Margin="0,0,0,10">
+                                <Label Text="Choisir A" TextColor="White" FontSize="14" FontAttributes="Bold"/>
+                            </Border>
+                            <Grid.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding VoteDuelCommand}" CommandParameter="left"/>
+                            </Grid.GestureRecognizers>
+                        </Grid>
+                    </Border>
+                    <!-- PHOTO B -->
+                    <Border Grid.Row="1" StrokeShape="RoundRectangle 18"
+                            Stroke="Transparent" BackgroundColor="#111111">
+                        <Grid>
+                            <!-- ⚡ Background flou : THUMBNAIL au lieu de PhotoRightUrl HD -->
+                            <Image Source="{Binding CurrentProject.PhotoRightThumbUrl}" Aspect="AspectFill" Opacity="0.28"/>
+                            <BoxView Color="#66000000"/>
+                            <!-- Photo principale : reste en HD -->
+                            <Image Source="{Binding CurrentProject.PhotoRightUrl}" Aspect="AspectFit" Margin="8"/>
+                            <Border BackgroundColor="#CC000000" StrokeShape="RoundRectangle 0,0,18,0"
+                                    Padding="14,6" HorizontalOptions="Start" VerticalOptions="Start">
+                                <Label Text="B" TextColor="White" FontSize="20" FontAttributes="Bold"/>
+                            </Border>
+                            <Border BackgroundColor="#99000000" StrokeShape="RoundRectangle 20"
+                                    Padding="12,6" HorizontalOptions="Center" VerticalOptions="End" Margin="0,0,0,10">
+                                <Label Text="Choisir B" TextColor="White" FontSize="14" FontAttributes="Bold"/>
+                            </Border>
+                            <Grid.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding VoteDuelCommand}" CommandParameter="right"/>
+                            </Grid.GestureRecognizers>
+                        </Grid>
+                    </Border>
+                </Grid>
+
+                <Border Grid.RowSpan="2" IsVisible="{Binding CanRewind}"
+                        BackgroundColor="#1A1A1A" StrokeShape="RoundRectangle 50"
+                        Stroke="{StaticResource Warning}" StrokeThickness="2"
+                        HeightRequest="50" WidthRequest="50"
+                        HorizontalOptions="Start" VerticalOptions="End" Margin="0,0,0,16">
+                    <Label Text="⏪" FontSize="22" HorizontalOptions="Center" VerticalOptions="Center"/>
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding RewindCommand}"/>
+                    </Border.GestureRecognizers>
+                </Border>
+
+                <Border Grid.RowSpan="2" IsVisible="{Binding ShowAnimation}"
+                        BackgroundColor="#CC000000" StrokeShape="RoundRectangle 20"
+                        Padding="20,10" HorizontalOptions="Center" VerticalOptions="Center">
+                    <Label Text="{Binding VoteAnimation}" FontSize="80" HorizontalOptions="Center"/>
+                </Border>
+            </Grid>
+
+            <!-- ✅ CARTE SONDAGE -->
+            <Grid x:Name="PollCard" IsVisible="False"
+                  BackgroundColor="#0A0A0A" Padding="20">
+                <ScrollView>
+                    <VerticalStackLayout Spacing="16">
+
+                        <!-- Badge -->
+                        <Border BackgroundColor="{StaticResource Accent}" StrokeShape="RoundRectangle 20"
+                                Padding="12,6" HorizontalOptions="Center">
+                            <Label Text="📊 Sondage" TextColor="{StaticResource TextOnAccent}"
+                                   FontSize="13" FontAttributes="Bold"/>
+                        </Border>
+
+                        <!-- Titre : 24 Bold White (uniformisé) -->
+                        <Label Text="{Binding CurrentProject.Title}"
+                               FontSize="24" FontAttributes="Bold" TextColor="White"
+                               HorizontalOptions="Center" HorizontalTextAlignment="Center"/>
+
+                        <!-- Description : 16 crème claire, lisible sur fond sombre -->
+                        <Label Text="{Binding CurrentProject.Description}"
+                               FontSize="20" TextColor="#E8DDCC"
+                               HorizontalOptions="Center" HorizontalTextAlignment="Center"
+                               IsVisible="{Binding CurrentProject.HasDescription}"/>
+
+                        <!-- Auteur : 13 PrimaryLight (terracotta clair Sézane) -->
+                        <Label Text="{Binding CurrentProject.OwnerUsername, StringFormat='par @{0}'}"
+       FontSize="13" TextColor="{StaticResource PrimaryLight}"
+       HorizontalOptions="Center"/>
+                        <!-- Options -->
+                        <CollectionView ItemsSource="{Binding PollOptions}" Margin="0,8,0,0">
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate x:DataType="models:PollOption">
+                                    <Border BackgroundColor="#1A1A1A"
+                                            StrokeShape="RoundRectangle 14"
+                                            Stroke="{StaticResource TextPrimary}" StrokeThickness="1"
+                                            Margin="0,0,0,10" Padding="18,16">
+                                        <Label Text="{Binding Text}"
+                                               FontSize="16" FontAttributes="Bold"
+                                               TextColor="{StaticResource BorderLight}"
+                                               VerticalOptions="Center"/>
+                                        <Border.GestureRecognizers>
+                                            <TapGestureRecognizer
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:VoteFeedViewModel}},
+                                                                  Path=VotePollCommand}"
+                                                CommandParameter="{Binding Id}"/>
+                                        </Border.GestureRecognizers>
+                                    </Border>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+
+                        <Label Text="👆 Appuie sur une option pour voter"
+                               FontSize="13" TextColor="#E8DDCC"
+                               HorizontalOptions="Center"/>
+
+                    </VerticalStackLayout>
+                </ScrollView>
+            </Grid>
+
+        </Grid>
+
+        <!-- BOUTONS VOTE PHOTO -->
+        <Grid Grid.Row="1" x:Name="VoteButtonsBar" IsVisible="False"
+              BackgroundColor="{StaticResource VoteBackground}" Padding="10,10,10,30">
+            <FlexLayout HorizontalOptions="Center" JustifyContent="Center"
+                        AlignItems="Center" Wrap="NoWrap">
+
+                <Border Margin="6,0" BackgroundColor="#1A1A1A"
+                        StrokeShape="RoundRectangle 50"
+                        Stroke="{StaticResource Warning}" StrokeThickness="2"
+                        HeightRequest="65" WidthRequest="65"
+                        Opacity="{Binding CanRewind, Converter={StaticResource BoolToOpacityConverter}}">
+                    <Label Text="⏪" FontSize="24" HorizontalOptions="Center" VerticalOptions="Center"/>
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding RewindCommand}"/>
+                    </Border.GestureRecognizers>
+                </Border>
+
+                <Border Margin="6,0" BackgroundColor="#1A1A1A"
+                        StrokeShape="RoundRectangle 50"
+                        Stroke="{StaticResource Error}" StrokeThickness="2"
+                        HeightRequest="65" WidthRequest="65">
+                    <Label Text="👎" FontSize="28" HorizontalOptions="Center" VerticalOptions="Center"/>
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding VoteCommand}" CommandParameter="1"/>
+                    </Border.GestureRecognizers>
+                </Border>
+
+                <Border Margin="6,0" BackgroundColor="#1A1A1A"
+                        StrokeShape="RoundRectangle 50"
+                        Stroke="{StaticResource Warning}" StrokeThickness="2"
+                        HeightRequest="65" WidthRequest="65">
+                    <Label Text="😐" FontSize="28" HorizontalOptions="Center" VerticalOptions="Center"/>
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding VoteCommand}" CommandParameter="2"/>
+                    </Border.GestureRecognizers>
+                </Border>
+
+                <Border Margin="6,0" BackgroundColor="#1A1A1A"
+                        StrokeShape="RoundRectangle 50"
+                        Stroke="{StaticResource Success}" StrokeThickness="2"
+                        HeightRequest="65" WidthRequest="65">
+                    <Label Text="❤️" FontSize="28" HorizontalOptions="Center" VerticalOptions="Center"/>
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding VoteCommand}" CommandParameter="3"/>
+                    </Border.GestureRecognizers>
+                </Border>
+
+                <Border Margin="6,0" BackgroundColor="#1A1A1A"
+                        StrokeShape="RoundRectangle 50"
+                        Stroke="{StaticResource Primary}" StrokeThickness="2"
+                        HeightRequest="65" WidthRequest="65"
+                        IsVisible="{Binding MeetVisible}">
+                    <Label Text="💘" FontSize="28" HorizontalOptions="Center" VerticalOptions="Center"/>
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding MeetCommand}"/>
+                    </Border.GestureRecognizers>
+                </Border>
+
+            </FlexLayout>
+        </Grid>
+
+    </Grid>
+</ContentPage>

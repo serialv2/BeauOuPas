@@ -1,0 +1,302 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="BeauOuPas.Views.Groups.CreateSeriesPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:BeauOuPas.ViewModels.Groups"
+        xmlns:tr="clr-namespace:BeauOuPas.Extensions"
+x:DataType="vm:CreateSeriesViewModel"
+    Title="{tr:Translate Key=CreateSeriesType_Title}"
+    BackgroundColor="{StaticResource BackgroundPage}">
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Annuler" Command="{Binding CancelCommand}"/>
+    </ContentPage.ToolbarItems>
+
+    <ScrollView>
+        <VerticalStackLayout Spacing="0" Padding="16,12">
+
+            <Label Text="{tr:Translate Key=CreateSeriesType_Header}"
+                   FontSize="24" FontAttributes="Bold"
+                   TextColor="{StaticResource TextPrimary}" Margin="0,0,0,6"/>
+
+            <!-- Contexte groupe si applicable -->
+            <Label Text="{Binding GroupName, StringFormat='Dans le groupe : {0}'}"
+                   IsVisible="{Binding HasGroup}"
+                   FontSize="13" TextColor="{StaticResource Primary}" Margin="0,0,0,16"/>
+            <Label Text="{tr:Translate Key=CreateSeriesType_Standalone}"
+                   IsVisible="{Binding HasGroup, Converter={StaticResource InverseBoolConverter}}"
+                   FontSize="13" TextColor="{StaticResource TextTertiary}" Margin="0,0,0,16"/>
+
+            <!-- Titre -->
+            <Border BackgroundColor="White" StrokeShape="RoundRectangle 14"
+                    Stroke="{StaticResource BorderLight}" StrokeThickness="1" Padding="16" Margin="0,0,0,12">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="Titre *" FontSize="13" FontAttributes="Bold"
+                           TextColor="{StaticResource TextTertiary}" TextTransform="Uppercase"/>
+                    <Entry Placeholder="Ex: Qui est le plus courageux ?"
+                           Text="{Binding Title}" FontSize="16"
+                           TextColor="{StaticResource TextPrimary}" PlaceholderColor="{StaticResource TextDisabled}"
+                           BackgroundColor="Transparent"/>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Description -->
+            <Border BackgroundColor="White" StrokeShape="RoundRectangle 14"
+                    Stroke="{StaticResource BorderLight}" StrokeThickness="1" Padding="16" Margin="0,0,0,20">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="Description" FontSize="13" FontAttributes="Bold"
+                           TextColor="{StaticResource TextTertiary}" TextTransform="Uppercase"/>
+                    <Editor Placeholder="{tr:Translate Key=CreateSeries_DescriptionLabel}"
+                            Text="{Binding Description}" FontSize="15"
+                            TextColor="{StaticResource TextPrimary}" PlaceholderColor="{StaticResource TextDisabled}"
+                            BackgroundColor="Transparent" AutoSize="TextChanges"
+                            MinimumHeightRequest="60"/>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Max projets -->
+            <Label Text="Nombre max de projets"
+                   FontSize="17" FontAttributes="Bold"
+                   TextColor="{StaticResource TextPrimary}" Margin="0,0,0,10"/>
+            <Label Text="{Binding MaxProjects, StringFormat='{0} projets maximum'}"
+                   FontSize="13" TextColor="{StaticResource Primary}" Margin="0,0,0,10"/>
+            <Grid ColumnDefinitions="*,*,*,*" ColumnSpacing="8" Margin="0,0,0,20">
+                <Border Grid.Column="0" x:Name="BtnMax5"
+                        StrokeShape="RoundRectangle 12" Stroke="{StaticResource BorderLight}"
+                        BackgroundColor="White" Padding="0,12">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding SelectMaxCommand}" CommandParameter="5"/>
+                    </Border.GestureRecognizers>
+                    <Label Text="5" FontSize="18" FontAttributes="Bold"
+                           TextColor="{StaticResource TextPrimary}" HorizontalOptions="Center"/>
+                </Border>
+                <Border Grid.Column="1" x:Name="BtnMax10"
+                        StrokeShape="RoundRectangle 12" Stroke="{StaticResource Primary}"
+                        BackgroundColor="{StaticResource SurfaceMuted}" Padding="0,12">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding SelectMaxCommand}" CommandParameter="10"/>
+                    </Border.GestureRecognizers>
+                    <Label Text="10" FontSize="18" FontAttributes="Bold"
+                           TextColor="{StaticResource Primary}" HorizontalOptions="Center"/>
+                </Border>
+                <Border Grid.Column="2" x:Name="BtnMax15"
+                        StrokeShape="RoundRectangle 12" Stroke="{StaticResource BorderLight}"
+                        BackgroundColor="White" Padding="0,12">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding SelectMaxCommand}" CommandParameter="15"/>
+                    </Border.GestureRecognizers>
+                    <Label Text="15" FontSize="18" FontAttributes="Bold"
+                           TextColor="{StaticResource TextPrimary}" HorizontalOptions="Center"/>
+                </Border>
+                <Border Grid.Column="3" x:Name="BtnMax20"
+                        StrokeShape="RoundRectangle 12" Stroke="{StaticResource BorderLight}"
+                        BackgroundColor="White" Padding="0,12">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding SelectMaxCommand}" CommandParameter="20"/>
+                    </Border.GestureRecognizers>
+                    <Label Text="20" FontSize="18" FontAttributes="Bold"
+                           TextColor="{StaticResource TextPrimary}" HorizontalOptions="Center"/>
+                </Border>
+            </Grid>
+
+            <!-- Max par membre -->
+            <Label Text="Projets max par membre"
+                   FontSize="17" FontAttributes="Bold"
+                   TextColor="{StaticResource TextPrimary}" Margin="0,0,0,10"/>
+            <Label Text="{Binding MaxPerMember, StringFormat='{0} projet(s) par membre'}"
+                   FontSize="13" TextColor="{StaticResource Primary}" Margin="0,0,0,10"/>
+            <Grid ColumnDefinitions="*,*,*,*" ColumnSpacing="8" Margin="0,0,0,24">
+                <Border Grid.Column="0" x:Name="BtnPer1"
+                        StrokeShape="RoundRectangle 12" Stroke="{StaticResource BorderLight}"
+                        BackgroundColor="White" Padding="0,12">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding SelectPerCommand}" CommandParameter="1"/>
+                    </Border.GestureRecognizers>
+                    <Label Text="1" FontSize="18" FontAttributes="Bold"
+                           TextColor="{StaticResource TextPrimary}" HorizontalOptions="Center"/>
+                </Border>
+                <Border Grid.Column="1" x:Name="BtnPer2"
+                        StrokeShape="RoundRectangle 12" Stroke="{StaticResource Primary}"
+                        BackgroundColor="{StaticResource SurfaceMuted}" Padding="0,12">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding SelectPerCommand}" CommandParameter="2"/>
+                    </Border.GestureRecognizers>
+                    <Label Text="2" FontSize="18" FontAttributes="Bold"
+                           TextColor="{StaticResource Primary}" HorizontalOptions="Center"/>
+                </Border>
+                <Border Grid.Column="2" x:Name="BtnPer3"
+                        StrokeShape="RoundRectangle 12" Stroke="{StaticResource BorderLight}"
+                        BackgroundColor="White" Padding="0,12">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding SelectPerCommand}" CommandParameter="3"/>
+                    </Border.GestureRecognizers>
+                    <Label Text="3" FontSize="18" FontAttributes="Bold"
+                           TextColor="{StaticResource TextPrimary}" HorizontalOptions="Center"/>
+                </Border>
+                <Border Grid.Column="3" x:Name="BtnPerAll"
+                        StrokeShape="RoundRectangle 12" Stroke="{StaticResource BorderLight}"
+                        BackgroundColor="White" Padding="0,12">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding SelectPerCommand}" CommandParameter="0"/>
+                    </Border.GestureRecognizers>
+                    <Label Text="∞" FontSize="18" FontAttributes="Bold"
+                           TextColor="{StaticResource TextPrimary}" HorizontalOptions="Center"/>
+                </Border>
+            </Grid>
+
+            <!-- ⚡ Visibilité des projets (choix obligatoire) -->
+            <Label Text="{tr:Translate Key=CreateSeries_VisibilityLabel}"
+                   FontSize="17" FontAttributes="Bold"
+                   TextColor="{StaticResource TextPrimary}" Margin="0,0,0,6"/>
+            <Label Text="{tr:Translate Key=CreateSeries_VisibilityHint}"
+                   FontSize="12" TextColor="{StaticResource TextTertiary}" Margin="0,0,0,12"/>
+
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="10" Margin="0,0,0,8">
+
+                <!-- Option : projets cachés -->
+                <Border Grid.Column="0"
+                        StrokeShape="RoundRectangle 14"
+                        Stroke="{StaticResource Primary}"
+                        StrokeThickness="2"
+                        BackgroundColor="{Binding IsHiddenSelected, Converter={StaticResource BoolToSelectedBgConverter}}"
+                        Padding="14">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding SelectVisibilityCommand}"
+                                              CommandParameter="hidden"/>
+                    </Border.GestureRecognizers>
+                    <VerticalStackLayout Spacing="6" HorizontalOptions="Center">
+                        <Label Text="🙈" FontSize="32" HorizontalOptions="Center"/>
+                        <Label Text="{tr:Translate Key=CreateSeries_Hidden}"
+                               FontSize="14" FontAttributes="Bold"
+                               TextColor="{StaticResource TextPrimary}"
+                               HorizontalOptions="Center"/>
+                        <Label Text="{tr:Translate Key=CreateSeries_HiddenHint}"
+                               FontSize="11" TextColor="{StaticResource TextTertiary}"
+                               HorizontalTextAlignment="Center"
+                               HorizontalOptions="Center"/>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Option : projets visibles -->
+                <Border Grid.Column="1"
+                        StrokeShape="RoundRectangle 14"
+                        Stroke="{StaticResource Primary}"
+                        StrokeThickness="2"
+                        BackgroundColor="{Binding IsVisibleSelected, Converter={StaticResource BoolToSelectedBgConverter}}"
+                        Padding="14">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding SelectVisibilityCommand}"
+                                              CommandParameter="visible"/>
+                    </Border.GestureRecognizers>
+                    <VerticalStackLayout Spacing="6" HorizontalOptions="Center">
+                        <Label Text="👀" FontSize="32" HorizontalOptions="Center"/>
+                        <Label Text="Visibles"
+                               FontSize="14" FontAttributes="Bold"
+                               TextColor="{StaticResource TextPrimary}"
+                               HorizontalOptions="Center"/>
+                        <Label Text="Tout le monde voit tout"
+                               FontSize="11" TextColor="{StaticResource TextTertiary}"
+                               HorizontalTextAlignment="Center"
+                               HorizontalOptions="Center"/>
+                    </VerticalStackLayout>
+                </Border>
+            </Grid>
+
+            <Label Text="{tr:Translate Key=CreateSeries_ChoiceRequired}"
+                   IsVisible="{Binding VisibilityChosen, Converter={StaticResource InverseBoolConverter}}"
+                   FontSize="11" TextColor="{StaticResource Warning}"
+                   Margin="0,0,0,16"/>
+            <BoxView IsVisible="{Binding VisibilityChosen}"
+                     HeightRequest="16" Color="Transparent"/>
+
+            <!-- ⚡ NOUVEAU : Toggle "Afficher les statistiques détaillées" -->
+            <Border BackgroundColor="White" StrokeShape="RoundRectangle 14"
+                    Stroke="{StaticResource BorderLight}" StrokeThickness="1" Padding="16" Margin="0,0,0,16">
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding ToggleShowStatsCommand}"/>
+                </Border.GestureRecognizers>
+                <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="14">
+                    <!-- Icône -->
+                    <Label Grid.Column="0" Text="📊"
+                           FontSize="28"
+                           VerticalOptions="Center"/>
+
+                    <!-- Texte explicatif -->
+                    <VerticalStackLayout Grid.Column="1" Spacing="4" VerticalOptions="Center">
+                        <Label Text="{tr:Translate Key=CreateSeries_TvStatsLabel}"
+                               FontSize="14" FontAttributes="Bold"
+                               TextColor="{StaticResource TextPrimary}"/>
+                        <Label Text="{tr:Translate Key=CreateSeries_TvStatsHint}"
+                               FontSize="11" TextColor="{StaticResource TextTertiary}"/>
+                    </VerticalStackLayout>
+
+                    <!-- Switch (lié au ViewModel, mais on tape sur toute la carte) -->
+                    <Switch Grid.Column="2"
+                            IsToggled="{Binding ShowStats}"
+                            OnColor="{StaticResource Primary}"
+                            ThumbColor="White"
+                            VerticalOptions="Center"/>
+                </Grid>
+            </Border>
+
+            <!-- ⚡ MAI 2026 — B2 : Toggle "Les membres peuvent ajouter des projets" -->
+            <Border BackgroundColor="White" StrokeShape="RoundRectangle 14"
+                    Stroke="{StaticResource BorderLight}" StrokeThickness="1" Padding="16" Margin="0,0,0,16">
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding ToggleMembersCanAddProjectsCommand}"/>
+                </Border.GestureRecognizers>
+                <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="14">
+                    <Label Grid.Column="0" Text="📸"
+                           FontSize="28"
+                           VerticalOptions="Center"/>
+
+                    <VerticalStackLayout Grid.Column="1" Spacing="4" VerticalOptions="Center">
+                        <Label Text="Les membres peuvent ajouter des projets"
+                               FontSize="14" FontAttributes="Bold"
+                               TextColor="{StaticResource TextPrimary}"/>
+                        <Label Text="{tr:Translate Key=CreateSeries_MembersAddHint}"
+                               FontSize="11" TextColor="{StaticResource TextTertiary}"/>
+                    </VerticalStackLayout>
+
+                    <Switch Grid.Column="2"
+                            IsToggled="{Binding MembersCanAddProjects}"
+                            OnColor="{StaticResource Primary}"
+                            ThumbColor="White"
+                            VerticalOptions="Center"/>
+                </Grid>
+            </Border>
+
+            <!-- Info code d'accès -->
+            <Border BackgroundColor="{StaticResource SurfaceMuted}" StrokeShape="RoundRectangle 14"
+                    Stroke="Transparent" Padding="16" Margin="0,0,0,24">
+                <HorizontalStackLayout Spacing="12">
+                    <Label Text="🔑" FontSize="24" VerticalOptions="Center"/>
+                    <VerticalStackLayout Spacing="4" VerticalOptions="Center">
+                        <Label Text="{tr:Translate Key=CreateQuiz_AccessCodeTitle}"
+                               FontSize="14" FontAttributes="Bold" TextColor="{StaticResource Primary}"/>
+                        <Label Text="{tr:Translate Key=CreateSeries_OpenAccessHint}"
+                               FontSize="12" TextColor="{StaticResource TextTertiary}"/>
+                    </VerticalStackLayout>
+                </HorizontalStackLayout>
+            </Border>
+
+            <!-- Bouton créer -->
+            <Border BackgroundColor="{StaticResource Primary}" StrokeShape="RoundRectangle 16"
+                    Stroke="Transparent" Padding="0,16" Margin="0,0,0,40">
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding CreateCommand}"/>
+                </Border.GestureRecognizers>
+                <Grid>
+                    <ActivityIndicator IsRunning="{Binding IsLoading}"
+                                       IsVisible="{Binding IsLoading}" Color="White"/>
+                    <Label Text="{tr:Translate Key=CreateSeries_CreateButton}"
+                           IsVisible="{Binding IsLoading, Converter={StaticResource InverseBoolConverter}}"
+                           FontSize="16" FontAttributes="Bold"
+                           TextColor="White" HorizontalOptions="Center"/>
+                </Grid>
+            </Border>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

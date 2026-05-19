@@ -1,0 +1,102 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="BeauOuPas.Views.Groups.SeriesResultsPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:BeauOuPas.ViewModels.Groups"
+        xmlns:tr="clr-namespace:BeauOuPas.Extensions"
+x:DataType="vm:SeriesResultsViewModel"
+    Title="{tr:Translate Key=SeriesResults_Title}"
+    BackgroundColor="#1A1A2E">
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Fermer" Command="{Binding CloseCommand}"/>
+    </ContentPage.ToolbarItems>
+
+    <ScrollView>
+        <VerticalStackLayout Padding="16,12" Spacing="0">
+
+            <ActivityIndicator IsRunning="{Binding IsLoading}"
+                               IsVisible="{Binding IsLoading}"
+                               Color="{StaticResource Primary}" Margin="0,40"/>
+
+            <Label Text="{tr:Translate Key=SeriesResults_Header}"
+                   FontSize="24" FontAttributes="Bold"
+                   TextColor="White" Margin="0,0,0,4"/>
+            <Label Text="{Binding SeriesTitle}"
+                   FontSize="14" TextColor="{StaticResource Primary}" Margin="0,0,0,16"/>
+
+            <CollectionView ItemsSource="{Binding Results}" SelectionMode="None">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="vm:ProjectResultItem">
+                        <Border BackgroundColor="#2A2A3E"
+                                StrokeShape="RoundRectangle 16"
+                                Stroke="#444466"
+                                StrokeThickness="1"
+                                Margin="0,0,0,16"
+                                Padding="16">
+                            <VerticalStackLayout Spacing="12">
+
+                                <!-- Titre -->
+                                <Grid ColumnDefinitions="Auto,*">
+                                    <Label Grid.Column="0" Text="{Binding TypeLabel}"
+                                           FontSize="22" Margin="0,0,10,0"/>
+                                    <VerticalStackLayout Grid.Column="1" Spacing="2">
+                                        <Label Text="{Binding Title}"
+                                               FontSize="16" FontAttributes="Bold"
+                                               TextColor="White"/>
+                                        <Label Text="{Binding TotalVotes, StringFormat='{0} votes'}"
+                                               FontSize="12" TextColor="{StaticResource TextTertiary}"/>
+                                    </VerticalStackLayout>
+                                </Grid>
+
+                                <!-- Résumé votes -->
+                                <Border BackgroundColor="#1A1A2E"
+                                        StrokeShape="RoundRectangle 10"
+                                        Stroke="Transparent"
+                                        Padding="12,10">
+                                    <Label Text="{Binding Summary}"
+                                           FontSize="15" FontAttributes="Bold"
+                                           TextColor="White"
+                                           HorizontalOptions="Center"/>
+                                </Border>
+
+                                <!-- Gagnant -->
+                                <Label Text="{Binding Winner}"
+                                       IsVisible="{Binding Winner, Converter={StaticResource StringToBoolConverter}}"
+                                       FontSize="16" FontAttributes="Bold"
+                                       TextColor="{StaticResource Primary}"
+                                       HorizontalOptions="Center"/>
+
+                                <!-- Selfies -->
+                                <VerticalStackLayout IsVisible="{Binding HasSelfies}" Spacing="8">
+                                    <Label Text="📸 Selfies"
+                                           FontSize="13" TextColor="{StaticResource TextTertiary}"/>
+                                    <CollectionView ItemsSource="{Binding SelfieUrls}"
+                                                    SelectionMode="None"
+                                                    HeightRequest="90">
+                                        <CollectionView.ItemsLayout>
+                                            <LinearItemsLayout Orientation="Horizontal" ItemSpacing="8"/>
+                                        </CollectionView.ItemsLayout>
+                                        <CollectionView.ItemTemplate>
+                                            <DataTemplate x:DataType="x:String">
+                                                <Border StrokeShape="RoundRectangle 10"
+                                                        Stroke="{StaticResource Primary}"
+                                                        StrokeThickness="2"
+                                                        HeightRequest="80" WidthRequest="80">
+                                                    <Image Source="{Binding .}" Aspect="AspectFill"/>
+                                                </Border>
+                                            </DataTemplate>
+                                        </CollectionView.ItemTemplate>
+                                    </CollectionView>
+                                </VerticalStackLayout>
+
+                            </VerticalStackLayout>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

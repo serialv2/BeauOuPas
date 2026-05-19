@@ -1,0 +1,195 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="BeauOuPas.Views.Groups.CreateGroupPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:BeauOuPas.ViewModels.Groups"
+        xmlns:tr="clr-namespace:BeauOuPas.Extensions"
+x:DataType="vm:CreateGroupViewModel"
+    Title="Nouveau groupe"
+    BackgroundColor="{StaticResource BackgroundPage}">
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Annuler" Command="{Binding CancelCommand}"/>
+    </ContentPage.ToolbarItems>
+
+    <ScrollView>
+        <VerticalStackLayout Spacing="0" Padding="16,12">
+
+            <Label Text="{tr:Translate Key=CreateGroup_Title}"
+                   FontSize="24"
+                   FontAttributes="Bold"
+                   TextColor="{StaticResource TextPrimary}"
+                   Margin="0,0,0,20"/>
+
+            <!-- Nom -->
+            <Border BackgroundColor="White"
+                    StrokeShape="RoundRectangle 14"
+                    Stroke="{StaticResource BorderLight}"
+                    StrokeThickness="1"
+                    Padding="16"
+                    Margin="0,0,0,12">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="Nom du groupe *"
+                           FontSize="13"
+                           FontAttributes="Bold"
+                           TextColor="{StaticResource TextTertiary}"
+                           TextTransform="Uppercase"/>
+                    <Entry Placeholder="{tr:Translate Key=CreateGroup_NamePlaceholder}"
+                           Text="{Binding Name}"
+                           FontSize="16"
+                           TextColor="{StaticResource TextPrimary}"
+                           PlaceholderColor="{StaticResource TextDisabled}"
+                           BackgroundColor="Transparent"/>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Description -->
+            <Border BackgroundColor="White"
+                    StrokeShape="RoundRectangle 14"
+                    Stroke="{StaticResource BorderLight}"
+                    StrokeThickness="1"
+                    Padding="16"
+                    Margin="0,0,0,20">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="Description"
+                           FontSize="13"
+                           FontAttributes="Bold"
+                           TextColor="{StaticResource TextTertiary}"
+                           TextTransform="Uppercase"/>
+                    <Editor Placeholder="De quoi parle ce groupe ?"
+                            Text="{Binding Description}"
+                            FontSize="15"
+                            TextColor="{StaticResource TextPrimary}"
+                            PlaceholderColor="{StaticResource TextDisabled}"
+                            BackgroundColor="Transparent"
+                            AutoSize="TextChanges"
+                            MinimumHeightRequest="60"/>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Inviter des amis -->
+            <Label Text="Inviter des amis"
+                   FontSize="17"
+                   FontAttributes="Bold"
+                   TextColor="{StaticResource TextPrimary}"
+                   Margin="0,0,0,10"/>
+
+            <Label Text="{Binding SelectedCount, StringFormat='{0} ami(s) sélectionné(s)'}"
+                   FontSize="13"
+                   TextColor="{StaticResource Primary}"
+                   Margin="0,0,0,12"/>
+
+            <ActivityIndicator IsRunning="{Binding IsLoadingFriends}"
+                               IsVisible="{Binding IsLoadingFriends}"
+                               Color="{StaticResource Primary}"
+                               Margin="0,20"/>
+
+            <!-- Liste amis -->
+            <CollectionView ItemsSource="{Binding Friends}"
+                            IsVisible="{Binding HasFriends}"
+                            SelectionMode="None">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="vm:FriendSelectItem">
+                        <Border BackgroundColor="White"
+                                StrokeShape="RoundRectangle 14"
+                                Stroke="{Binding BorderColor}"
+                                StrokeThickness="2"
+                                Margin="0,0,0,10"
+                                Padding="14">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:CreateGroupViewModel}}, Path=ToggleFriendCommand}"
+                                    CommandParameter="{Binding .}"/>
+                            </Border.GestureRecognizers>
+                            <Grid ColumnDefinitions="44,*,36" ColumnSpacing="12">
+
+                                <!-- Avatar -->
+                                <Border Grid.Column="0"
+                                        BackgroundColor="{StaticResource SurfaceMuted}"
+                                        StrokeShape="RoundRectangle 22"
+                                        Stroke="Transparent"
+                                        HeightRequest="44"
+                                        WidthRequest="44">
+                                    <Label Text="{Binding FirstLetter}"
+                                           FontSize="18"
+                                           FontAttributes="Bold"
+                                           TextColor="{StaticResource Primary}"
+                                           HorizontalOptions="Center"
+                                           VerticalOptions="Center"/>
+                                </Border>
+
+                                <!-- Username -->
+                                <Label Grid.Column="1"
+                                       Text="{Binding Username, StringFormat='@{0}'}"
+                                       FontSize="15"
+                                       FontAttributes="Bold"
+                                       TextColor="{StaticResource TextPrimary}"
+                                       VerticalOptions="Center"/>
+
+                                <!-- Check -->
+                                <Border Grid.Column="2"
+                                        BackgroundColor="{Binding CheckBgColor}"
+                                        StrokeShape="RoundRectangle 18"
+                                        Stroke="Transparent"
+                                        HeightRequest="36"
+                                        WidthRequest="36">
+                                    <Label Text="{Binding CheckIcon}"
+                                           FontSize="16"
+                                           FontAttributes="Bold"
+                                           TextColor="White"
+                                           HorizontalOptions="Center"
+                                           VerticalOptions="Center"/>
+                                </Border>
+
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <!-- Aucun ami -->
+            <Border BackgroundColor="White"
+                    StrokeShape="RoundRectangle 14"
+                    Stroke="{StaticResource BorderLight}"
+                    StrokeThickness="1"
+                    Padding="20"
+                    IsVisible="{Binding HasFriends, Converter={StaticResource InverseBoolConverter}}">
+                <VerticalStackLayout Spacing="8" HorizontalOptions="Center">
+                    <Label Text="👥" FontSize="36" HorizontalOptions="Center"/>
+                    <Label Text="Aucun ami pour l'instant"
+                           FontSize="14"
+                           TextColor="{StaticResource TextTertiary}"
+                           HorizontalOptions="Center"/>
+                    <Label Text="Tu pourras inviter des amis plus tard"
+                           FontSize="12"
+                           TextColor="{StaticResource TextDisabled}"
+                           HorizontalOptions="Center"/>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Bouton créer -->
+            <Border BackgroundColor="{StaticResource Primary}"
+                    StrokeShape="RoundRectangle 16"
+                    Stroke="Transparent"
+                    Padding="0,16"
+                    Margin="0,24,0,40">
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding CreateCommand}"/>
+                </Border.GestureRecognizers>
+                <Grid>
+                    <ActivityIndicator IsRunning="{Binding IsLoading}"
+                                       IsVisible="{Binding IsLoading}"
+                                       Color="White"/>
+                    <Label Text="{tr:Translate Key=CreateGroup_CreateButton}"
+                           IsVisible="{Binding IsLoading, Converter={StaticResource InverseBoolConverter}}"
+                           FontSize="16"
+                           FontAttributes="Bold"
+                           TextColor="White"
+                           HorizontalOptions="Center"/>
+                </Grid>
+            </Border>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

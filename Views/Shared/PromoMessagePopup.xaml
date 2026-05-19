@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<toolkit:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+               xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+               xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+               xmlns:tr="clr-namespace:BeauOuPas.Extensions"
+               x:Class="BeauOuPas.Views.Shared.PromoMessagePopup"
+               CanBeDismissedByTappingOutsideOfPopup="True"
+               Color="Transparent">
+
+    <Border BackgroundColor="{AppThemeBinding Light={StaticResource SurfaceCardAlt}, Dark={StaticResource DarkSurface}}"
+            StrokeShape="RoundRectangle 16" Stroke="Transparent" Margin="24,0" Padding="0">
+        <VerticalStackLayout Spacing="0">
+            <Grid BackgroundColor="{StaticResource Primary}" Padding="24,20" HeightRequest="80">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Label Grid.Row="0" Text="{tr:Translate Key=Promo_Team}" FontSize="13"
+                       TextColor="{StaticResource PrimaryLight}" HorizontalOptions="Center"/>
+                <Label x:Name="TitleLabel" Grid.Row="1" FontSize="18" FontAttributes="Bold"
+                       TextColor="{StaticResource TextOnPrimary}" HorizontalOptions="Center" Margin="0,4,0,0"/>
+            </Grid>
+            <VerticalStackLayout Padding="24,20" Spacing="16">
+                <ScrollView MaximumHeightRequest="300">
+                    <Label x:Name="MessageLabel" FontSize="15" LineBreakMode="WordWrap"
+                           TextColor="{AppThemeBinding Light={StaticResource TextPrimary}, Dark={StaticResource DarkTextPrimary}}"/>
+                </ScrollView>
+                <Button Text="{tr:Translate Key=Promo_Understood}" x:Name="CloseButton"
+                        BackgroundColor="{StaticResource Primary}"
+                        TextColor="{StaticResource TextOnPrimary}" FontAttributes="Bold"
+                        FontSize="15" CornerRadius="10" HeightRequest="48" Margin="0,4,0,0"/>
+            </VerticalStackLayout>
+        </VerticalStackLayout>
+    </Border>
+</toolkit:Popup>

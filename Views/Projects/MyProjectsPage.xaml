@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="BeauOuPas.Views.Projects.MyProjectsPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:BeauOuPas.ViewModels.Projects"
+    xmlns:shared="clr-namespace:BeauOuPas.Views.Shared"
+    xmlns:detailVm="clr-namespace:BeauOuPas.ViewModels"
+    xmlns:tr="clr-namespace:BeauOuPas.Extensions"
+    x:DataType="vm:MyProjectsViewModel"
+    Title="{tr:Translate Key=MyProjects_Title}"
+    BackgroundColor="{StaticResource BackgroundPage}">
+
+    <Grid>
+        <Grid RowDefinitions="Auto,*">
+
+            <Button Grid.Row="0" Text="{tr:Translate Key=MyProjects_NewProject}"
+                    Command="{Binding CreateNewProjectCommand}"
+                    BackgroundColor="{StaticResource Primary}"
+                    TextColor="{StaticResource TextOnPrimary}" CornerRadius="10"
+                    HeightRequest="45" Margin="20,16,20,8"/>
+
+            <Grid Grid.Row="1">
+                <ActivityIndicator IsRunning="{Binding IsLoading}" IsVisible="{Binding IsLoading}"
+                                   Color="{StaticResource Primary}" VerticalOptions="Center" HorizontalOptions="Center"/>
+
+                <VerticalStackLayout IsVisible="{Binding IsEmpty}"
+                                     VerticalOptions="Center" HorizontalOptions="Center" Spacing="12">
+                    <Label Text="📭" FontSize="64" HorizontalOptions="Center"/>
+                    <Label Text="{tr:Translate Key=MyProjects_Empty}" FontSize="16"
+                           TextColor="{StaticResource TextTertiary}" HorizontalOptions="Center"/>
+                    <Label Text="{tr:Translate Key=MyProjects_EmptyHint}" FontSize="14"
+                           TextColor="{StaticResource TextDisabled}" HorizontalOptions="Center"/>
+                </VerticalStackLayout>
+
+                <CollectionView ItemsSource="{Binding Projects}" Margin="20,8">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="vm:ProjectItemViewModel">
+                            <Border BackgroundColor="{StaticResource SurfaceCardAlt}" StrokeShape="RoundRectangle 12"
+                                    Stroke="{StaticResource BorderLight}" StrokeThickness="1" Margin="0,0,0,12" Padding="0">
+                                <VerticalStackLayout>
+                                    <Grid ColumnDefinitions="110,*">
+                                        <Grid Grid.Column="0">
+                                            <Image Source="{Binding PhotoUrl}" Aspect="AspectFill"
+                                                   HeightRequest="110" WidthRequest="110"/>
+                                            <Border BackgroundColor="#88000000" StrokeShape="RoundRectangle 0"
+                                                    HorizontalOptions="Fill" VerticalOptions="Fill">
+                                                <Label Text="ℹ️" FontSize="22"
+                                                       HorizontalOptions="Center" VerticalOptions="Center"/>
+                                            </Border>
+                                            <Grid.GestureRecognizers>
+                                                <TapGestureRecognizer
+                                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:MyProjectsViewModel}}, Path=ShowDetailCommand}"
+                                                    CommandParameter="{Binding .}"/>
+                                            </Grid.GestureRecognizers>
+                                        </Grid>
+                                        <VerticalStackLayout Grid.Column="1" Padding="12,10,12,8" Spacing="5">
+                                            <Label Text="{Binding TypeLabel}" FontSize="11" TextColor="{StaticResource TextTertiary}"/>
+                                            <Label Text="{Binding Title}" FontSize="15" FontAttributes="Bold"
+                                                   TextColor="{StaticResource TextPrimary}" LineBreakMode="TailTruncation"/>
+                                            <Border StrokeShape="RoundRectangle 10" Padding="8,3"
+                                                    HorizontalOptions="Start" BackgroundColor="{Binding StatusColor}">
+                                                <Label Text="{Binding StatusLabel}" FontSize="11"
+                                                       TextColor="White" FontAttributes="Bold"/>
+                                            </Border>
+                                            <Label FontSize="11" TextColor="{StaticResource TextTertiary}">
+                                                <Label.Text>
+                                                    <MultiBinding StringFormat="{}{0}  •  {1}">
+                                                        <Binding Path="GenderLabel"/>
+                                                        <Binding Path="AgeLabel"/>
+                                                    </MultiBinding>
+                                                </Label.Text>
+                                            </Label>
+                                            <Label Text="{Binding DateLabel}" FontSize="11" TextColor="{StaticResource TextDisabled}"/>
+                                            <Border IsVisible="{Binding HasVotes}" StrokeShape="RoundRectangle 8"
+                                                    Stroke="Transparent" BackgroundColor="{StaticResource SurfaceMuted}"
+                                                    Padding="8,4" HorizontalOptions="Start">
+                                                <Label Text="{Binding VoteSummary}" FontSize="11"
+                                                       TextColor="{StaticResource TextSecondary}" FontAttributes="Bold"/>
+                                            </Border>
+                                            <Label IsVisible="{Binding IsRejected}"
+                                                   Text="{Binding RejectReason, StringFormat='Motif : {0}'}"
+                                                   FontSize="11" TextColor="{StaticResource Error}" LineBreakMode="WordWrap"/>
+                                        </VerticalStackLayout>
+                                    </Grid>
+
+                                    <Grid ColumnDefinitions="*,*" ColumnSpacing="8" Padding="12,0,12,12">
+                                        <Button Grid.Column="0" Text="{tr:Translate Key=MyProjects_Close}"
+                                                IsVisible="{Binding CanClose}"
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:MyProjectsViewModel}}, Path=CloseProjectCommand}"
+                                                CommandParameter="{Binding Id}"
+                                                BackgroundColor="{StaticResource SurfaceMuted}"
+                                                TextColor="{StaticResource TextSecondary}"
+                                                FontSize="12" HeightRequest="36" CornerRadius="8"/>
+                                        <Button Grid.Column="1" Text="{tr:Translate Key=MyProjects_Delete}"
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:MyProjectsViewModel}}, Path=DeleteProjectCommand}"
+                                                CommandParameter="{Binding Id}"
+                                                BackgroundColor="{StaticResource ErrorLight}"
+                                                TextColor="{StaticResource Error}"
+                                                FontSize="12" HeightRequest="36" CornerRadius="8"/>
+                                    </Grid>
+                                </VerticalStackLayout>
+                            </Border>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </Grid>
+        </Grid>
+
+        <shared:ProjectDetailPopup x:Name="DetailPopup"
+                                   HorizontalOptions="Fill" VerticalOptions="Fill"/>
+    </Grid>
+</ContentPage>

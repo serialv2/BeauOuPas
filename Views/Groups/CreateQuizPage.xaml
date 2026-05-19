@@ -1,0 +1,454 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="BeauOuPas.Views.Groups.CreateQuizPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:BeauOuPas.ViewModels.Groups"
+    xmlns:tr="clr-namespace:BeauOuPas.Extensions"
+    x:DataType="vm:CreateQuizViewModel"
+    Title="{tr:Translate Key=CreateQuiz_Title}"
+    BackgroundColor="{StaticResource BackgroundPage}">
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="{tr:Translate Key=Common_Cancel}" Command="{Binding CancelCommand}"/>
+    </ContentPage.ToolbarItems>
+
+    <ScrollView>
+        <VerticalStackLayout Spacing="0" Padding="16,12">
+
+            <!-- En-tête -->
+            <Label Text="{tr:Translate Key=CreateQuiz_Header}"
+                   FontSize="24" FontAttributes="Bold"
+                   TextColor="{StaticResource TextPrimary}" Margin="0,0,0,6"/>
+
+            <!-- Contexte groupe / standalone -->
+            <Label Text="{Binding GroupName, StringFormat='Dans le groupe : {0}'}"
+                   IsVisible="{Binding HasGroup}"
+                   FontSize="13" TextColor="{StaticResource Primary}" Margin="0,0,0,16"/>
+            <Label Text="{tr:Translate Key=CreateQuiz_Standalone}"
+                   IsVisible="{Binding HasGroup, Converter={StaticResource InverseBoolConverter}}"
+                   FontSize="13" TextColor="{StaticResource TextTertiary}" Margin="0,0,0,16"/>
+
+            <!-- Titre -->
+            <Border BackgroundColor="White" StrokeShape="RoundRectangle 14"
+                    Stroke="{StaticResource BorderLight}" StrokeThickness="1" Padding="16" Margin="0,0,0,12"
+                    IsVisible="{Binding IsCreateMode}">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="{tr:Translate Key=CreateQuiz_TitleLabel}"
+                           FontSize="13" FontAttributes="Bold"
+                           TextColor="{StaticResource TextTertiary}" TextTransform="Uppercase"/>
+                    <Entry Placeholder="{tr:Translate Key=CreateQuiz_TitlePlaceholder}"
+                           Text="{Binding Title}" FontSize="16"
+                           TextColor="{StaticResource TextPrimary}" PlaceholderColor="{StaticResource TextDisabled}"
+                           BackgroundColor="Transparent"
+                           MaxLength="200"/>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Description -->
+            <Border BackgroundColor="White" StrokeShape="RoundRectangle 14"
+                    Stroke="{StaticResource BorderLight}" StrokeThickness="1" Padding="16" Margin="0,0,0,20"
+                    IsVisible="{Binding IsCreateMode}">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="{tr:Translate Key=CreateQuiz_DescriptionLabel}"
+                           FontSize="13" FontAttributes="Bold"
+                           TextColor="{StaticResource TextTertiary}" TextTransform="Uppercase"/>
+                    <Editor Placeholder="{tr:Translate Key=CreateQuiz_DescriptionPlaceholder}"
+                            Text="{Binding Description}" FontSize="15"
+                            TextColor="{StaticResource TextPrimary}" PlaceholderColor="{StaticResource TextDisabled}"
+                            BackgroundColor="Transparent" AutoSize="TextChanges"
+                            MinimumHeightRequest="60"/>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- ═══════════════════════════════════════════════════════
+                 🎨 SÉLECTEUR DE STYLE VISUEL DU QUIZZ
+                 4 cartes 2×2 : kahoot / millionaire / burger / weakest
+                 La carte sélectionnée a un fond rose clair + bordure rose accent.
+                 Le style est appliqué à la TV web et bientôt au mobile player.
+                 ═══════════════════════════════════════════════════════ -->
+            <VerticalStackLayout Spacing="10" Margin="0,0,0,20"
+                                 IsVisible="{Binding IsCreateMode}">
+                <Label Text="{tr:Translate Key=CreateQuiz_StyleLabel}"
+                       FontSize="13" FontAttributes="Bold"
+                       TextColor="{StaticResource TextTertiary}" TextTransform="Uppercase"
+                       Margin="4,0,0,0"/>
+                <Label Text="{tr:Translate Key=CreateQuiz_StyleHint}"
+                       FontSize="12" TextColor="{StaticResource TextTertiary}"
+                       Margin="4,0,0,0"/>
+
+                <Grid ColumnSpacing="10" RowSpacing="10"
+                      ColumnDefinitions="*,*"
+                      RowDefinitions="*,*">
+
+                    <!-- Carte 1 : Kahoot -->
+                    <Border Grid.Row="0" Grid.Column="0"
+                            BackgroundColor="{Binding StyleKahootBg}"
+                            Stroke="{Binding StyleKahootBorder}"
+                            StrokeShape="RoundRectangle 14"
+                            StrokeThickness="2" Padding="14">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding SelectStyleCommand}"
+                                                  CommandParameter="kahoot"/>
+                        </Border.GestureRecognizers>
+                        <Grid RowDefinitions="Auto,Auto,Auto" RowSpacing="4">
+                            <Label Grid.Row="0" Text="✓"
+                                   FontSize="14" FontAttributes="Bold"
+                                   TextColor="{StaticResource Primary}"
+                                   HorizontalOptions="End"
+                                   IsVisible="{Binding StyleKahootSelected}"/>
+                            <Label Grid.Row="1" Text="🎨"
+                                   FontSize="32"
+                                   HorizontalOptions="Center"/>
+                            <VerticalStackLayout Grid.Row="2" Spacing="2">
+                                <Label Text="Kahoot!"
+                                       FontSize="14" FontAttributes="Bold"
+                                       TextColor="{StaticResource TextPrimary}"
+                                       HorizontalTextAlignment="Center"/>
+                                <Label Text="{tr:Translate Key=CreateQuiz_StyleKahootDesc}"
+                                       FontSize="11" TextColor="{StaticResource TextTertiary}"
+                                       HorizontalTextAlignment="Center"/>
+                            </VerticalStackLayout>
+                        </Grid>
+                    </Border>
+
+                    <!-- Carte 2 : Millionaire -->
+                    <Border Grid.Row="0" Grid.Column="1"
+                            BackgroundColor="{Binding StyleMillionaireBg}"
+                            Stroke="{Binding StyleMillionaireBorder}"
+                            StrokeShape="RoundRectangle 14"
+                            StrokeThickness="2" Padding="14">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding SelectStyleCommand}"
+                                                  CommandParameter="millionaire"/>
+                        </Border.GestureRecognizers>
+                        <Grid RowDefinitions="Auto,Auto,Auto" RowSpacing="4">
+                            <Label Grid.Row="0" Text="✓"
+                                   FontSize="14" FontAttributes="Bold"
+                                   TextColor="{StaticResource Primary}"
+                                   HorizontalOptions="End"
+                                   IsVisible="{Binding StyleMillionaireSelected}"/>
+                            <Label Grid.Row="1" Text="💎"
+                                   FontSize="32"
+                                   HorizontalOptions="Center"/>
+                            <VerticalStackLayout Grid.Row="2" Spacing="2">
+                                <Label Text="Millionnaire"
+                                       FontSize="14" FontAttributes="Bold"
+                                       TextColor="{StaticResource TextPrimary}"
+                                       HorizontalTextAlignment="Center"/>
+                                <Label Text="{tr:Translate Key=CreateQuiz_StyleMillionaireDesc}"
+                                       FontSize="11" TextColor="{StaticResource TextTertiary}"
+                                       HorizontalTextAlignment="Center"/>
+                            </VerticalStackLayout>
+                        </Grid>
+                    </Border>
+
+                    <!-- Carte 3 : Burger Quiz -->
+                    <Border Grid.Row="1" Grid.Column="0"
+                            BackgroundColor="{Binding StyleBurgerBg}"
+                            Stroke="{Binding StyleBurgerBorder}"
+                            StrokeShape="RoundRectangle 14"
+                            StrokeThickness="2" Padding="14">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding SelectStyleCommand}"
+                                                  CommandParameter="burger"/>
+                        </Border.GestureRecognizers>
+                        <Grid RowDefinitions="Auto,Auto,Auto" RowSpacing="4">
+                            <Label Grid.Row="0" Text="✓"
+                                   FontSize="14" FontAttributes="Bold"
+                                   TextColor="{StaticResource Primary}"
+                                   HorizontalOptions="End"
+                                   IsVisible="{Binding StyleBurgerSelected}"/>
+                            <Label Grid.Row="1" Text="🍔"
+                                   FontSize="32"
+                                   HorizontalOptions="Center"/>
+                            <VerticalStackLayout Grid.Row="2" Spacing="2">
+                                <Label Text="Burger Quiz"
+                                       FontSize="14" FontAttributes="Bold"
+                                       TextColor="{StaticResource TextPrimary}"
+                                       HorizontalTextAlignment="Center"/>
+                                <Label Text="{tr:Translate Key=CreateQuiz_StyleBurgerDesc}"
+                                       FontSize="11" TextColor="{StaticResource TextTertiary}"
+                                       HorizontalTextAlignment="Center"/>
+                            </VerticalStackLayout>
+                        </Grid>
+                    </Border>
+
+                    <!-- Carte 4 : Weakest Link -->
+                    <Border Grid.Row="1" Grid.Column="1"
+                            BackgroundColor="{Binding StyleWeakestBg}"
+                            Stroke="{Binding StyleWeakestBorder}"
+                            StrokeShape="RoundRectangle 14"
+                            StrokeThickness="2" Padding="14">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding SelectStyleCommand}"
+                                                  CommandParameter="weakest"/>
+                        </Border.GestureRecognizers>
+                        <Grid RowDefinitions="Auto,Auto,Auto" RowSpacing="4">
+                            <Label Grid.Row="0" Text="✓"
+                                   FontSize="14" FontAttributes="Bold"
+                                   TextColor="{StaticResource Primary}"
+                                   HorizontalOptions="End"
+                                   IsVisible="{Binding StyleWeakestSelected}"/>
+                            <Label Grid.Row="1" Text="⚫"
+                                   FontSize="32"
+                                   HorizontalOptions="Center"/>
+                            <VerticalStackLayout Grid.Row="2" Spacing="2">
+                                <Label Text="Maillon faible"
+                                       FontSize="14" FontAttributes="Bold"
+                                       TextColor="{StaticResource TextPrimary}"
+                                       HorizontalTextAlignment="Center"/>
+                                <Label Text="{tr:Translate Key=CreateQuiz_StyleWeakestDesc}"
+                                       FontSize="11" TextColor="{StaticResource TextTertiary}"
+                                       HorizontalTextAlignment="Center"/>
+                            </VerticalStackLayout>
+                        </Grid>
+                    </Border>
+                </Grid>
+            </VerticalStackLayout>
+
+            <!-- Toggle "Afficher classement complet" -->
+            <Border BackgroundColor="White" StrokeShape="RoundRectangle 14"
+                    Stroke="{StaticResource BorderLight}" StrokeThickness="1" Padding="16" Margin="0,0,0,20"
+                    IsVisible="{Binding IsCreateMode}">
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding ToggleShowFullLeaderboardCommand}"/>
+                </Border.GestureRecognizers>
+                <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="14">
+                    <Label Grid.Column="0" Text="🏆"
+                           FontSize="28" VerticalOptions="Center"/>
+                    <VerticalStackLayout Grid.Column="1" Spacing="4" VerticalOptions="Center">
+                        <Label Text="{tr:Translate Key=CreateQuiz_ShowFullLeaderboard}"
+                               FontSize="14" FontAttributes="Bold"
+                               TextColor="{StaticResource TextPrimary}"/>
+                        <Label Text="{tr:Translate Key=CreateQuiz_ShowFullLeaderboardHint}"
+                               FontSize="11" TextColor="{StaticResource TextTertiary}"/>
+                    </VerticalStackLayout>
+                    <Switch Grid.Column="2"
+                            IsToggled="{Binding ShowFullLeaderboard}"
+                            OnColor="{StaticResource Primary}"
+                            ThumbColor="White"
+                            VerticalOptions="Center"/>
+                </Grid>
+            </Border>
+
+            <!-- ═══ SECTION QUESTIONS ═══ -->
+
+            <!-- En-tête section avec compteur -->
+            <Grid ColumnDefinitions="*,Auto" Margin="0,0,0,12">
+                <Label Grid.Column="0"
+                       Text="{tr:Translate Key=CreateQuiz_QuestionsSection}"
+                       FontSize="17" FontAttributes="Bold"
+                       TextColor="{StaticResource TextPrimary}"
+                       VerticalOptions="Center"/>
+                <Border Grid.Column="1"
+                        BackgroundColor="{StaticResource SurfaceMuted}"
+                        StrokeShape="RoundRectangle 10"
+                        Stroke="Transparent"
+                        Padding="10,4"
+                        VerticalOptions="Center">
+                    <Label Text="{Binding QuestionCount, StringFormat='{0} / 50'}"
+                           FontSize="12" FontAttributes="Bold"
+                           TextColor="{StaticResource Primary}"/>
+                </Border>
+            </Grid>
+
+            <!-- Empty state -->
+            <Border IsVisible="{Binding NoQuestions}"
+                    BackgroundColor="White"
+                    StrokeShape="RoundRectangle 14"
+                    Stroke="{StaticResource BorderLight}"
+                    StrokeThickness="1"
+                    Padding="20,28"
+                    Margin="0,0,0,12">
+                <VerticalStackLayout Spacing="10" HorizontalOptions="Center">
+                    <Label Text="❓" FontSize="40" HorizontalOptions="Center"/>
+                    <Label Text="{tr:Translate Key=CreateQuiz_NoQuestionsTitle}"
+                           FontSize="14" FontAttributes="Bold"
+                           TextColor="{StaticResource TextPrimary}"
+                           HorizontalOptions="Center"/>
+                    <Label Text="{tr:Translate Key=CreateQuiz_NoQuestionsHint}"
+                           FontSize="12" TextColor="{StaticResource TextTertiary}"
+                           HorizontalTextAlignment="Center"
+                           HorizontalOptions="Center"/>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Liste des questions -->
+            <CollectionView ItemsSource="{Binding Questions}"
+                            IsVisible="{Binding HasQuestions}"
+                            SelectionMode="None"
+                            Margin="0,0,0,12">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="vm:QuizQuestionItem">
+                        <Border BackgroundColor="White"
+                                StrokeShape="RoundRectangle 14"
+                                Stroke="{StaticResource BorderLight}"
+                                StrokeThickness="1"
+                                Margin="0,0,0,10"
+                                Padding="14">
+                            <Grid RowDefinitions="Auto,Auto" RowSpacing="10">
+
+                                <!-- Ligne 1 : badge position + titre + flèches -->
+                                <Grid Grid.Row="0" ColumnDefinitions="Auto,*,Auto,Auto" ColumnSpacing="10">
+
+                                    <!-- Badge position -->
+                                    <Border Grid.Column="0"
+                                            BackgroundColor="{StaticResource Primary}"
+                                            StrokeShape="RoundRectangle 8"
+                                            Stroke="Transparent"
+                                            Padding="8,4"
+                                            VerticalOptions="Center">
+                                        <Label Text="{Binding PositionLabel}"
+                                               FontSize="12" FontAttributes="Bold"
+                                               TextColor="White"/>
+                                    </Border>
+
+                                    <!-- Titre + énoncé court -->
+                                    <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
+                                        <Label Text="{Binding Title}"
+                                               FontSize="14" FontAttributes="Bold"
+                                               TextColor="{StaticResource TextPrimary}"
+                                               LineBreakMode="TailTruncation"/>
+                                        <Label Text="{Binding QuestionText}"
+                                               FontSize="11"
+                                               TextColor="{StaticResource TextTertiary}"
+                                               LineBreakMode="TailTruncation"
+                                               MaxLines="1"/>
+                                    </VerticalStackLayout>
+
+                                    <!-- Flèche haut -->
+                                    <Border Grid.Column="2"
+                                            BackgroundColor="{StaticResource SurfaceMuted}"
+                                            StrokeShape="RoundRectangle 8"
+                                            Stroke="Transparent"
+                                            Padding="8,6"
+                                            Opacity="{Binding CanMoveUp, Converter={StaticResource BoolToOpacityConverter}, FallbackValue=1}"
+                                            IsEnabled="{Binding CanMoveUp}">
+                                        <Border.GestureRecognizers>
+                                            <TapGestureRecognizer
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:CreateQuizViewModel}}, Path=MoveQuestionUpCommand}"
+                                                CommandParameter="{Binding .}"/>
+                                        </Border.GestureRecognizers>
+                                        <Label Text="⬆"
+                                               FontSize="14"
+                                               TextColor="{StaticResource TextTertiary}"
+                                               HorizontalOptions="Center"/>
+                                    </Border>
+
+                                    <!-- Flèche bas -->
+                                    <Border Grid.Column="3"
+                                            BackgroundColor="{StaticResource SurfaceMuted}"
+                                            StrokeShape="RoundRectangle 8"
+                                            Stroke="Transparent"
+                                            Padding="8,6"
+                                            Opacity="{Binding CanMoveDown, Converter={StaticResource BoolToOpacityConverter}, FallbackValue=1}"
+                                            IsEnabled="{Binding CanMoveDown}">
+                                        <Border.GestureRecognizers>
+                                            <TapGestureRecognizer
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:CreateQuizViewModel}}, Path=MoveQuestionDownCommand}"
+                                                CommandParameter="{Binding .}"/>
+                                        </Border.GestureRecognizers>
+                                        <Label Text="⬇"
+                                               FontSize="14"
+                                               TextColor="{StaticResource TextTertiary}"
+                                               HorizontalOptions="Center"/>
+                                    </Border>
+                                </Grid>
+
+                                <!-- Ligne 2 : actions (modifier / supprimer) -->
+                                <Grid Grid.Row="1" ColumnDefinitions="*,*" ColumnSpacing="8">
+
+                                    <!-- Modifier -->
+                                    <Border Grid.Column="0"
+                                            BackgroundColor="{StaticResource SurfaceMuted}"
+                                            StrokeShape="RoundRectangle 10"
+                                            Stroke="Transparent"
+                                            Padding="0,8">
+                                        <Border.GestureRecognizers>
+                                            <TapGestureRecognizer
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:CreateQuizViewModel}}, Path=EditQuestionCommand}"
+                                                CommandParameter="{Binding .}"/>
+                                        </Border.GestureRecognizers>
+                                        <Label Text="{tr:Translate Key=CreateQuiz_EditQuestion}"
+                                               FontSize="12" FontAttributes="Bold"
+                                               TextColor="{StaticResource Primary}"
+                                               HorizontalOptions="Center"/>
+                                    </Border>
+
+                                    <!-- Supprimer -->
+                                    <Border Grid.Column="1"
+                                            BackgroundColor="White"
+                                            StrokeShape="RoundRectangle 10"
+                                            Stroke="{StaticResource Error}"
+                                            StrokeThickness="1"
+                                            Padding="0,8">
+                                        <Border.GestureRecognizers>
+                                            <TapGestureRecognizer
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:CreateQuizViewModel}}, Path=DeleteQuestionCommand}"
+                                                CommandParameter="{Binding .}"/>
+                                        </Border.GestureRecognizers>
+                                        <Label Text="{tr:Translate Key=CreateQuiz_DeleteQuestion}"
+                                               FontSize="12" FontAttributes="Bold"
+                                               TextColor="{StaticResource Error}"
+                                               HorizontalOptions="Center"/>
+                                    </Border>
+                                </Grid>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <!-- Bouton "+ Ajouter une question" -->
+            <Border BackgroundColor="White"
+                    StrokeShape="RoundRectangle 14"
+                    Stroke="{StaticResource Primary}"
+                    StrokeThickness="2"
+                    Padding="0,14"
+                    Margin="0,0,0,20"
+                    IsEnabled="{Binding CanAddQuestion}"
+                    Opacity="{Binding CanAddQuestion, Converter={StaticResource BoolToOpacityConverter}, FallbackValue=1}">
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding AddQuestionCommand}"/>
+                </Border.GestureRecognizers>
+                <Label Text="{tr:Translate Key=CreateQuiz_AddQuestion}"
+                       FontSize="14" FontAttributes="Bold"
+                       TextColor="{StaticResource Primary}"
+                       HorizontalOptions="Center"/>
+            </Border>
+
+            <!-- Info code d'accès -->
+            <Border BackgroundColor="{StaticResource SurfaceMuted}" StrokeShape="RoundRectangle 14"
+                    Stroke="Transparent" Padding="16" Margin="0,0,0,24"
+                    IsVisible="{Binding IsCreateMode}">
+                <HorizontalStackLayout Spacing="12">
+                    <Label Text="🔑" FontSize="24" VerticalOptions="Center"/>
+                    <VerticalStackLayout Spacing="4" VerticalOptions="Center">
+                        <Label Text="{tr:Translate Key=CreateQuiz_AccessCodeTitle}"
+                               FontSize="14" FontAttributes="Bold" TextColor="{StaticResource Primary}"/>
+                        <Label Text="{tr:Translate Key=CreateQuiz_AccessCodeHint}"
+                               FontSize="12" TextColor="{StaticResource TextTertiary}"/>
+                    </VerticalStackLayout>
+                </HorizontalStackLayout>
+            </Border>
+
+            <!-- Bouton créer / mettre à jour -->
+            <Border BackgroundColor="{StaticResource Primary}" StrokeShape="RoundRectangle 16"
+                    Stroke="Transparent" Padding="0,16" Margin="0,0,0,40">
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding CreateCommand}"/>
+                </Border.GestureRecognizers>
+                <Grid>
+                    <ActivityIndicator IsRunning="{Binding IsLoading}"
+                                       IsVisible="{Binding IsLoading}" Color="White"/>
+                    <Label Text="{Binding SaveButtonLabel}"
+                           IsVisible="{Binding IsLoading, Converter={StaticResource InverseBoolConverter}}"
+                           FontSize="16" FontAttributes="Bold"
+                           TextColor="White" HorizontalOptions="Center"/>
+                </Grid>
+            </Border>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

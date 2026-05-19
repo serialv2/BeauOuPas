@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>LSRequiresIPhoneOS</key>
+	<true/>
+	<key>UIDeviceFamily</key>
+	<array>
+		<integer>1</integer>
+		<integer>2</integer>
+	</array>
+	<key>UIRequiredDeviceCapabilities</key>
+	<array>
+		<string>arm64</string>
+	</array>
+
+	<!-- Portrait uniquement (app mobile) -->
+	<key>UISupportedInterfaceOrientations</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+	</array>
+	<key>UISupportedInterfaceOrientations~ipad</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+		<string>UIInterfaceOrientationPortraitUpsideDown</string>
+	</array>
+
+	<key>XSAppIconAssets</key>
+	<string>Assets.xcassets/appicon.appiconset</string>
+
+	<!-- ─── Permissions iOS (obligatoire sinon crash) ──────────────── -->
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>BeauOuPas utilise votre localisation pour vous montrer des projets près de chez vous.</string>
+
+	<key>NSCameraUsageDescription</key>
+	<string>BeauOuPas utilise votre caméra pour prendre une photo de profil ou de projet.</string>
+
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>BeauOuPas accède à votre galerie pour choisir une photo de profil ou de projet.</string>
+
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>BeauOuPas peut enregistrer des photos dans votre galerie.</string>
+
+	<!-- ─── URL Schemes (deep links & OAuth) ───────────────────────── -->
+	<key>CFBundleURLTypes</key>
+	<array>
+		<!-- OAuth Supabase callback : beauoupas://callback -->
+		<dict>
+			<key>CFBundleURLName</key>
+			<string>fr.beauoupas.oauth</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>beauoupas</string>
+			</array>
+		</dict>
+	</array>
+
+	<!-- ─── Associated Domains (Universal Links) ───────────────────── -->
+	<!-- Active https://beauoupas.fr/invite/CODE directement dans l'app -->
+	<!-- Nécessite aussi un fichier apple-app-site-association sur le serveur -->
+	<key>com.apple.developer.associated-domains</key>
+	<array>
+		<string>applinks:beauoupas.fr</string>
+	</array>
+
+	<!-- ─── Firebase / notifications ───────────────────────────────── -->
+	<key>FirebaseAppDelegateProxyEnabled</key>
+	<false/>
+
+	<!-- ─── Sécurité réseau ─────────────────────────────────────────── -->
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<false/>
+		<key>NSExceptionDomains</key>
+		<dict>
+			<key>beauoupas.fr</key>
+			<dict>
+				<key>NSExceptionAllowsInsecureHTTPLoads</key>
+				<false/>
+				<key>NSIncludesSubdomains</key>
+				<true/>
+			</dict>
+			<key>supabase.co</key>
+			<dict>
+				<key>NSExceptionAllowsInsecureHTTPLoads</key>
+				<false/>
+				<key>NSIncludesSubdomains</key>
+				<true/>
+			</dict>
+		</dict>
+	</dict>
+</dict>
+</plist>

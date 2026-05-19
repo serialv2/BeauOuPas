@@ -1,0 +1,145 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFrameworks>net9.0-android;net9.0-ios</TargetFrameworks>
+		<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net9.0-windows10.0.19041.0</TargetFrameworks>
+
+		<JavaMaximumHeapSize>8G</JavaMaximumHeapSize>
+		<AndroidEnableMultiDex>true</AndroidEnableMultiDex>
+		<AndroidDexTool>d8</AndroidDexTool>
+
+		<OutputType>Exe</OutputType>
+		<RootNamespace>BeauOuPas</RootNamespace>
+		<UseMaui>true</UseMaui>
+		<SingleProject>true</SingleProject>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+
+		<ApplicationTitle>BeauOuPas</ApplicationTitle>
+		<ApplicationId>fr.beauoupas.app</ApplicationId>
+
+		<ApplicationDisplayVersion>1.0.0</ApplicationDisplayVersion>
+		<ApplicationVersion>1</ApplicationVersion>
+
+		<WindowsPackageType>None</WindowsPackageType>
+
+		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">23.0</SupportedOSPlatformVersion>
+		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">15.0</SupportedOSPlatformVersion>
+		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</SupportedOSPlatformVersion>
+		<TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</TargetPlatformMinVersion>
+	</PropertyGroup>
+
+	<!-- ═══════════════════════════════════════════════════════════════ -->
+	<!-- CONFIGURATION RELEASE ANDROID (AAB signé Play Store)            -->
+	<!-- Mots de passe keystore retirés du csproj (sécurité Git).        -->
+	<!-- Les fournir en CLI pour la release Android :                    -->
+	<!--   dotnet build BeauOuPas.csproj -f net9.0-android -c Release    -->
+	<!--     -p:AndroidSigningStorePass=MOT_DE_PASSE                     -->
+	<!--     -p:AndroidSigningKeyPass=MOT_DE_PASSE                       -->
+	<!-- ═══════════════════════════════════════════════════════════════ -->
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net9.0-android|AnyCPU'">
+		<AndroidPackageFormat>aab</AndroidPackageFormat>
+		<AndroidKeyStore>true</AndroidKeyStore>
+		<AndroidSigningKeyStore>D:\Users\Steen\source\BeauOuPas\BeauOuPas\BeauOuPas\beauoupas.keystore</AndroidSigningKeyStore>
+		<AndroidSigningKeyAlias>beauoupas</AndroidSigningKeyAlias>
+		<AndroidLinkMode>None</AndroidLinkMode>
+		<PublishTrimmed>false</PublishTrimmed>
+		<RunAOTCompilation>false</RunAOTCompilation>
+		<DebugType>portable</DebugType>
+		<DebugSymbols>true</DebugSymbols>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net9.0-android|AnyCPU'">
+		<AndroidKeyStore>false</AndroidKeyStore>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<MauiIcon Include="Resources\AppIcon\appicon.png" ForegroundFile="Resources\AppIcon\appiconfg.png" Color="#FF6B35" />
+		<MauiSplashScreen Include="Resources\Splash\splash.png" Color="#F4EFE6" BaseSize="200,200" />
+		<MauiImage Include="Resources\Images\*" />
+		<MauiFont Include="Resources\Fonts\*" />
+		<MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
+	</ItemGroup>
+
+	<ItemGroup Condition="$(TargetFramework.Contains('-android'))">
+		<GoogleServicesJson Include="Platforms\Android\google-services.json" />
+	</ItemGroup>
+
+	<ItemGroup Condition="Exists('Platforms\iOS\GoogleService-Info.plist')">
+		<BundleResource Include="Platforms\iOS\GoogleService-Info.plist" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<EmbeddedResource Remove="Resources\Strings\AppResources.fr2.resx" />
+		<EmbeddedResource Remove="Resources\Strings\AppResources2.resx" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Remove="hs_err_pid*.log" />
+		<None Remove="replay_pid*.log" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.Maui.Controls" Version="9.0.111" />
+		<PackageReference Include="CommunityToolkit.Maui" Version="9.1.0" />
+		<PackageReference Include="CommunityToolkit.Maui.Camera" Version="3.0.1" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.8" />
+		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
+		<PackageReference Include="supabase-csharp" Version="0.16.2" />
+		<PackageReference Include="SkiaSharp" Version="3.119.2" />
+		<PackageReference Include="SkiaSharp.Views.Maui.Controls" Version="3.119.2" />
+	</ItemGroup>
+
+	<ItemGroup Condition="$(TargetFramework.Contains('-android'))">
+		<PackageReference Include="ImageCropper.Maui" Version="1.2.3" />
+		<PackageReference Include="Plugin.MauiMTAdmob" Version="2.4.0" />
+
+		<PackageReference Include="Xamarin.AndroidX.Activity" Version="1.12.4.1" />
+		<PackageReference Include="Xamarin.AndroidX.Activity.Ktx" Version="1.12.4.1" />
+		<PackageReference Include="Xamarin.Google.Android.Material" Version="1.12.0.3" />
+		<PackageReference Include="Xamarin.AndroidX.Fragment" Version="1.8.9.2" />
+		<PackageReference Include="Xamarin.AndroidX.Fragment.Ktx" Version="1.8.9.2" />
+
+		<PackageReference Include="Xamarin.AndroidX.Lifecycle.Common" Version="2.10.0.2" />
+		<PackageReference Include="Xamarin.AndroidX.Lifecycle.Runtime" Version="2.10.0.2" />
+		<PackageReference Include="Xamarin.AndroidX.Lifecycle.Process" Version="2.10.0.2" />
+		<PackageReference Include="Xamarin.AndroidX.Lifecycle.LiveData" Version="2.10.0.2" />
+		<PackageReference Include="Xamarin.AndroidX.Lifecycle.LiveData.Core" Version="2.10.0.2" />
+		<PackageReference Include="Xamarin.AndroidX.Lifecycle.LiveData.Core.Ktx" Version="2.10.0.2" />
+	</ItemGroup>
+
+	<ItemGroup Condition="$(TargetFramework.Contains('-windows'))">
+		<PackageReference Include="ImageCropper.Maui" Version="1.2.3" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<MauiXaml Update="Views\Groups\CreateGroupPage.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\Groups\CreatePartyPage.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\Groups\CreateQuizPage.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\Groups\CreateSeriesPage.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\Groups\CreateSeriesTypePage.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\Groups\EditQuizQuestionsPage.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\Groups\GroupsPage.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\Groups\NewPage1.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\Home\HomePage.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+	</ItemGroup>
+
+</Project>

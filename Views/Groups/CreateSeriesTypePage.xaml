@@ -1,0 +1,217 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="BeauOuPas.Views.Groups.CreateSeriesTypePage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:BeauOuPas.ViewModels.Groups"
+    xmlns:tr="clr-namespace:BeauOuPas.Extensions"
+    x:DataType="vm:CreateSeriesTypeViewModel"
+    Title="{tr:Translate Key=CreateSeriesType_Title}"
+    BackgroundColor="{StaticResource BackgroundPage}">
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="{tr:Translate Key=Common_Cancel}" Command="{Binding CancelCommand}"/>
+    </ContentPage.ToolbarItems>
+
+    <ScrollView>
+        <VerticalStackLayout Spacing="0" Padding="16,12">
+
+            <!-- En-tête -->
+            <Label Text="{tr:Translate Key=CreateSeriesType_Header}"
+                   FontSize="24" FontAttributes="Bold"
+                   TextColor="{StaticResource TextPrimary}" Margin="0,0,0,6"/>
+
+            <!-- Contexte groupe / standalone -->
+            <Label Text="{Binding GroupName, StringFormat='Dans le groupe : {0}'}"
+                   IsVisible="{Binding HasGroup}"
+                   FontSize="13" TextColor="{StaticResource Primary}" Margin="0,0,0,4"/>
+            <Label Text="{tr:Translate Key=CreateSeriesType_Standalone}"
+                   IsVisible="{Binding HasGroup, Converter={StaticResource InverseBoolConverter}}"
+                   FontSize="13" TextColor="{StaticResource TextTertiary}" Margin="0,0,0,4"/>
+
+            <Label Text="{tr:Translate Key=CreateSeriesType_Subtitle}"
+                   FontSize="13" TextColor="{StaticResource TextTertiary}" Margin="0,0,0,24"/>
+
+            <!-- Loading indicator -->
+            <ActivityIndicator IsRunning="{Binding IsLoading}"
+                               IsVisible="{Binding IsLoading}"
+                               Color="{StaticResource Primary}" Margin="0,40"/>
+
+            <!-- Cartes (visibles seulement quand le chargement est terminé) -->
+            <VerticalStackLayout Spacing="14"
+                                 IsVisible="{Binding IsLoading, Converter={StaticResource InverseBoolConverter}}">
+
+                <!-- ═══ Carte VOTE ═══ -->
+                <Border BackgroundColor="White"
+                        StrokeShape="RoundRectangle 16"
+                        Stroke="{StaticResource BorderLight}"
+                        StrokeThickness="1"
+                        Padding="20">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding SelectVoteCommand}"/>
+                    </Border.GestureRecognizers>
+                    <Grid ColumnDefinitions="64,*,Auto" ColumnSpacing="16">
+                        <Border Grid.Column="0"
+                                BackgroundColor="{StaticResource SurfaceMuted}"
+                                StrokeShape="RoundRectangle 14"
+                                Stroke="Transparent"
+                                HeightRequest="64" WidthRequest="64">
+                            <Label Text="🗳️" FontSize="32"
+                                   HorizontalOptions="Center"
+                                   VerticalOptions="Center"/>
+                        </Border>
+                        <VerticalStackLayout Grid.Column="1" Spacing="4" VerticalOptions="Center">
+                            <Label Text="{tr:Translate Key=CreateSeriesType_VoteTitle}"
+                                   FontSize="17" FontAttributes="Bold"
+                                   TextColor="{StaticResource TextPrimary}"/>
+                            <Label Text="{tr:Translate Key=CreateSeriesType_VoteDescription}"
+                                   FontSize="12" TextColor="{StaticResource TextTertiary}"
+                                   LineBreakMode="WordWrap"/>
+                        </VerticalStackLayout>
+                        <Label Grid.Column="2" Text="›"
+                               FontSize="28" TextColor="{StaticResource Primary}"
+                               VerticalOptions="Center"/>
+                    </Grid>
+                </Border>
+
+                <!-- ═══ Carte QUIZ activée ═══ -->
+                <Border BackgroundColor="White"
+                        StrokeShape="RoundRectangle 16"
+                        Stroke="{StaticResource BorderLight}"
+                        StrokeThickness="1"
+                        Padding="20"
+                        IsVisible="{Binding IsQuizCreationEnabled}">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding SelectQuizCommand}"/>
+                    </Border.GestureRecognizers>
+                    <Grid ColumnDefinitions="64,*,Auto" ColumnSpacing="16">
+                        <Border Grid.Column="0"
+                                BackgroundColor="{StaticResource SurfaceMuted}"
+                                StrokeShape="RoundRectangle 14"
+                                Stroke="Transparent"
+                                HeightRequest="64" WidthRequest="64">
+                            <Label Text="🧠" FontSize="32"
+                                   HorizontalOptions="Center"
+                                   VerticalOptions="Center"/>
+                        </Border>
+                        <VerticalStackLayout Grid.Column="1" Spacing="4" VerticalOptions="Center">
+                            <Label Text="{tr:Translate Key=CreateSeriesType_QuizTitle}"
+                                   FontSize="17" FontAttributes="Bold"
+                                   TextColor="{StaticResource TextPrimary}"/>
+                            <Label Text="{tr:Translate Key=CreateSeriesType_QuizDescription}"
+                                   FontSize="12" TextColor="{StaticResource TextTertiary}"
+                                   LineBreakMode="WordWrap"/>
+                        </VerticalStackLayout>
+                        <Label Grid.Column="2" Text="›"
+                               FontSize="28" TextColor="{StaticResource Primary}"
+                               VerticalOptions="Center"/>
+                    </Grid>
+                </Border>
+
+                <!-- ═══ Carte QUIZ désactivée ═══ -->
+                <Border BackgroundColor="{StaticResource SurfaceMuted}"
+                        StrokeShape="RoundRectangle 16"
+                        Stroke="{StaticResource BorderLight}"
+                        StrokeThickness="1"
+                        Padding="20"
+                        IsVisible="{Binding IsQuizCreationEnabled, Converter={StaticResource InverseBoolConverter}}">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding SelectQuizCommand}"/>
+                    </Border.GestureRecognizers>
+                    <Grid ColumnDefinitions="64,*,Auto" ColumnSpacing="16">
+                        <Border Grid.Column="0"
+                                BackgroundColor="{StaticResource BorderLight}"
+                                StrokeShape="RoundRectangle 14"
+                                Stroke="Transparent"
+                                HeightRequest="64" WidthRequest="64">
+                            <Label Text="🧠" FontSize="32" Opacity="0.4"
+                                   HorizontalOptions="Center"
+                                   VerticalOptions="Center"/>
+                        </Border>
+                        <VerticalStackLayout Grid.Column="1" Spacing="4" VerticalOptions="Center">
+                            <Label Text="{tr:Translate Key=CreateSeriesType_QuizTitle}"
+                                   FontSize="17" FontAttributes="Bold"
+                                   TextColor="{StaticResource TextTertiary}"/>
+                            <Label Text="{tr:Translate Key=CreateSeriesType_QuizDisabled}"
+                                   FontSize="12" TextColor="{StaticResource TextDisabled}"
+                                   LineBreakMode="WordWrap"/>
+                        </VerticalStackLayout>
+                        <Label Grid.Column="2" Text="🔒"
+                               FontSize="20" TextColor="{StaticResource TextDisabled}"
+                               VerticalOptions="Center"/>
+                    </Grid>
+                </Border>
+
+                <!-- ═══ Carte PARTIE RAPIDE activée ═══ -->
+                <Border BackgroundColor="White"
+                        StrokeShape="RoundRectangle 16"
+                        Stroke="{StaticResource BorderLight}"
+                        StrokeThickness="1"
+                        Padding="20"
+                        IsVisible="{Binding IsPartyCreationEnabled}">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding SelectPartyCommand}"/>
+                    </Border.GestureRecognizers>
+                    <Grid ColumnDefinitions="64,*,Auto" ColumnSpacing="16">
+                        <Border Grid.Column="0"
+                                BackgroundColor="{StaticResource SurfaceMuted}"
+                                StrokeShape="RoundRectangle 14"
+                                Stroke="Transparent"
+                                HeightRequest="64" WidthRequest="64">
+                            <Label Text="🎉" FontSize="32"
+                                   HorizontalOptions="Center"
+                                   VerticalOptions="Center"/>
+                        </Border>
+                        <VerticalStackLayout Grid.Column="1" Spacing="4" VerticalOptions="Center">
+                            <Label Text="{tr:Translate Key=CreateSeriesType_PartyTitle}"
+                                   FontSize="17" FontAttributes="Bold"
+                                   TextColor="{StaticResource TextPrimary}"/>
+                            <Label Text="{tr:Translate Key=CreateSeriesType_PartyDescription}"
+                                   FontSize="12" TextColor="{StaticResource TextTertiary}"
+                                   LineBreakMode="WordWrap"/>
+                        </VerticalStackLayout>
+                        <Label Grid.Column="2" Text="›"
+                               FontSize="28" TextColor="{StaticResource Primary}"
+                               VerticalOptions="Center"/>
+                    </Grid>
+                </Border>
+
+                <!-- ═══ Carte PARTIE RAPIDE désactivée ═══ -->
+                <Border BackgroundColor="{StaticResource SurfaceMuted}"
+                        StrokeShape="RoundRectangle 16"
+                        Stroke="{StaticResource BorderLight}"
+                        StrokeThickness="1"
+                        Padding="20"
+                        IsVisible="{Binding IsPartyCreationEnabled, Converter={StaticResource InverseBoolConverter}}">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding SelectPartyCommand}"/>
+                    </Border.GestureRecognizers>
+                    <Grid ColumnDefinitions="64,*,Auto" ColumnSpacing="16">
+                        <Border Grid.Column="0"
+                                BackgroundColor="{StaticResource BorderLight}"
+                                StrokeShape="RoundRectangle 14"
+                                Stroke="Transparent"
+                                HeightRequest="64" WidthRequest="64">
+                            <Label Text="🎉" FontSize="32" Opacity="0.4"
+                                   HorizontalOptions="Center"
+                                   VerticalOptions="Center"/>
+                        </Border>
+                        <VerticalStackLayout Grid.Column="1" Spacing="4" VerticalOptions="Center">
+                            <Label Text="{tr:Translate Key=CreateSeriesType_PartyTitle}"
+                                   FontSize="17" FontAttributes="Bold"
+                                   TextColor="{StaticResource TextTertiary}"/>
+                            <Label Text="{tr:Translate Key=CreateSeriesType_QuizDisabled}"
+                                   FontSize="12" TextColor="{StaticResource TextDisabled}"
+                                   LineBreakMode="WordWrap"/>
+                        </VerticalStackLayout>
+                        <Label Grid.Column="2" Text="🔒"
+                               FontSize="20" TextColor="{StaticResource TextDisabled}"
+                               VerticalOptions="Center"/>
+                    </Grid>
+                </Border>
+
+            </VerticalStackLayout>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

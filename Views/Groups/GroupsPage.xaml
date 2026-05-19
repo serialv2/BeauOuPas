@@ -1,0 +1,380 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="BeauOuPas.Views.Groups.GroupsPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:BeauOuPas.ViewModels.Groups"
+        xmlns:tr="clr-namespace:BeauOuPas.Extensions"
+x:DataType="vm:GroupsViewModel"
+    Title=""
+    BackgroundColor="{StaticResource BackgroundPage}">
+
+    <!--
+    ⚡ FIX PERF v6 : CollectionView LIBRES (plus de ScrollView englobant)
+    
+    AVANT : <ScrollView><VerticalStackLayout><Label/><CollectionView/></VerticalStackLayout></ScrollView>
+    Cette structure CASSAIT la virtualisation : le ScrollView demandait à la CollectionView
+    de matérialiser TOUTES ses lignes immédiatement (height infinie). Pour 30 groupes ça allait,
+    mais pour 100+ groupes/séries ça ramait sec et bouffait de la RAM.
+    
+    APRÈS : la CollectionView gère elle-même son défilement.
+     - Le titre + le bouton "Créer" sont passés en CollectionView.Header (défilent avec la liste)
+     - L'état vide est géré nativement par CollectionView.EmptyView
+    
+    Résultat : virtualisation OK, scroll fluide, RAM contrôlée même avec 1000 items.
+    -->
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="＋" Command="{Binding CreateGroupCommand}" Order="Primary"/>
+    </ContentPage.ToolbarItems>
+
+    <Grid RowDefinitions="Auto,Auto,*">
+
+        <!-- TABS -->
+        <Border Grid.Row="0"
+                BackgroundColor="White"
+                StrokeShape="RoundRectangle 0"
+                Stroke="{StaticResource BorderLight}"
+                StrokeThickness="1"
+                Padding="16,8">
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="4">
+                <Border x:Name="TabGroups" Grid.Column="0"
+                        BackgroundColor="{StaticResource Primary}"
+                        StrokeShape="RoundRectangle 10"
+                        Stroke="Transparent"
+                        Padding="0,10">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnTabGroupsTapped"/>
+                    </Border.GestureRecognizers>
+                    <Label Text="👥 Groupes"
+                           FontSize="13"
+                           FontAttributes="Bold"
+                           TextColor="White"
+                           HorizontalOptions="Center"/>
+                </Border>
+                <Border x:Name="TabSeries" Grid.Column="1"
+                        BackgroundColor="{StaticResource SurfaceMuted}"
+                        StrokeShape="RoundRectangle 10"
+                        Stroke="Transparent"
+                        Padding="0,10">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnTabSeriesTapped"/>
+                    </Border.GestureRecognizers>
+                    <Label Text="{tr:Translate Key=Home_MySeries}"
+                           FontSize="13"
+                           TextColor="{StaticResource TextTertiary}"
+                           HorizontalOptions="Center"/>
+                </Border>
+            </Grid>
+        </Border>
+
+        <!-- BADGE INVITATIONS EN ATTENTE -->
+        <Border Grid.Row="1"
+                IsVisible="{Binding HasPendingInvitations}"
+                BackgroundColor="#FFF3CD"
+                StrokeShape="RoundRectangle 0"
+                Stroke="#FFE082"
+                StrokeThickness="0,0,0,1"
+                Padding="16,10">
+            <Border.GestureRecognizers>
+                <TapGestureRecognizer Command="{Binding OpenInvitationsCommand}"/>
+            </Border.GestureRecognizers>
+            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                <Label Grid.Column="0"
+                       Text="{Binding InvitationsBadge}"
+                       FontSize="14"
+                       FontAttributes="Bold"
+                       TextColor="#8B6914"
+                       VerticalOptions="Center"/>
+                <Label Grid.Column="1"
+                       Text="›"
+                       FontSize="20"
+                       TextColor="#8B6914"
+                       VerticalOptions="Center"/>
+            </Grid>
+        </Border>
+
+        <!-- CONTENU -->
+        <Grid Grid.Row="2">
+
+            <!-- ═══ TAB GROUPES ═══ -->
+            <Grid x:Name="ContentGroups">
+                <ActivityIndicator IsRunning="{Binding IsLoading}"
+                                   IsVisible="{Binding IsLoading}"
+                                   Color="{StaticResource Primary}"
+                                   VerticalOptions="Center"
+                                   HorizontalOptions="Center"/>
+
+                <!--
+                ⚡ CollectionView LIBRE : pas de ScrollView englobant.
+                Header = titre. EmptyView = état vide. ItemTemplate = liste.
+                
+                Pas besoin d'IsVisible pour cacher pendant le loading :
+                l'ActivityIndicator est un overlay au-dessus, et l'EmptyView
+                gère nativement l'état vide.
+                -->
+                <CollectionView ItemsSource="{Binding Groups}"
+                                SelectionMode="None">
+                    <CollectionView.Header>
+                        <VerticalStackLayout Padding="16,12,16,0">
+                            <Label Text="👥 Mes Groupes"
+                                   FontSize="24"
+                                   FontAttributes="Bold"
+                                   TextColor="{StaticResource TextPrimary}"
+                                   Margin="0,0,0,16"/>
+                        </VerticalStackLayout>
+                    </CollectionView.Header>
+
+                    <CollectionView.ItemsLayout>
+                        <LinearItemsLayout Orientation="Vertical" ItemSpacing="0"/>
+                    </CollectionView.ItemsLayout>
+
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="vm:GroupItem">
+                            <Border BackgroundColor="White"
+                                    StrokeShape="RoundRectangle 16"
+                                    Stroke="{StaticResource BorderLight}"
+                                    StrokeThickness="1"
+                                    Margin="16,0,16,12"
+                                    Padding="16">
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:GroupsViewModel}}, Path=OpenGroupCommand}"
+                                        CommandParameter="{Binding .}"/>
+                                </Border.GestureRecognizers>
+                                <Grid ColumnDefinitions="56,*,Auto" ColumnSpacing="12">
+                                    <Border Grid.Column="0"
+                                            BackgroundColor="{StaticResource SurfaceMuted}"
+                                            StrokeShape="RoundRectangle 14"
+                                            Stroke="Transparent"
+                                            HeightRequest="56"
+                                            WidthRequest="56">
+                                        <Label Text="{Binding AvatarEmoji}"
+                                               FontSize="26"
+                                               HorizontalOptions="Center"
+                                               VerticalOptions="Center"/>
+                                    </Border>
+                                    <VerticalStackLayout Grid.Column="1" Spacing="4" VerticalOptions="Center">
+                                        <!-- 🔧 Badge créateur : 👑 inline avant le nom du groupe -->
+                                        <HorizontalStackLayout Spacing="6">
+                                            <Label Text="👑"
+                                                   FontSize="14"
+                                                   VerticalOptions="Center"
+                                                   IsVisible="{Binding IsOwnedByMe}"/>
+                                            <Label Text="{Binding Name}"
+                                                   FontSize="16"
+                                                   FontAttributes="Bold"
+                                                   TextColor="{StaticResource TextPrimary}"
+                                                   LineBreakMode="TailTruncation"
+                                                   VerticalOptions="Center"/>
+                                        </HorizontalStackLayout>
+                                        <Label Text="{Binding MemberCount, StringFormat='{0} membres'}"
+                                               FontSize="13"
+                                               TextColor="{StaticResource TextTertiary}"/>
+                                        <Label Text="{Binding ActiveSeriesLabel}"
+                                               FontSize="12"
+                                               TextColor="{StaticResource Primary}"
+                                               IsVisible="{Binding HasActiveSeries}"/>
+                                    </VerticalStackLayout>
+                                    <Label Grid.Column="2"
+                                           Text="›"
+                                           FontSize="24"
+                                           TextColor="{StaticResource BorderMedium}"
+                                           VerticalOptions="Center"/>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+
+                    <CollectionView.EmptyView>
+                        <VerticalStackLayout VerticalOptions="Center"
+                                             HorizontalOptions="Center"
+                                             Spacing="16"
+                                             Padding="40">
+                            <Label Text="👥" FontSize="64" HorizontalOptions="Center"/>
+                            <Label Text="Aucun groupe"
+                                   FontSize="20"
+                                   FontAttributes="Bold"
+                                   TextColor="{StaticResource TextPrimary}"
+                                   HorizontalOptions="Center"/>
+                            <Label Text="{tr:Translate Key=Groups_EmptyHint}"
+                                   FontSize="14"
+                                   TextColor="{StaticResource TextTertiary}"
+                                   HorizontalTextAlignment="Center"
+                                   HorizontalOptions="Center"/>
+                            <Border BackgroundColor="{StaticResource Primary}"
+                                    StrokeShape="RoundRectangle 14"
+                                    Stroke="Transparent"
+                                    Padding="24,14"
+                                    HorizontalOptions="Center">
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vm:GroupsViewModel}}, Path=CreateGroupCommand}"/>
+                                </Border.GestureRecognizers>
+                                <Label Text="{tr:Translate Key=Groups_CreateGroup}"
+                                       TextColor="White"
+                                       FontSize="15"
+                                       FontAttributes="Bold"/>
+                            </Border>
+                        </VerticalStackLayout>
+                    </CollectionView.EmptyView>
+                </CollectionView>
+            </Grid>
+
+            <!-- ═══ TAB MES SÉRIES ═══ -->
+            <Grid x:Name="ContentMySeries" IsVisible="False">
+                <ActivityIndicator IsRunning="{Binding IsLoadingSeries}"
+                                   IsVisible="{Binding IsLoadingSeries}"
+                                   Color="{StaticResource Primary}"
+                                   VerticalOptions="Center"
+                                   HorizontalOptions="Center"/>
+
+                <!--
+                ⚡ Idem ici : CollectionView libre. Le titre + sous-titre + le
+                bouton "Créer" sont en Header. L'EmptyView gère l'état vide.
+                -->
+                <CollectionView ItemsSource="{Binding StandaloneSeries}"
+                                SelectionMode="None">
+                    <CollectionView.Header>
+                        <VerticalStackLayout Padding="16,12,16,0">
+                            <Label Text="{tr:Translate Key=Home_MySeries}"
+                                   FontSize="24"
+                                   FontAttributes="Bold"
+                                   TextColor="{StaticResource TextPrimary}"
+                                   Margin="0,0,0,4"/>
+                            <Label Text="{tr:Translate Key=Groups_OpenSeriesNoGroup}"
+                                   FontSize="13"
+                                   TextColor="{StaticResource TextTertiary}"
+                                   Margin="0,0,0,16"/>
+
+                            <Border BackgroundColor="{StaticResource Primary}"
+                                    StrokeShape="RoundRectangle 14"
+                                    Stroke="Transparent"
+                                    Padding="0,14"
+                                    Margin="0,0,0,16">
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding CreateStandaloneSeriesCommand}"/>
+                                </Border.GestureRecognizers>
+                                <Label Text="{tr:Translate Key=Groups_CreateOpenSeries}"
+                                       FontSize="15"
+                                       FontAttributes="Bold"
+                                       TextColor="White"
+                                       HorizontalOptions="Center"/>
+                            </Border>
+                        </VerticalStackLayout>
+                    </CollectionView.Header>
+
+                    <CollectionView.ItemsLayout>
+                        <LinearItemsLayout Orientation="Vertical" ItemSpacing="0"/>
+                    </CollectionView.ItemsLayout>
+
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="vm:StandaloneSeriesItem">
+                            <Border BackgroundColor="White"
+                                    StrokeShape="RoundRectangle 16"
+                                    Stroke="{StaticResource BorderLight}"
+                                    StrokeThickness="1"
+                                    Margin="16,0,16,12"
+                                    Padding="16">
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:GroupsViewModel}}, Path=OpenStandaloneSeriesCommand}"
+                                        CommandParameter="{Binding .}"/>
+                                </Border.GestureRecognizers>
+                                <Grid RowDefinitions="Auto,Auto,Auto" RowSpacing="6">
+                                    <Grid Grid.Row="0" ColumnDefinitions="*,Auto">
+                                        <Label Grid.Column="0"
+                                               Text="{Binding Title}"
+                                               FontSize="16"
+                                               FontAttributes="Bold"
+                                               TextColor="{StaticResource TextPrimary}"
+                                               LineBreakMode="TailTruncation"/>
+                                        <Border Grid.Column="1"
+                                                BackgroundColor="{StaticResource SurfaceMuted}"
+                                                StrokeShape="RoundRectangle 8"
+                                                Stroke="Transparent"
+                                                Padding="8,4">
+                                            <Label Text="{Binding StatusLabel}"
+                                                   FontSize="11"
+                                                   FontAttributes="Bold"
+                                                   TextColor="{Binding StatusColor}"/>
+                                        </Border>
+                                    </Grid>
+                                    <Label Grid.Row="1"
+                                           Text="{Binding MaxProjects, StringFormat='Max {0} projets'}"
+                                           FontSize="12"
+                                           TextColor="{StaticResource TextTertiary}"/>
+
+                                    <!-- Code + bouton copier -->
+                                    <Grid Grid.Row="2"
+                                          ColumnDefinitions="*,Auto"
+                                          ColumnSpacing="8">
+                                        <Border Grid.Column="0"
+                                                BackgroundColor="{StaticResource SurfaceMuted}"
+                                                StrokeShape="RoundRectangle 8"
+                                                Stroke="Transparent"
+                                                Padding="10,6"
+                                                HorizontalOptions="Start">
+                                            <Label Text="{Binding AccessCode, StringFormat='🔑 Code : {0}'}"
+                                                   FontSize="13"
+                                                   FontAttributes="Bold"
+                                                   TextColor="{StaticResource Primary}"/>
+                                        </Border>
+                                        <Border Grid.Column="1"
+                                                BackgroundColor="{StaticResource SurfaceMuted}"
+                                                StrokeShape="RoundRectangle 8"
+                                                Stroke="Transparent"
+                                                Padding="10,6"
+                                                HorizontalOptions="End">
+                                            <Border.GestureRecognizers>
+                                                <TapGestureRecognizer
+                                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:GroupsViewModel}}, Path=CopyAccessCodeCommand}"
+                                                    CommandParameter="{Binding .}"/>
+                                            </Border.GestureRecognizers>
+                                            <Label Text="📋 Copier"
+                                                   FontSize="12"
+                                                   FontAttributes="Bold"
+                                                   TextColor="{StaticResource Primary}"/>
+                                        </Border>
+                                    </Grid>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+
+                    <CollectionView.EmptyView>
+                        <VerticalStackLayout VerticalOptions="Center"
+                                             HorizontalOptions="Center"
+                                             Spacing="16"
+                                             Padding="40">
+                            <Label Text="🎬" FontSize="64" HorizontalOptions="Center"/>
+                            <Label Text="{tr:Translate Key=Groups_NoOpenSeries}"
+                                   FontSize="20"
+                                   FontAttributes="Bold"
+                                   TextColor="{StaticResource TextPrimary}"
+                                   HorizontalOptions="Center"/>
+                            <Label Text="{tr:Translate Key=Groups_OpenSeriesHint}"
+                                   FontSize="14"
+                                   TextColor="{StaticResource TextTertiary}"
+                                   HorizontalTextAlignment="Center"
+                                   HorizontalOptions="Center"/>
+                            <Border BackgroundColor="{StaticResource Primary}"
+                                    StrokeShape="RoundRectangle 14"
+                                    Stroke="Transparent"
+                                    Padding="24,14"
+                                    HorizontalOptions="Center">
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vm:GroupsViewModel}}, Path=CreateStandaloneSeriesCommand}"/>
+                                </Border.GestureRecognizers>
+                                <Label Text="{tr:Translate Key=Groups_CreateOpenSeries}"
+                                       TextColor="White"
+                                       FontSize="15"
+                                       FontAttributes="Bold"/>
+                            </Border>
+                        </VerticalStackLayout>
+                    </CollectionView.EmptyView>
+                </CollectionView>
+            </Grid>
+
+        </Grid>
+    </Grid>
+</ContentPage>

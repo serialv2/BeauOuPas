@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="BeauOuPas.Views.Groups.PartyPlayPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:BeauOuPas.ViewModels.Groups"
+    xmlns:tr="clr-namespace:BeauOuPas.Extensions"
+    x:DataType="vm:PartyPlayViewModel"
+    Title="{Binding PartyTitle}"
+    BackgroundColor="{StaticResource BackgroundPage}"
+    Shell.NavBarIsVisible="False">
+
+    <Grid>
+
+        <!-- ════════════════ CHARGEMENT ════════════════ -->
+        <VerticalStackLayout IsVisible="{Binding IsLoading}"
+                             VerticalOptions="Center" HorizontalOptions="Center"
+                             Spacing="16">
+            <ActivityIndicator IsRunning="{Binding IsLoading}"
+                               Color="{StaticResource Primary}"
+                               WidthRequest="48" HeightRequest="48"/>
+            <Label Text="{tr:Translate Key=Common_Loading}"
+                   FontSize="15" TextColor="{StaticResource TextTertiary}"
+                   HorizontalOptions="Center"/>
+        </VerticalStackLayout>
+
+        <!-- ════════════════ LOBBY ════════════════ -->
+        <VerticalStackLayout IsVisible="{Binding IsLobby}"
+                             VerticalOptions="Center" Padding="28" Spacing="20">
+            <Label Text="🎉" FontSize="64" HorizontalOptions="Center"/>
+            <Label Text="{Binding PartyTitle}"
+                   FontSize="24" FontAttributes="Bold"
+                   TextColor="{StaticResource TextPrimary}"
+                   HorizontalTextAlignment="Center"/>
+            <Label Text="{tr:Translate Key=Party_Lobby_Waiting}"
+                   FontSize="15" TextColor="{StaticResource TextTertiary}"
+                   HorizontalTextAlignment="Center"/>
+            <Border BackgroundColor="White" StrokeShape="RoundRectangle 14"
+                    Stroke="{StaticResource BorderLight}" StrokeThickness="1"
+                    Padding="20,14" HorizontalOptions="Center" Margin="0,8,0,0">
+                <Label Text="{Binding ParticipantCountLabel}"
+                       FontSize="16" FontAttributes="Bold"
+                       TextColor="{StaticResource Primary}"
+                       HorizontalOptions="Center"/>
+            </Border>
+            <ActivityIndicator IsRunning="{Binding IsLobby}"
+                               Color="{StaticResource Primary}"
+                               WidthRequest="32" HeightRequest="32"
+                               Margin="0,8,0,0"/>
+        </VerticalStackLayout>
+
+        <!-- ════════════════ INTRO ════════════════ -->
+        <VerticalStackLayout IsVisible="{Binding IsIntro}"
+                             VerticalOptions="Center" Padding="28" Spacing="18">
+            <Label Text="🎬" FontSize="64" HorizontalOptions="Center"/>
+            <Label Text="{tr:Translate Key=Party_Intro_Title}"
+                   FontSize="22" FontAttributes="Bold"
+                   TextColor="{StaticResource TextPrimary}"
+                   HorizontalTextAlignment="Center"/>
+            <Label Text="{tr:Translate Key=Party_Intro_Subtitle}"
+                   FontSize="15" TextColor="{StaticResource TextTertiary}"
+                   HorizontalTextAlignment="Center"/>
+            <ActivityIndicator IsRunning="{Binding IsIntro}"
+                               Color="{StaticResource Primary}"
+                               WidthRequest="32" HeightRequest="32"
+                               Margin="0,8,0,0"/>
+        </VerticalStackLayout>
+
+        <!-- ════════════════ QUESTION ════════════════ -->
+        <Grid IsVisible="{Binding IsQuestion}" RowDefinitions="Auto,*"
+              Padding="16,12">
+
+            <!-- En-tête : position + countdown -->
+            <Grid Grid.Row="0" ColumnDefinitions="*,Auto" Margin="0,0,0,12">
+                <Label Grid.Column="0"
+                       Text="{Binding QuestionPositionLabel}"
+                       FontSize="14" FontAttributes="Bold"
+                       TextColor="{StaticResource TextTertiary}"
+                       VerticalOptions="Center"/>
+                <Border Grid.Column="1"
+                        BackgroundColor="{Binding CountdownColor}"
+                        StrokeShape="RoundRectangle 20" StrokeThickness="0"
+                        Padding="16,6" HorizontalOptions="End">
+                    <Label Text="{Binding Countdown, StringFormat='{0}s'}"
+                           FontSize="16" FontAttributes="Bold"
+                           TextColor="White"/>
+                </Border>
+            </Grid>
+
+            <!-- Corps : question + liste des joueurs (boutons) -->
+            <ScrollView Grid.Row="1">
+                <VerticalStackLayout Spacing="14">
+
+                    <!-- Texte de la question -->
+                    <Border BackgroundColor="{StaticResource Primary}"
+                            StrokeShape="RoundRectangle 16" StrokeThickness="0"
+                            Padding="20,18">
+                        <Label Text="{Binding QuestionText}"
+                               FontSize="20" FontAttributes="Bold"
+                               TextColor="White"
+                               HorizontalTextAlignment="Center"/>
+                    </Border>
+
+                    <Label Text="{tr:Translate Key=Party_Question_Instruction}"
+                           FontSize="13" TextColor="{StaticResource TextTertiary}"
+                           HorizontalTextAlignment="Center" Margin="0,2,0,4"/>
+
+                    <!-- Liste des joueurs : chaque pseudo = un gros bouton -->
+                    <CollectionView ItemsSource="{Binding Players}"
+                                    SelectionMode="None">
+                        <CollectionView.ItemsLayout>
+                            <LinearItemsLayout Orientation="Vertical"
+                                               ItemSpacing="10"/>
+                        </CollectionView.ItemsLayout>
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="vm:PartyPlayerItem">
+                                <Border StrokeShape="RoundRectangle 14"
+                                        StrokeThickness="1"
+                                        Stroke="{StaticResource BorderLight}"
+                                        Padding="0">
+                                    <Border.Triggers>
+                                        <DataTrigger TargetType="Border"
+                                                     Binding="{Binding IsSelected}"
+                                                     Value="True">
+                                            <Setter Property="BackgroundColor"
+                                                    Value="{StaticResource Primary}"/>
+                                            <Setter Property="Stroke"
+                                                    Value="{StaticResource Primary}"/>
+                                        </DataTrigger>
+                                        <DataTrigger TargetType="Border"
+                                                     Binding="{Binding IsSelected}"
+                                                     Value="False">
+                                            <Setter Property="BackgroundColor"
+                                                    Value="White"/>
+                                        </DataTrigger>
+                                    </Border.Triggers>
+
+                                    <Grid ColumnDefinitions="Auto,*"
+                                          Padding="14,12" ColumnSpacing="14">
+
+                                        <!-- Pastille avatar / initiale -->
+                                        <Border Grid.Column="0"
+                                                WidthRequest="44" HeightRequest="44"
+                                                StrokeShape="RoundRectangle 22"
+                                                StrokeThickness="0"
+                                                BackgroundColor="{StaticResource Accent}"
+                                                VerticalOptions="Center">
+                                            <Grid>
+                                                <Image IsVisible="{Binding HasAvatar}"
+                                                       Source="{Binding AvatarUrl}"
+                                                       Aspect="AspectFill"/>
+                                                <Label IsVisible="{Binding ShowInitial}"
+                                                       Text="{Binding Initial}"
+                                                       FontSize="20"
+                                                       FontAttributes="Bold"
+                                                       TextColor="White"
+                                                       HorizontalOptions="Center"
+                                                       VerticalOptions="Center"/>
+                                            </Grid>
+                                        </Border>
+
+                                        <!-- Pseudo -->
+                                        <Label Grid.Column="1"
+                                               Text="{Binding Username}"
+                                               FontSize="17" FontAttributes="Bold"
+                                               TextColor="{StaticResource TextPrimary}"
+                                               VerticalOptions="Center">
+                                            <Label.Triggers>
+                                                <DataTrigger TargetType="Label"
+                                                             Binding="{Binding IsSelected}"
+                                                             Value="True">
+                                                    <Setter Property="TextColor"
+                                                            Value="White"/>
+                                                </DataTrigger>
+                                            </Label.Triggers>
+                                        </Label>
+                                    </Grid>
+
+                                    <Border.GestureRecognizers>
+                                        <TapGestureRecognizer
+                                            Command="{Binding Source={RelativeSource AncestorType={x:Type vm:PartyPlayViewModel}}, Path=VoteCommand}"
+                                            CommandParameter="{Binding .}"/>
+                                    </Border.GestureRecognizers>
+                                </Border>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+
+                </VerticalStackLayout>
+            </ScrollView>
+        </Grid>
+
+        <!-- ════════════════ VOTÉ ════════════════ -->
+        <VerticalStackLayout IsVisible="{Binding IsVoted}"
+                             VerticalOptions="Center" Padding="28" Spacing="18">
+            <Label Text="✅" FontSize="64" HorizontalOptions="Center"/>
+            <Label Text="{tr:Translate Key=Party_Voted_Title}"
+                   FontSize="22" FontAttributes="Bold"
+                   TextColor="{StaticResource Success}"
+                   HorizontalTextAlignment="Center"/>
+            <Label Text="{Binding VotedForName, StringFormat='Tu as voté pour : {0}'}"
+                   IsVisible="{Binding HasVotedForName}"
+                   FontSize="16"
+                   TextColor="{StaticResource TextPrimary}"
+                   HorizontalTextAlignment="Center"/>
+            <Label Text="{Binding VotedMessage}"
+                   FontSize="14" TextColor="{StaticResource TextTertiary}"
+                   HorizontalTextAlignment="Center"/>
+            <ActivityIndicator IsRunning="{Binding IsVoted}"
+                               Color="{StaticResource Primary}"
+                               WidthRequest="28" HeightRequest="28"
+                               Margin="0,8,0,0"/>
+        </VerticalStackLayout>
+
+        <!-- ════════════════ FINISH ════════════════ -->
+        <VerticalStackLayout IsVisible="{Binding IsFinish}"
+                             VerticalOptions="Center" Padding="28" Spacing="18">
+            <Label Text="🏆" FontSize="64" HorizontalOptions="Center"/>
+            <Label Text="{tr:Translate Key=Party_Finish_Title}"
+                   FontSize="24" FontAttributes="Bold"
+                   TextColor="{StaticResource TextPrimary}"
+                   HorizontalTextAlignment="Center"/>
+            <Label Text="{tr:Translate Key=Party_Finish_Subtitle}"
+                   FontSize="15" TextColor="{StaticResource TextTertiary}"
+                   HorizontalTextAlignment="Center"/>
+            <Button Text="{tr:Translate Key=Common_Close}"
+                    Command="{Binding LeaveCommand}"
+                    BackgroundColor="{StaticResource Primary}"
+                    TextColor="White" CornerRadius="14"
+                    HeightRequest="50" Margin="0,12,0,0"/>
+        </VerticalStackLayout>
+
+        <!-- ════════════════ ERREUR ════════════════ -->
+        <VerticalStackLayout IsVisible="{Binding IsError}"
+                             VerticalOptions="Center" Padding="28" Spacing="16">
+            <Label Text="⚠️" FontSize="56" HorizontalOptions="Center"/>
+            <Label Text="{Binding ErrorTitle}"
+                   FontSize="20" FontAttributes="Bold"
+                   TextColor="{StaticResource Error}"
+                   HorizontalTextAlignment="Center"/>
+            <Label Text="{Binding ErrorMessage}"
+                   FontSize="14" TextColor="{StaticResource TextTertiary}"
+                   HorizontalTextAlignment="Center"/>
+            <Button Text="{tr:Translate Key=Common_Close}"
+                    Command="{Binding LeaveCommand}"
+                    BackgroundColor="{StaticResource Primary}"
+                    TextColor="White" CornerRadius="14"
+                    HeightRequest="50" Margin="0,12,0,0"/>
+        </VerticalStackLayout>
+
+        <!-- ════════════════ OVERLAY PAUSE ════════════════ -->
+        <Grid IsVisible="{Binding IsPaused}"
+              BackgroundColor="#CC1A1612">
+            <VerticalStackLayout VerticalOptions="Center" Spacing="14">
+                <Label Text="⏸️" FontSize="56" HorizontalOptions="Center"/>
+                <Label Text="{tr:Translate Key=Quiz_Paused_Title}"
+                       FontSize="20" FontAttributes="Bold"
+                       TextColor="White"
+                       HorizontalTextAlignment="Center"/>
+                <Label Text="{tr:Translate Key=Quiz_Paused_Message}"
+                       FontSize="14" TextColor="#E5DCC9"
+                       HorizontalTextAlignment="Center"/>
+            </VerticalStackLayout>
+        </Grid>
+
+    </Grid>
+</ContentPage>

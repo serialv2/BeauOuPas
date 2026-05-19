@@ -1,0 +1,286 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="BeauOuPas.Views.Groups.MyInvitationsPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:BeauOuPas.ViewModels.Groups"
+    xmlns:tr="clr-namespace:BeauOuPas.Extensions"
+    x:DataType="vm:MyInvitationsViewModel"
+    Title="{tr:Translate Key=MyInvitations_Title}"
+    BackgroundColor="{StaticResource BackgroundPage}">
+
+    <!--
+        ⚡ MAI 2026 — Hub d'invitations unifié.
+        2 sections : Demandes d'ami (1) + Invitations à séries (2).
+        L'état "vide" ne s'affiche que si LES DEUX sections sont vides.
+    -->
+
+    <Grid>
+        <RefreshView IsRefreshing="{Binding IsLoading}"
+                     Command="{Binding LoadCommand}"
+                     RefreshColor="#C2754C">
+            <ScrollView>
+                <VerticalStackLayout Padding="16,12" Spacing="0">
+
+                    <!-- ═══ TITRE DE PAGE ═══════════════════════════ -->
+                    <Label Text="{tr:Translate Key=MyInvitations_Header}"
+                           FontSize="22" FontAttributes="Bold"
+                           TextColor="{StaticResource TextPrimary}"
+                           Margin="0,0,0,16"/>
+
+                    <!-- ═══ ÉTAT VIDE (rien des 2 côtés) ═══════════ -->
+                    <VerticalStackLayout
+                        IsVisible="{Binding IsEmpty}"
+                        Spacing="10" Padding="0,40" HorizontalOptions="Center">
+                        <Label Text="📭" FontSize="48" HorizontalOptions="Center"/>
+                        <Label Text="{tr:Translate Key=MyInvitations_Empty}"
+                               FontSize="14" TextColor="{StaticResource TextTertiary}"
+                               HorizontalOptions="Center"/>
+                    </VerticalStackLayout>
+
+                    <!-- ═══════════════════════════════════════════════
+                         SECTION 1 : DEMANDES D'AMI REÇUES
+                         ═══════════════════════════════════════════════ -->
+                    <VerticalStackLayout
+                        IsVisible="{Binding HasFriendRequests}"
+                        Spacing="0"
+                        Margin="0,0,0,18">
+
+                        <!-- Header section -->
+                        <HorizontalStackLayout Spacing="6" Margin="0,0,0,10">
+                            <Label Text="{tr:Translate Key=MyInvitations_FriendsSectionTitle}"
+                                   FontSize="15" FontAttributes="Bold"
+                                   TextColor="{StaticResource TextSecondary}"
+                                   VerticalOptions="Center"/>
+                            <!-- Badge compteur -->
+                            <Border BackgroundColor="{StaticResource Primary}"
+                                    StrokeShape="RoundRectangle 999"
+                                    Stroke="Transparent"
+                                    Padding="8,2"
+                                    MinimumWidthRequest="22"
+                                    VerticalOptions="Center">
+                                <Label Text="{Binding FriendRequestsCount}"
+                                       FontSize="11"
+                                       FontAttributes="Bold"
+                                       TextColor="White"
+                                       HorizontalOptions="Center"
+                                       VerticalOptions="Center"/>
+                            </Border>
+                        </HorizontalStackLayout>
+
+                        <!-- Liste -->
+                        <CollectionView ItemsSource="{Binding FriendRequests}"
+                                        SelectionMode="None">
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate x:DataType="vm:FriendRequestItem">
+                                    <Border BackgroundColor="White"
+                                            StrokeShape="RoundRectangle 14"
+                                            Stroke="{StaticResource BorderLight}"
+                                            StrokeThickness="1"
+                                            Margin="0,0,0,10"
+                                            Padding="14">
+                                        <Grid RowDefinitions="Auto,Auto" RowSpacing="12">
+
+                                            <!-- Identité : avatar + pseudo -->
+                                            <Grid Grid.Row="0"
+                                                  ColumnDefinitions="Auto,*"
+                                                  ColumnSpacing="12">
+
+                                                <!-- Avatar : image OU initiale -->
+                                                <Border Grid.Column="0"
+                                                        BackgroundColor="{StaticResource Primary}"
+                                                        StrokeShape="RoundRectangle 999"
+                                                        Stroke="Transparent"
+                                                        WidthRequest="48"
+                                                        HeightRequest="48"
+                                                        VerticalOptions="Center">
+                                                    <Grid>
+                                                        <!-- Initiale (fallback) -->
+                                                        <Label Text="{Binding AvatarInitial}"
+                                                               FontSize="20"
+                                                               FontAttributes="Bold"
+                                                               TextColor="White"
+                                                               HorizontalOptions="Center"
+                                                               VerticalOptions="Center"
+                                                               IsVisible="{Binding HasAvatar, Converter={StaticResource InverseBoolConverter}}"/>
+                                                        <!-- Image avatar (si dispo) -->
+                                                        <Image Source="{Binding AvatarUrl}"
+                                                               Aspect="AspectFill"
+                                                               IsVisible="{Binding HasAvatar}"/>
+                                                    </Grid>
+                                                </Border>
+
+                                                <!-- Pseudo + label -->
+                                                <VerticalStackLayout Grid.Column="1"
+                                                                     Spacing="2"
+                                                                     VerticalOptions="Center">
+                                                    <Label Text="{Binding DisplayName}"
+                                                           FontSize="16" FontAttributes="Bold"
+                                                           TextColor="{StaticResource TextPrimary}"/>
+                                                    <Label Text="{tr:Translate Key=MyInvitations_WantsToBeFriend}"
+                                                           FontSize="13" TextColor="{StaticResource TextTertiary}"/>
+                                                </VerticalStackLayout>
+                                            </Grid>
+
+                                            <!-- Boutons Refuser / Accepter -->
+                                            <Grid Grid.Row="1"
+                                                  ColumnDefinitions="*,*"
+                                                  ColumnSpacing="10">
+
+                                                <!-- Refuser -->
+                                                <Border Grid.Column="0"
+                                                        BackgroundColor="{StaticResource SurfaceMuted}"
+                                                        StrokeShape="RoundRectangle 12"
+                                                        Stroke="{StaticResource BorderMedium}"
+                                                        StrokeThickness="1"
+                                                        Padding="0,12">
+                                                    <Border.GestureRecognizers>
+                                                        <TapGestureRecognizer
+                                                            Command="{Binding Source={RelativeSource AncestorType={x:Type vm:MyInvitationsViewModel}}, Path=DeclineFriendCommand}"
+                                                            CommandParameter="{Binding .}"/>
+                                                    </Border.GestureRecognizers>
+                                                    <Label Text="{tr:Translate Key=MyInvitations_Decline}"
+                                                           FontSize="14" FontAttributes="Bold"
+                                                           TextColor="{StaticResource TextSecondary}"
+                                                           HorizontalOptions="Center"/>
+                                                </Border>
+
+                                                <!-- Accepter -->
+                                                <Border Grid.Column="1"
+                                                        BackgroundColor="{StaticResource Primary}"
+                                                        StrokeShape="RoundRectangle 12"
+                                                        Stroke="Transparent"
+                                                        Padding="0,12">
+                                                    <Border.GestureRecognizers>
+                                                        <TapGestureRecognizer
+                                                            Command="{Binding Source={RelativeSource AncestorType={x:Type vm:MyInvitationsViewModel}}, Path=AcceptFriendCommand}"
+                                                            CommandParameter="{Binding .}"/>
+                                                    </Border.GestureRecognizers>
+                                                    <Grid>
+                                                        <ActivityIndicator IsRunning="{Binding IsProcessing}"
+                                                                           IsVisible="{Binding IsProcessing}"
+                                                                           Color="White"
+                                                                           WidthRequest="18" HeightRequest="18"/>
+                                                        <Label Text="{tr:Translate Key=MyInvitations_Accept}"
+                                                               IsVisible="{Binding IsProcessing, Converter={StaticResource InverseBoolConverter}}"
+                                                               FontSize="14" FontAttributes="Bold"
+                                                               TextColor="White"
+                                                               HorizontalOptions="Center"/>
+                                                    </Grid>
+                                                </Border>
+                                            </Grid>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+                    </VerticalStackLayout>
+
+                    <!-- ═══════════════════════════════════════════════
+                         SECTION 2 : INVITATIONS À DES SÉRIES
+                         ═══════════════════════════════════════════════ -->
+                    <VerticalStackLayout
+                        IsVisible="{Binding HasSeriesInvitations}"
+                        Spacing="0">
+
+                        <!-- Header section -->
+                        <HorizontalStackLayout Spacing="6" Margin="0,0,0,10">
+                            <Label Text="{tr:Translate Key=MyInvitations_SeriesSectionTitle}"
+                                   FontSize="15" FontAttributes="Bold"
+                                   TextColor="{StaticResource TextSecondary}"
+                                   VerticalOptions="Center"/>
+                            <!-- Badge compteur -->
+                            <Border BackgroundColor="{StaticResource Primary}"
+                                    StrokeShape="RoundRectangle 999"
+                                    Stroke="Transparent"
+                                    Padding="8,2"
+                                    MinimumWidthRequest="22"
+                                    VerticalOptions="Center">
+                                <Label Text="{Binding SeriesInvitationsCount}"
+                                       FontSize="11"
+                                       FontAttributes="Bold"
+                                       TextColor="White"
+                                       HorizontalOptions="Center"
+                                       VerticalOptions="Center"/>
+                            </Border>
+                        </HorizontalStackLayout>
+
+                        <!-- Liste -->
+                        <CollectionView ItemsSource="{Binding SeriesInvitations}"
+                                        SelectionMode="None">
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate x:DataType="vm:InvitationItem">
+                                    <Border BackgroundColor="White"
+                                            StrokeShape="RoundRectangle 14"
+                                            Stroke="{StaticResource BorderLight}"
+                                            StrokeThickness="1"
+                                            Margin="0,0,0,10"
+                                            Padding="14">
+                                        <Grid RowDefinitions="Auto,Auto" RowSpacing="12">
+
+                                            <VerticalStackLayout Grid.Row="0" Spacing="2">
+                                                <Label Text="{Binding SeriesTitle}"
+                                                       FontSize="16" FontAttributes="Bold"
+                                                       TextColor="{StaticResource TextPrimary}"/>
+                                                <Label Text="{Binding SubLabel}"
+                                                       FontSize="13" TextColor="{StaticResource TextTertiary}"/>
+                                            </VerticalStackLayout>
+
+                                            <Grid Grid.Row="1"
+                                                  ColumnDefinitions="*,*"
+                                                  ColumnSpacing="10">
+
+                                                <!-- Refuser -->
+                                                <Border Grid.Column="0"
+                                                        BackgroundColor="{StaticResource SurfaceMuted}"
+                                                        StrokeShape="RoundRectangle 12"
+                                                        Stroke="{StaticResource BorderMedium}"
+                                                        StrokeThickness="1"
+                                                        Padding="0,12">
+                                                    <Border.GestureRecognizers>
+                                                        <TapGestureRecognizer
+                                                            Command="{Binding Source={RelativeSource AncestorType={x:Type vm:MyInvitationsViewModel}}, Path=DeclineSeriesCommand}"
+                                                            CommandParameter="{Binding .}"/>
+                                                    </Border.GestureRecognizers>
+                                                    <Label Text="{tr:Translate Key=MyInvitations_Decline}"
+                                                           FontSize="14" FontAttributes="Bold"
+                                                           TextColor="{StaticResource TextSecondary}"
+                                                           HorizontalOptions="Center"/>
+                                                </Border>
+
+                                                <!-- Accepter -->
+                                                <Border Grid.Column="1"
+                                                        BackgroundColor="{StaticResource Primary}"
+                                                        StrokeShape="RoundRectangle 12"
+                                                        Stroke="Transparent"
+                                                        Padding="0,12">
+                                                    <Border.GestureRecognizers>
+                                                        <TapGestureRecognizer
+                                                            Command="{Binding Source={RelativeSource AncestorType={x:Type vm:MyInvitationsViewModel}}, Path=AcceptSeriesCommand}"
+                                                            CommandParameter="{Binding .}"/>
+                                                    </Border.GestureRecognizers>
+                                                    <Grid>
+                                                        <ActivityIndicator IsRunning="{Binding IsProcessing}"
+                                                                           IsVisible="{Binding IsProcessing}"
+                                                                           Color="White"
+                                                                           WidthRequest="18" HeightRequest="18"/>
+                                                        <Label Text="{tr:Translate Key=MyInvitations_Accept}"
+                                                               IsVisible="{Binding IsProcessing, Converter={StaticResource InverseBoolConverter}}"
+                                                               FontSize="14" FontAttributes="Bold"
+                                                               TextColor="White"
+                                                               HorizontalOptions="Center"/>
+                                                    </Grid>
+                                                </Border>
+                                            </Grid>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+                    </VerticalStackLayout>
+
+                </VerticalStackLayout>
+            </ScrollView>
+        </RefreshView>
+    </Grid>
+</ContentPage>

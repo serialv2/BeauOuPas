@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="BeauOuPas.Views.Groups.CreatePartyPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:BeauOuPas.ViewModels.Groups"
+    xmlns:tr="clr-namespace:BeauOuPas.Extensions"
+    x:DataType="vm:CreatePartyViewModel"
+    Title="{tr:Translate Key=CreateParty_Title}"
+    BackgroundColor="{StaticResource BackgroundPage}">
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="{tr:Translate Key=Common_Cancel}" Command="{Binding CancelCommand}"/>
+    </ContentPage.ToolbarItems>
+
+    <ScrollView>
+        <VerticalStackLayout Spacing="0" Padding="16,12">
+
+            <!-- En-tête -->
+            <Label Text="{tr:Translate Key=CreateParty_Header}"
+                   FontSize="24" FontAttributes="Bold"
+                   TextColor="{StaticResource TextPrimary}" Margin="0,0,0,6"/>
+
+            <Label Text="{tr:Translate Key=CreateParty_Subtitle}"
+                   FontSize="13" TextColor="{StaticResource TextTertiary}"
+                   Margin="0,0,0,14"/>
+
+            <!-- Contexte groupe / standalone -->
+            <Label Text="{Binding GroupName, StringFormat='Dans le groupe : {0}'}"
+                   IsVisible="{Binding HasGroup}"
+                   FontSize="13" TextColor="{StaticResource Primary}" Margin="0,0,0,16"/>
+            <Label Text="{tr:Translate Key=CreateParty_Standalone}"
+                   IsVisible="{Binding HasGroup, Converter={StaticResource InverseBoolConverter}}"
+                   FontSize="13" TextColor="{StaticResource TextTertiary}" Margin="0,0,0,16"/>
+
+            <!-- Titre -->
+            <Border BackgroundColor="White" StrokeShape="RoundRectangle 14"
+                    Stroke="{StaticResource BorderLight}" StrokeThickness="1" Padding="16" Margin="0,0,0,12">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="{tr:Translate Key=CreateParty_TitleLabel}"
+                           FontSize="13" FontAttributes="Bold"
+                           TextColor="{StaticResource TextTertiary}" TextTransform="Uppercase"/>
+                    <Entry Placeholder="{tr:Translate Key=CreateParty_TitlePlaceholder}"
+                           Text="{Binding Title}" FontSize="16"
+                           TextColor="{StaticResource TextPrimary}" PlaceholderColor="{StaticResource TextDisabled}"
+                           BackgroundColor="Transparent"
+                           MaxLength="120"/>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Description -->
+            <Border BackgroundColor="White" StrokeShape="RoundRectangle 14"
+                    Stroke="{StaticResource BorderLight}" StrokeThickness="1" Padding="16" Margin="0,0,0,20">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="{tr:Translate Key=CreateParty_DescriptionLabel}"
+                           FontSize="13" FontAttributes="Bold"
+                           TextColor="{StaticResource TextTertiary}" TextTransform="Uppercase"/>
+                    <Editor Placeholder="{tr:Translate Key=CreateParty_DescriptionPlaceholder}"
+                            Text="{Binding Description}" FontSize="15"
+                            TextColor="{StaticResource TextPrimary}" PlaceholderColor="{StaticResource TextDisabled}"
+                            BackgroundColor="Transparent" AutoSize="TextChanges"
+                            MinimumHeightRequest="60"/>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- ═══════════════════════════════════════════════════════
+                 🎲 NOMBRE DE QUESTIONS (stepper)
+                 Les questions sont tirées AU HASARD côté serveur dans la
+                 banque party_questions (selon langue + catégorie).
+                 ═══════════════════════════════════════════════════════ -->
+            <Border BackgroundColor="White" StrokeShape="RoundRectangle 14"
+                    Stroke="{StaticResource BorderLight}" StrokeThickness="1" Padding="16" Margin="0,0,0,12">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="{tr:Translate Key=CreateParty_QuestionCountLabel}"
+                           FontSize="13" FontAttributes="Bold"
+                           TextColor="{StaticResource TextTertiary}" TextTransform="Uppercase"/>
+                    <Label Text="{tr:Translate Key=CreateParty_QuestionCountHint}"
+                           FontSize="12" TextColor="{StaticResource TextTertiary}"/>
+
+                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="14" Margin="0,4,0,0">
+
+                        <!-- Bouton − -->
+                        <Border Grid.Column="0"
+                                BackgroundColor="{StaticResource SurfaceMuted}"
+                                StrokeShape="RoundRectangle 12"
+                                Stroke="Transparent"
+                                Padding="16,8"
+                                IsEnabled="{Binding CanDecrease}"
+                                Opacity="{Binding CanDecrease, Converter={StaticResource BoolToOpacityConverter}, FallbackValue=1}">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding DecreaseCountCommand}"/>
+                            </Border.GestureRecognizers>
+                            <Label Text="−"
+                                   FontSize="22" FontAttributes="Bold"
+                                   TextColor="{StaticResource Primary}"
+                                   HorizontalOptions="Center"/>
+                        </Border>
+
+                        <!-- Valeur centrale -->
+                        <Label Grid.Column="1"
+                               Text="{Binding QuestionCountLabel}"
+                               FontSize="18" FontAttributes="Bold"
+                               TextColor="{StaticResource TextPrimary}"
+                               HorizontalTextAlignment="Center"
+                               VerticalOptions="Center"/>
+
+                        <!-- Bouton + -->
+                        <Border Grid.Column="2"
+                                BackgroundColor="{StaticResource SurfaceMuted}"
+                                StrokeShape="RoundRectangle 12"
+                                Stroke="Transparent"
+                                Padding="16,8"
+                                IsEnabled="{Binding CanIncrease}"
+                                Opacity="{Binding CanIncrease, Converter={StaticResource BoolToOpacityConverter}, FallbackValue=1}">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding IncreaseCountCommand}"/>
+                            </Border.GestureRecognizers>
+                            <Label Text="+"
+                                   FontSize="22" FontAttributes="Bold"
+                                   TextColor="{StaticResource Primary}"
+                                   HorizontalOptions="Center"/>
+                        </Border>
+                    </Grid>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- ═══════════════════════════════════════════════════════
+                 🏷️ CATÉGORIE (picker dynamique, option B)
+                 Liste chargée depuis party_questions via la RPC
+                 get_party_categories. "🎲 Mélange" est toujours en tête
+                 (= toutes catégories confondues).
+                 ═══════════════════════════════════════════════════════ -->
+            <Border BackgroundColor="White" StrokeShape="RoundRectangle 14"
+                    Stroke="{StaticResource BorderLight}" StrokeThickness="1" Padding="16" Margin="0,0,0,20">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="{tr:Translate Key=CreateParty_CategoryLabel}"
+                           FontSize="13" FontAttributes="Bold"
+                           TextColor="{StaticResource TextTertiary}" TextTransform="Uppercase"/>
+                    <Label Text="{tr:Translate Key=CreateParty_CategoryHint}"
+                           FontSize="12" TextColor="{StaticResource TextTertiary}"/>
+
+                    <Grid>
+                        <Picker ItemsSource="{Binding Categories}"
+                                SelectedItem="{Binding SelectedCategory}"
+                                FontSize="15"
+                                TextColor="{StaticResource TextPrimary}"
+                                TitleColor="{StaticResource TextDisabled}"
+                                BackgroundColor="Transparent"
+                                IsEnabled="{Binding IsLoadingCategories, Converter={StaticResource InverseBoolConverter}}"/>
+                        <ActivityIndicator IsRunning="{Binding IsLoadingCategories}"
+                                           IsVisible="{Binding IsLoadingCategories}"
+                                           Color="{StaticResource Primary}"
+                                           HorizontalOptions="End"
+                                           VerticalOptions="Center"
+                                           WidthRequest="20" HeightRequest="20"/>
+                    </Grid>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Toggle "Afficher classement complet" -->
+            <Border BackgroundColor="White" StrokeShape="RoundRectangle 14"
+                    Stroke="{StaticResource BorderLight}" StrokeThickness="1" Padding="16" Margin="0,0,0,20">
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding ToggleShowFullLeaderboardCommand}"/>
+                </Border.GestureRecognizers>
+                <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="14">
+                    <Label Grid.Column="0" Text="🏆"
+                           FontSize="28" VerticalOptions="Center"/>
+                    <VerticalStackLayout Grid.Column="1" Spacing="4" VerticalOptions="Center">
+                        <Label Text="{tr:Translate Key=CreateParty_ShowFullLeaderboard}"
+                               FontSize="14" FontAttributes="Bold"
+                               TextColor="{StaticResource TextPrimary}"/>
+                        <Label Text="{tr:Translate Key=CreateParty_ShowFullLeaderboardHint}"
+                               FontSize="11" TextColor="{StaticResource TextTertiary}"/>
+                    </VerticalStackLayout>
+                    <Switch Grid.Column="2"
+                            IsToggled="{Binding ShowFullLeaderboard}"
+                            OnColor="{StaticResource Primary}"
+                            ThumbColor="White"
+                            VerticalOptions="Center"/>
+                </Grid>
+            </Border>
+
+            <!-- Info code d'accès -->
+            <Border BackgroundColor="{StaticResource SurfaceMuted}" StrokeShape="RoundRectangle 14"
+                    Stroke="Transparent" Padding="16" Margin="0,0,0,24">
+                <HorizontalStackLayout Spacing="12">
+                    <Label Text="🔑" FontSize="24" VerticalOptions="Center"/>
+                    <VerticalStackLayout Spacing="4" VerticalOptions="Center">
+                        <Label Text="{tr:Translate Key=CreateParty_AccessCodeTitle}"
+                               FontSize="14" FontAttributes="Bold" TextColor="{StaticResource Primary}"/>
+                        <Label Text="{tr:Translate Key=CreateParty_AccessCodeHint}"
+                               FontSize="12" TextColor="{StaticResource TextTertiary}"/>
+                    </VerticalStackLayout>
+                </HorizontalStackLayout>
+            </Border>
+
+            <!-- Bouton créer -->
+            <Border BackgroundColor="{StaticResource Primary}" StrokeShape="RoundRectangle 16"
+                    Stroke="Transparent" Padding="0,16" Margin="0,0,0,40">
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding CreateCommand}"/>
+                </Border.GestureRecognizers>
+                <Grid>
+                    <ActivityIndicator IsRunning="{Binding IsLoading}"
+                                       IsVisible="{Binding IsLoading}" Color="White"/>
+                    <Label Text="{tr:Translate Key=CreateParty_CreateButton}"
+                           IsVisible="{Binding IsLoading, Converter={StaticResource InverseBoolConverter}}"
+                           FontSize="16" FontAttributes="Bold"
+                           TextColor="White" HorizontalOptions="Center"/>
+                </Grid>
+            </Border>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

@@ -1,0 +1,150 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="BeauOuPas.Views.Friends.FriendProfilePage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:BeauOuPas.ViewModels.Friends"
+    xmlns:models="clr-namespace:BeauOuPas.Models"
+    xmlns:tr="clr-namespace:BeauOuPas.Extensions"
+    x:DataType="vm:FriendProfileViewModel"
+    Title=""
+    BackgroundColor="{StaticResource BackgroundPage}">
+
+    <ScrollView>
+        <VerticalStackLayout Spacing="0">
+
+            <!-- Hero profil -->
+            <Border BackgroundColor="White" StrokeShape="RoundRectangle 0,0,20,20"
+                    Stroke="{StaticResource BorderLight}" StrokeThickness="1" Padding="24,20">
+                <VerticalStackLayout Spacing="12" HorizontalOptions="Center">
+
+                    <!-- Avatar -->
+                    <Grid HorizontalOptions="Center">
+                        <Border StrokeShape="RoundRectangle 45"
+                                HeightRequest="90" WidthRequest="90"
+                                BackgroundColor="{StaticResource Primary}" Stroke="{StaticResource Primary}" StrokeThickness="2">
+                            <Image Source="{Binding AvatarUrl}" Aspect="AspectFill"
+                                   IsVisible="{Binding HasAvatar}"/>
+                        </Border>
+                        <Border StrokeShape="RoundRectangle 45"
+                                HeightRequest="90" WidthRequest="90"
+                                BackgroundColor="{StaticResource Primary}"
+                                IsVisible="{Binding HasAvatar, Converter={StaticResource InverseBoolConverter}}">
+                            <Label Text="{Binding AvatarInitial}"
+                                   TextColor="White" FontSize="34" FontAttributes="Bold"
+                                   HorizontalOptions="Center" VerticalOptions="Center"/>
+                        </Border>
+                        <Border StrokeShape="RoundRectangle 8"
+                                HeightRequest="16" WidthRequest="16"
+                                BackgroundColor="{Binding OnlineColor}"
+                                Stroke="White" StrokeThickness="2"
+                                HorizontalOptions="End" VerticalOptions="End"
+                                Margin="0,0,4,4"/>
+                    </Grid>
+
+                    <Label Text="{Binding Username, StringFormat='@{0}'}"
+                           FontSize="20" FontAttributes="Bold"
+                           TextColor="{StaticResource TextPrimary}" HorizontalOptions="Center"/>
+                    <Label Text="{Binding OnlineStatusText}"
+                           FontSize="12" TextColor="{Binding OnlineColor}"
+                           HorizontalOptions="Center"/>
+
+                    <!-- Stats -->
+                    <Grid ColumnDefinitions="*,*" Margin="0,8,0,0">
+                        <VerticalStackLayout Grid.Column="0" HorizontalOptions="Center" Spacing="2">
+                            <Label Text="{Binding ProjectCount}" FontSize="20" FontAttributes="Bold"
+                                   TextColor="{StaticResource Primary}" HorizontalOptions="Center"/>
+                            <Label Text="{tr:Translate Key=Profile_Projects}"
+                                   FontSize="11" TextColor="{StaticResource TextTertiary}" HorizontalOptions="Center"/>
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Column="1" HorizontalOptions="Center" Spacing="2">
+                            <Label Text="{Binding VoteCount}" FontSize="20" FontAttributes="Bold"
+                                   TextColor="{StaticResource Primary}" HorizontalOptions="Center"/>
+                            <Label Text="{tr:Translate Key=Profile_Votes}"
+                                   FontSize="11" TextColor="{StaticResource TextTertiary}" HorizontalOptions="Center"/>
+                        </VerticalStackLayout>
+                    </Grid>
+
+                    <!-- Boutons -->
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="12" Margin="0,8,0,0">
+                        <Button Grid.Column="0"
+                                Text="{tr:Translate Key=FriendProfile_Message}"
+                                Command="{Binding SendMessageCommand}"
+                                BackgroundColor="{StaticResource Primary}" TextColor="White"
+                                CornerRadius="10" HeightRequest="44" FontSize="14"
+                                IsVisible="{Binding ChatEnabled}"/>
+                        <Button Grid.Column="1"
+                                Text="{tr:Translate Key=FriendProfile_Remove}"
+                                Command="{Binding RemoveFriendCommand}"
+                                BackgroundColor="{StaticResource ErrorLight}" TextColor="{StaticResource Error}"
+                                CornerRadius="10" HeightRequest="44" FontSize="14"/>
+                    </Grid>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Projets -->
+            <VerticalStackLayout Padding="16" Spacing="12">
+                <Label Text="{tr:Translate Key=FriendProfile_Projects}"
+                       FontSize="16" FontAttributes="Bold" TextColor="{StaticResource TextPrimary}"/>
+
+                <ActivityIndicator IsRunning="{Binding IsLoading}"
+                                   IsVisible="{Binding IsLoading}"
+                                   Color="{StaticResource Primary}" HorizontalOptions="Center"/>
+
+                <Label Text="{tr:Translate Key=FriendProfile_NoProjects}"
+                       IsVisible="{Binding IsEmpty}"
+                       FontSize="14" TextColor="{StaticResource TextTertiary}" HorizontalOptions="Center"/>
+
+                <!-- ✅ Grille avec vraies photos -->
+                <CollectionView ItemsSource="{Binding Projects}"
+                                IsVisible="{Binding IsEmpty, Converter={StaticResource InverseBoolConverter}}">
+                    <CollectionView.ItemsLayout>
+                        <GridItemsLayout Orientation="Vertical" Span="3"
+                                         HorizontalItemSpacing="4" VerticalItemSpacing="4"/>
+                    </CollectionView.ItemsLayout>
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="models:FriendProjectItem">
+                            <Border StrokeShape="RoundRectangle 8" Stroke="Transparent"
+                                    BackgroundColor="#1A1A1A" HeightRequest="110">
+                                <Grid>
+                                    <!-- Photo réelle -->
+                                    <Image Source="{Binding ThumbnailUrl}"
+                                           Aspect="AspectFill"
+                                           IsVisible="{Binding HasPhoto}"/>
+                                    <!-- Emoji si pas de photo -->
+                                    <Label Text="{Binding TypeEmoji}"
+                                           FontSize="32" HorizontalOptions="Center"
+                                           VerticalOptions="Center"
+                                           IsVisible="{Binding HasPhoto, Converter={StaticResource InverseBoolConverter}}"/>
+                                    <!-- Badge déjà voté -->
+                                    <Border IsVisible="{Binding AlreadyVoted}"
+                                            BackgroundColor="#80000000"
+                                            StrokeShape="RoundRectangle 4"
+                                            Padding="4,2" HorizontalOptions="Start"
+                                            VerticalOptions="Start" Margin="4">
+                                        <Label Text="✅" FontSize="10"/>
+                                    </Border>
+                                    <!-- Badge privé -->
+                                    <Border IsVisible="{Binding IsPrivate}"
+                                            BackgroundColor="#80000000"
+                                            StrokeShape="RoundRectangle 4"
+                                            Padding="3,1" HorizontalOptions="End"
+                                            VerticalOptions="Start" Margin="4">
+                                        <Label Text="🔒" FontSize="10"/>
+                                    </Border>
+                                </Grid>
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:FriendProfileViewModel}},
+                                                          Path=OpenProjectCommand}"
+                                        CommandParameter="{Binding .}"/>
+                                </Border.GestureRecognizers>
+                            </Border>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </VerticalStackLayout>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
