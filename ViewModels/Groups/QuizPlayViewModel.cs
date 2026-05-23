@@ -1,6 +1,7 @@
 ﻿using BeauOuPas.Localization;
 using BeauOuPas.Models;
 using BeauOuPas.Services;
+using BeauOuPas.Services.Ads;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Supabase.Realtime.PostgresChanges;
@@ -41,6 +42,7 @@ public partial class QuizPlayViewModel : ObservableObject, IDisposable
     private readonly QuizService _quizService;
     private readonly SeriesService _seriesService;
     private readonly SeriesRealtimeService _realtime;
+    private readonly IAdService _adService;
 
     // ─── Init / cleanup ──────────────────────────────────────────
     private bool _isInitializing = false;
@@ -67,11 +69,13 @@ public partial class QuizPlayViewModel : ObservableObject, IDisposable
     public QuizPlayViewModel(
         QuizService quizService,
         SeriesService seriesService,
-        SeriesRealtimeService realtime)
+        SeriesRealtimeService realtime,
+        IAdService adService)
     {
         _quizService = quizService;
         _seriesService = seriesService;
         _realtime = realtime;
+        _adService = adService;
 
         _realtime.OnSeriesChanged = OnRealtimeSeriesChanged;
         _realtime.OnQuizQuestionChanged = OnRealtimeQuizQuestionChanged;
@@ -405,6 +409,11 @@ public partial class QuizPlayViewModel : ObservableObject, IDisposable
             // 5) S'abonner au realtime AVANT le premier render (pour ne rater aucun event
             //    pendant le rendu)
             await _realtime.SubscribeAsync(SeriesId, "quiz");
+
+            // 5bis) Précharge l'interstitielle pendant que l'animateur prépare son lancement.
+            //       Affichée plus tard sur la transition preparing → active (cf. OnRealtimeSeriesChanged).
+            if (_series.Status == "preparing")
+                _ = _adService.LoadInterstitialAsync();
 
             // 6) Premier rendu
             RenderCurrentScreen();
@@ -1075,6 +1084,14 @@ public partial class QuizPlayViewModel : ObservableObject, IDisposable
                 ShowError(L.T("Quiz_Error_TvDeactivatedTitle"),
                           L.T("Quiz_Error_TvDeactivatedMessage"));
                 return;
+            }
+
+            // 🎬 Game start : preparing → active. On affiche une interstitielle
+            // côté joueur (fire-and-forget, jamais bloquant). La pub se superpose
+            // pendant l'intro (20s) ; le state machine continue en arrière-plan.
+            if (prev != null && prev.Status == "preparing" && fresh.Status == "active")
+            {
+                _ = _adService.ShowInterstitialBeforeGameStartAsync();
             }
 
             // Status change ou index change → reroute

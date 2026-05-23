@@ -1,6 +1,7 @@
 using BeauOuPas.Localization;
 using BeauOuPas.Models;
 using BeauOuPas.Services;
+using BeauOuPas.Services.Ads;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Supabase.Realtime.PostgresChanges;
@@ -59,6 +60,7 @@ public partial class PartyPlayViewModel : ObservableObject, IDisposable
     private readonly PartyService _partyService;
     private readonly SeriesService _seriesService;
     private readonly SeriesRealtimeService _realtime;
+    private readonly IAdService _adService;
 
     // ─── Init / cleanup ──────────────────────────────────────────
     private bool _isInitializing = false;
@@ -82,11 +84,13 @@ public partial class PartyPlayViewModel : ObservableObject, IDisposable
     public PartyPlayViewModel(
         PartyService partyService,
         SeriesService seriesService,
-        SeriesRealtimeService realtime)
+        SeriesRealtimeService realtime,
+        IAdService adService)
     {
         _partyService = partyService;
         _seriesService = seriesService;
         _realtime = realtime;
+        _adService = adService;
 
         _realtime.OnSeriesChanged = OnRealtimeSeriesChanged;
         _realtime.OnQuizQuestionChanged = OnRealtimeQuestionChanged;
@@ -224,6 +228,11 @@ public partial class PartyPlayViewModel : ObservableObject, IDisposable
             //    (mode "quiz" réutilisé : écoute series + series_participants
             //     + quiz_questions ; on ne touche pas SeriesRealtimeService)
             await _realtime.SubscribeAsync(SeriesId, "quiz");
+
+            // 5bis) Précharge l'interstitielle pendant le lobby. Affichée plus
+            //       tard sur la transition preparing → active.
+            if (_series != null && _series.Status == "preparing")
+                _ = _adService.LoadInterstitialAsync();
 
             // 6) Premier rendu
             RenderCurrentScreen();
@@ -589,6 +598,12 @@ public partial class PartyPlayViewModel : ObservableObject, IDisposable
                 ShowError(L.T("Quiz_Error_TvDeactivatedTitle"),
                           L.T("Quiz_Error_TvDeactivatedMessage"));
                 return;
+            }
+
+            // 🎬 Game start : preparing → active. Interstitielle non-bloquante.
+            if (prev != null && prev.Status == "preparing" && fresh.Status == "active")
+            {
+                _ = _adService.ShowInterstitialBeforeGameStartAsync();
             }
 
             if (prev == null

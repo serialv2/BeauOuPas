@@ -2,6 +2,7 @@
 using CommunityToolkit.Mvvm.Input;
 using BeauOuPas.Models;
 using BeauOuPas.Services;
+using BeauOuPas.Services.Ads;
 using BeauOuPas.Localization;
 using Supabase.Realtime.PostgresChanges;
 using Supabase.Realtime.Socket;
@@ -16,6 +17,11 @@ public partial class SeriesVoteViewModel : ObservableObject, IDisposable
     private readonly SeriesVoteService _voteService;
     private readonly PhotoUploadService _uploadService;
     private readonly SeriesRealtimeService _realtime;
+    private readonly IAdService _adService;
+
+    // Statut précédent suivi localement pour détecter la transition
+    // preparing → active (= moment du game start) et déclencher la pub.
+    private string? _lastStatus = null;
 
     // ⚡ Doit correspondre à VOTE_DURATION_SECONDS dans tv-config.js
     private const int VoteSeconds = 20;
@@ -43,12 +49,14 @@ public partial class SeriesVoteViewModel : ObservableObject, IDisposable
         SeriesService seriesService,
         SeriesVoteService voteService,
         PhotoUploadService uploadService,
-        SeriesRealtimeService realtime)
+        SeriesRealtimeService realtime,
+        IAdService adService)
     {
         _seriesService = seriesService;
         _voteService = voteService;
         _uploadService = uploadService;
         _realtime = realtime;
+        _adService = adService;
 
         _realtime.OnSeriesChanged = OnRealtimeSeriesChanged;
         _realtime.OnSeriesProjectChanged = OnRealtimeProjectChanged;
@@ -175,6 +183,7 @@ public partial class SeriesVoteViewModel : ObservableObject, IDisposable
             CurrentIndex = series.CurrentProjectIndex;
             ParticipantCount = await _voteService.GetParticipantCountAsync(SeriesId);
             IsPaused = series.TvPaused;
+            _lastStatus = series.Status;
 
             System.Diagnostics.Debug.WriteLine(
                 $"[SeriesVote] Init : statut={series.Status}, projet={CurrentIndex + 1}/{TotalProjects}, paused={IsPaused}");
@@ -185,6 +194,11 @@ public partial class SeriesVoteViewModel : ObservableObject, IDisposable
             //    Comme ça, si la TV démarre/avance pendant le chargement,
             //    on reçoit l'event et on se met à jour.
             await _realtime.SubscribeAsync(SeriesId);
+
+            // 4bis) Précharge l'interstitielle pendant le lobby. Affichée plus
+            //       tard sur la transition preparing → active.
+            if (series.Status == "preparing")
+                _ = _adService.LoadInterstitialAsync();
 
             // 5) Charger le projet courant (avec son started_at, qui peut être null
             //    si la TV n'a pas encore démarré ou pas encore avancé).
@@ -590,6 +604,14 @@ public partial class SeriesVoteViewModel : ObservableObject, IDisposable
         {
             var series = await _seriesService.GetSeriesAsync(SeriesId);
             if (series == null) return;
+
+            // 🎬 Game start : preparing → active. Interstitielle non-bloquante.
+            // (la pub se superpose au démarrage, on ne bloque pas le state machine).
+            if (_lastStatus == "preparing" && series.Status == "active")
+            {
+                _ = _adService.ShowInterstitialBeforeGameStartAsync();
+            }
+            _lastStatus = series.Status;
 
             // Pause / reprise depuis la TV
             if (IsPaused != series.TvPaused)

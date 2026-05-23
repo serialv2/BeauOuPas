@@ -1,4 +1,4 @@
-﻿namespace BeauOuPas.Services.Ads;
+namespace BeauOuPas.Services.Ads;
 
 public interface IAdService
 {
@@ -10,6 +10,14 @@ public interface IAdService
     Task LoadInterstitialAsync();
     Task<bool> ShowInterstitialAsync();
     bool IsInterstitialReady { get; }
+
+    /// <summary>
+    /// Wrapper "game start" : affiche une interstitielle si elle est prête.
+    /// Ne bloque JAMAIS le jeu (fire-and-forget côté show). Skip silencieux
+    /// si les pubs sont désactivées ou si la pub n'est pas chargée.
+    /// Appelé au moment où une série/quiz/partie bascule de 'preparing' à 'active'.
+    /// </summary>
+    Task ShowInterstitialBeforeGameStartAsync();
 
     // ─── Rewarded ────────────────────────────────────────────────────
     Task LoadRewardedAsync();
@@ -28,6 +36,7 @@ public class MockAdService : IAdService
     public Task LoadInterstitialAsync() => Task.CompletedTask;
     public Task<bool> ShowInterstitialAsync() => Task.FromResult(false);
     public bool IsInterstitialReady => false;
+    public Task ShowInterstitialBeforeGameStartAsync() => Task.CompletedTask;
 
     // Rewarded → retourne toujours true en dev
     // pour ne pas bloquer les tests

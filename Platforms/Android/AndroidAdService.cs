@@ -1,4 +1,4 @@
-﻿using Plugin.MauiMtAdmob;
+using Plugin.MauiMtAdmob;
 using Plugin.MauiMtAdmob.Extra;
 using BeauOuPas.Services;
 using BeauOuPas.Services.Ads;
@@ -11,6 +11,14 @@ public class AndroidAdService : IAdService
     private const string BannerId = "ca-app-pub-5814544077070305/9551316912";
     private const string RewardedId = "ca-app-pub-5814544077070305/8830321670";
 
+    // ⚠️ TODO PROD : créer le slot Interstitiel dans la console AdMob
+    //    (https://apps.admob.com/ → BeauOuPas → Blocs d'annonces →
+    //     Ajouter → Interstitiel → nommer "BeauOuPas - Interstitial - GameStart")
+    //    puis remplacer l'ID de test ci-dessous par l'ID réel de la forme
+    //    "ca-app-pub-5814544077070305/XXXXXXXXXX" AVANT le build de release.
+    // ID de test Google (sert toujours une pub bidon, safe pour dev/AdMob).
+    private const string InterstitialId = "ca-app-pub-3940256099942544/1033173712";
+
     private readonly AppSettingsService _settingsService;
     private bool _rewardEarned = false;
 
@@ -20,7 +28,8 @@ public class AndroidAdService : IAdService
     }
 
     public bool IsBannerReady => true;
-    public bool IsInterstitialReady => true;
+    public bool IsInterstitialReady
+        => CrossMauiMTAdmob.Current.IsInterstitialLoaded(InterstitialId);
     public bool IsRewardedReady
         => CrossMauiMTAdmob.Current.IsRewardedLoaded(RewardedId);
 
@@ -28,8 +37,106 @@ public class AndroidAdService : IAdService
     public Task LoadBannerAsync() => Task.CompletedTask;
 
     // ─── Interstitielle ──────────────────────────────────────────────
-    public Task LoadInterstitialAsync() => Task.CompletedTask;
-    public Task<bool> ShowInterstitialAsync() => Task.FromResult(false);
+
+    public Task LoadInterstitialAsync()
+    {
+        try
+        {
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                CrossMauiMTAdmob.Current.LoadInterstitial(
+                    InterstitialId,
+                    new MTInterstitialAdOptions(),
+                    InterstitialId);
+            });
+            System.Diagnostics.Debug.WriteLine("[Ad] LoadInterstitial appelé");
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"[Ad] LoadInterstitial error: {ex.Message}");
+        }
+        return Task.CompletedTask;
+    }
+
+    /// <summary>
+    /// Affiche l'interstitielle si chargée. Retourne true si affichage déclenché.
+    /// </summary>
+    public async Task<bool> ShowInterstitialAsync()
+    {
+        try
+        {
+            if (!await _settingsService.GetAdsEnabledAsync()) return false;
+            if (!CrossMauiMTAdmob.Current.IsInterstitialLoaded(InterstitialId))
+                return false;
+
+            void OnInterstitialClosed(object? s, EventArgs e)
+            {
+                CrossMauiMTAdmob.Current.OnInterstitialClosed -= OnInterstitialClosed;
+                _ = LoadInterstitialAsync();
+            }
+
+            CrossMauiMTAdmob.Current.OnInterstitialClosed += OnInterstitialClosed;
+
+            MainThread.BeginInvokeOnMainThread(() =>
+                CrossMauiMTAdmob.Current.ShowInterstitial(InterstitialId));
+
+            return true;
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"[Ad] ShowInterstitial error: {ex.Message}");
+            return false;
+        }
+    }
+
+    /// <summary>
+    /// Wrapper "game start" : non-bloquant, jamais throw, jamais hang.
+    /// Appelé sur la transition series.status 'preparing' → 'active'.
+    /// </summary>
+    public async Task ShowInterstitialBeforeGameStartAsync()
+    {
+        try
+        {
+            if (!await _settingsService.GetAdsEnabledAsync())
+            {
+                System.Diagnostics.Debug.WriteLine("[Ad] Interstitial skip : ads disabled");
+                return;
+            }
+
+            if (!CrossMauiMTAdmob.Current.IsInterstitialLoaded(InterstitialId))
+            {
+                System.Diagnostics.Debug.WriteLine("[Ad] Interstitial skip : not loaded (no preload?)");
+                return;
+            }
+
+            void OnInterstitialClosed(object? s, EventArgs e)
+            {
+                CrossMauiMTAdmob.Current.OnInterstitialClosed -= OnInterstitialClosed;
+                System.Diagnostics.Debug.WriteLine("[Ad] Interstitial closed, reload pour la prochaine");
+                _ = LoadInterstitialAsync();
+            }
+
+            CrossMauiMTAdmob.Current.OnInterstitialClosed += OnInterstitialClosed;
+
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                try
+                {
+                    CrossMauiMTAdmob.Current.ShowInterstitial(InterstitialId);
+                    System.Diagnostics.Debug.WriteLine("[Ad] ShowInterstitial (game start) appelé");
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"[Ad] ShowInterstitial threw: {ex.Message}");
+                    CrossMauiMTAdmob.Current.OnInterstitialClosed -= OnInterstitialClosed;
+                }
+            });
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"[Ad] ShowInterstitialBeforeGameStart error: {ex.Message}");
+        }
+    }
 
     // ─── Rewarded ────────────────────────────────────────────────────
     public async Task LoadRewardedAsync()
