@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using BeauOuPas.Services;
+using BeauOuPas.Localization;
 using System.Text.Json;
 
 namespace BeauOuPas.ViewModels.Projects;
@@ -172,13 +173,13 @@ public partial class MyProjectsViewModel : ObservableObject
             return string.Empty;
 
         var total = GetInt(s, "total_votes");
-        if (total == 0) return "Aucun vote pour l'instant";
+        if (total == 0) return L.T("MyProjects_NoVoteYet");
 
         var jaime = GetInt(s, "total_jaime");
         var moyen = GetInt(s, "total_moyen");
         var pasfan = GetInt(s, "total_pasfan");
 
-        return $"❤️ {jaime}  😐 {moyen}  👎 {pasfan}  • {total} votes";
+        return L.F("MyProjects_PhotoSummary", jaime, moyen, pasfan, total);
     }
 
     private static (string PhotoUrl, string Summary) BuildDuelSummary(
@@ -189,7 +190,7 @@ public partial class MyProjectsViewModel : ObservableObject
 
         var total = GetInt(s, "total_votes");
         if (total == 0)
-            return (photoLeftUrl, "Aucun vote pour l'instant");
+            return (photoLeftUrl, L.T("MyProjects_NoVoteYet"));
 
         var votesLeft = GetInt(s, "votes_left");
         var votesRight = GetInt(s, "votes_right");
@@ -200,7 +201,7 @@ public partial class MyProjectsViewModel : ObservableObject
         var pctLeft = (int)Math.Round(votesLeft * 100.0 / total);
         var pctRight = 100 - pctLeft;
 
-        return (winnerUrl, $"A: {pctLeft}%  vs  B: {pctRight}%  • {total} votes");
+        return (winnerUrl, L.F("MyProjects_DuelSummary", pctLeft, pctRight, total));
     }
 
     private static string BuildPollSummary(JsonElement p)
@@ -210,8 +211,8 @@ public partial class MyProjectsViewModel : ObservableObject
 
         var total = GetInt(s, "total_votes");
         return total == 0
-            ? "Aucun vote pour l'instant"
-            : $"📊 Sondage  • {total} votes";
+            ? L.T("MyProjects_NoVoteYet")
+            : L.F("MyProjects_PollSummary", total);
     }
 
     // ─── Afficher le détail ──────────────────────────────────────────
@@ -243,9 +244,9 @@ public partial class MyProjectsViewModel : ObservableObject
     private async Task CloseProjectAsync(string projectId)
     {
         bool confirm = await Shell.Current.DisplayAlert(
-            "Fermer le projet",
-            "Voulez-vous fermer ce projet ? Les votes seront arrêtés.",
-            "Oui", "Non");
+            L.T("MyProjects_Close_Title"),
+            L.T("MyProjects_Close_Msg"),
+            L.T("Common_Yes"), L.T("Common_No"));
 
         if (!confirm) return;
 
@@ -258,9 +259,9 @@ public partial class MyProjectsViewModel : ObservableObject
     private async Task DeleteProjectAsync(string projectId)
     {
         bool confirm = await Shell.Current.DisplayAlert(
-            "Supprimer le projet",
-            "Voulez-vous vraiment supprimer ce projet ?",
-            "Oui", "Non");
+            L.T("MyProjects_Delete_Title"),
+            L.T("MyProjects_Delete_Msg"),
+            L.T("Common_Yes"), L.T("Common_No"));
 
         if (!confirm) return;
 
@@ -270,7 +271,7 @@ public partial class MyProjectsViewModel : ObservableObject
             await LoadProjectsAsync();
         else
             await Shell.Current.DisplayAlert(
-                "Erreur", "Impossible de supprimer ce projet.", "OK");
+                L.T("Common_Error"), L.T("MyProjects_DeleteFailed_Msg"), L.T("Common_OK"));
     }
 
     // ─── Créer un nouveau projet ─────────────────────────────────────
@@ -302,18 +303,18 @@ public class ProjectItemViewModel
 
     public string TypeLabel => Type switch
     {
-        "photo_vote" => "📷 Vote photo",
-        "duel" => "⚖️ Duel",
-        "poll" => "📊 Sondage",
+        "photo_vote" => L.T("MyProjects_Type_Photo"),
+        "duel" => L.T("MyProjects_Type_Duel"),
+        "poll" => L.T("MyProjects_Type_Poll"),
         _ => Type
     };
 
     public string StatusLabel => Status switch
     {
-        "pending" => "⏳ En attente de validation",
-        "approved" => IsOpen ? "✅ En ligne" : "🔒 Fermé",
-        "rejected" => "❌ Refusé",
-        _ => "Inconnu"
+        "pending" => L.T("MyProjects_Status_Pending"),
+        "approved" => IsOpen ? L.T("MyProjects_Status_Online") : L.T("MyProjects_Status_Closed"),
+        "rejected" => L.T("MyProjects_Status_Rejected"),
+        _ => L.T("MyProjects_Status_Unknown")
     };
 
     public Color StatusColor => Status switch
@@ -328,12 +329,12 @@ public class ProjectItemViewModel
 
     public string GenderLabel => GenderFilter switch
     {
-        "male" => "👨 Hommes",
-        "female" => "👩 Femmes",
-        _ => "👥 Tous"
+        "male" => L.T("MyProjects_Gender_Male"),
+        "female" => L.T("MyProjects_Gender_Female"),
+        _ => L.T("MyProjects_Gender_All")
     };
 
-    public string AgeLabel => $"{MinAge}-{MaxAge} ans";
+    public string AgeLabel => L.F("MyProjects_AgeRange", MinAge, MaxAge);
     public string DateLabel => CreatedAt.ToString("dd/MM/yyyy");
     public bool CanClose => Status == "approved" && IsOpen;
     public bool IsRejected => Status == "rejected";

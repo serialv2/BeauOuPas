@@ -48,7 +48,7 @@ x:DataType="vm:SeriesDetailViewModel"
                     <!-- Mode VOTE : nombre de projets -->
                     <Label Grid.Row="1"
                            IsVisible="{Binding IsVoteMode}"
-                           Text="{Binding ProjectCount, StringFormat='{0} projet(s) ajouté(s)'}"
+                           Text="{Binding ProjectCountLabel}"
                            FontSize="13"
                            TextColor="{StaticResource TextTertiary}"/>
                     <!-- Mode QUIZ : nombre de questions -->
@@ -81,7 +81,7 @@ x:DataType="vm:SeriesDetailViewModel"
                             <Border.GestureRecognizers>
                                 <TapGestureRecognizer Command="{Binding CopyAccessCodeCommand}"/>
                             </Border.GestureRecognizers>
-                            <Label Text="📋 Copier"
+                            <Label Text="{tr:Translate Key=SeriesDetail_Copy}"
                                    FontSize="12"
                                    FontAttributes="Bold"
                                    TextColor="{StaticResource Primary}"/>
@@ -120,7 +120,7 @@ x:DataType="vm:SeriesDetailViewModel"
                     <Border.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding EditQuizQuestionsCommand}"/>
                     </Border.GestureRecognizers>
-                    <Label Text="✏️ Modifier les questions"
+                    <Label Text="{tr:Translate Key=SeriesDetail_EditQuestions}"
                            FontSize="14"
                            FontAttributes="Bold"
                            TextColor="White"
@@ -152,7 +152,8 @@ x:DataType="vm:SeriesDetailViewModel"
                     <Border.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding StopSeriesCommand}"/>
                     </Border.GestureRecognizers>
-                    <Label Text="⏹ Terminer"
+                    <Label Text="{tr:Translate Key=SeriesDetail_Finish}"
+
                            FontSize="14"
                            FontAttributes="Bold"
                            TextColor="White"
@@ -172,7 +173,7 @@ x:DataType="vm:SeriesDetailViewModel"
                     <TapGestureRecognizer Command="{Binding ActivateTvModeCommand}"/>
                 </Border.GestureRecognizers>
                 <VerticalStackLayout Spacing="2" HorizontalOptions="Center">
-                    <Label Text="📺 Activer mode TV"
+                    <Label Text="{tr:Translate Key=SeriesDetail_ActivateTv}"
                            FontSize="16"
                            FontAttributes="Bold"
                            TextColor="White"
@@ -198,7 +199,9 @@ x:DataType="vm:SeriesDetailViewModel"
                            FontAttributes="Bold"
                            TextColor="{StaticResource Accent}"
                            HorizontalOptions="Center"/>
-                    <Label Text="Sur la TV (PC, Chromecast, Smart TV), tape le code ci-dessous :"
+                    <Label Text="{tr:Translate Key=SeriesDetail_TvInstruction}"
+
+
                            FontSize="12"
                            TextColor="{StaticResource TextSecondary}"
                            HorizontalTextAlignment="Center"
@@ -256,7 +259,9 @@ x:DataType="vm:SeriesDetailViewModel"
                 <VerticalStackLayout Spacing="12">
                     <Grid ColumnDefinitions="*,Auto">
                         <VerticalStackLayout Grid.Column="0" Spacing="4">
-                            <Label Text="📺 Mode TV en cours"
+                            <Label Text="{tr:Translate Key=SeriesDetail_TvInProgress}"
+
+
                                    FontSize="15"
                                    FontAttributes="Bold"
                                    TextColor="{StaticResource Accent}"/>
@@ -309,7 +314,7 @@ x:DataType="vm:SeriesDetailViewModel"
                 <Border.GestureRecognizers>
                     <TapGestureRecognizer Command="{Binding InviteFriendsCommand}"/>
                 </Border.GestureRecognizers>
-                <Label Text="👥 Inviter des amis"
+                <Label Text="{tr:Translate Key=SeriesDetail_InviteFriends}"
                        FontSize="14"
                        FontAttributes="Bold"
                        TextColor="White"
@@ -362,7 +367,7 @@ x:DataType="vm:SeriesDetailViewModel"
                     <Border.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding DeleteSeriesCommand}"/>
                     </Border.GestureRecognizers>
-                    <Label Text="🗑️ Supprimer"
+                    <Label Text="{tr:Translate Key=SeriesDetail_Delete}"
                            FontSize="13"
                            FontAttributes="Bold"
                            TextColor="{StaticResource Error}"
@@ -380,7 +385,7 @@ x:DataType="vm:SeriesDetailViewModel"
                  ═══════════════════════════════════════════════════════ -->
             <VerticalStackLayout IsVisible="{Binding CanViewQuizQuestions}" Spacing="14">
 
-                <Label Text="🧠 Questions du quiz"
+                <Label Text="{tr:Translate Key=SeriesDetail_QuizQuestions}"
                        FontSize="17"
                        FontAttributes="Bold"
                        TextColor="{StaticResource TextPrimary}"
@@ -451,11 +456,12 @@ x:DataType="vm:SeriesDetailViewModel"
                                      Spacing="10"
                                      Padding="20,20">
                     <Label Text="🧠" FontSize="48" HorizontalOptions="Center"/>
-                    <Label Text="Aucune question pour l'instant"
+                    <Label Text="{tr:Translate Key=SeriesDetail_NoQuestionYet}"
+
                            FontSize="14"
                            TextColor="{StaticResource TextTertiary}"
                            HorizontalOptions="Center"/>
-                    <Label Text="Tape « Modifier les questions » pour en ajouter !"
+                    <Label Text="{tr:Translate Key=SeriesDetail_NoQuestionHint}"
                            IsVisible="{Binding CanEditQuiz}"
                            FontSize="12"
                            TextColor="{StaticResource TextDisabled}"
@@ -479,7 +485,7 @@ x:DataType="vm:SeriesDetailViewModel"
                         StrokeThickness="1"
                         Padding="20,18">
                     <VerticalStackLayout Spacing="14">
-                        <Label Text="🎯 Salle d'attente"
+                        <Label Text="{tr:Translate Key=SeriesDetail_WaitingRoom}"
                                FontSize="17"
                                FontAttributes="Bold"
                                TextColor="{StaticResource TextPrimary}"/>
@@ -582,11 +588,11 @@ x:DataType="vm:SeriesDetailViewModel"
                         StrokeThickness="1"
                         Padding="20,18">
                     <VerticalStackLayout Spacing="10">
-                        <Label Text="✨ Mes projets"
+                        <Label Text="{tr:Translate Key=SeriesDetail_MyProjects}"
                                FontSize="17"
                                FontAttributes="Bold"
                                TextColor="{StaticResource TextPrimary}"/>
-                        <Label Text="Touche un projet pour le modifier, ou utilise 🗑️ pour le supprimer."
+                        <Label Text="{tr:Translate Key=SeriesDetail_MyProjectsHint}"
                                FontSize="11"
                                TextColor="{StaticResource TextTertiary}"/>
 
@@ -714,7 +720,7 @@ x:DataType="vm:SeriesDetailViewModel"
                                      Spacing="10"
                                      Padding="20,30">
                     <Label Text="⏳" FontSize="48" HorizontalOptions="Center"/>
-                    <Label Text="En attente des premiers projets..."
+                    <Label Text="{tr:Translate Key=SeriesDetail_WaitingFirstProjects}"
                            FontSize="14"
                            TextColor="{StaticResource TextTertiary}"
                            HorizontalOptions="Center"/>
@@ -811,7 +817,7 @@ x:DataType="vm:SeriesDetailViewModel"
                                      Spacing="10"
                                      Padding="20,20">
                     <Label Text="📋" FontSize="48" HorizontalOptions="Center"/>
-                    <Label Text="Aucun projet pour l'instant"
+                    <Label Text="{tr:Translate Key=SeriesDetail_NoProjectYet}"
                            FontSize="14"
                            TextColor="{StaticResource TextTertiary}"
                            HorizontalOptions="Center"/>

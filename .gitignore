@@ -18,6 +18,11 @@ sign_apk.bat
 *.csproj.Backup.tmp
 * - Copie.csproj
 * - Backup.csproj.user
+*.bak
+*.bak2
+
+# Config SDK locale par machine (Windows et Mac ont des versions differentes)
+global.json
 
 # Logs
 *.log

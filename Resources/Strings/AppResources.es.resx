@@ -1054,7 +1054,7 @@ por favor completa esta información.</value>
     <value>Desconectado</value>
   </data>
   <data name="Profile_Online" xml:space="preserve">
-    <value>â— En lÃ­nea</value>
+    <value>● En línea</value>
   </data>
   <data name="Profile_Phone" xml:space="preserve">
     <value>Teléfono</value>
@@ -1063,7 +1063,7 @@ por favor completa esta información.</value>
     <value>Proyectos</value>
   </data>
   <data name="Profile_RecentlyOnline" xml:space="preserve">
-    <value>â— Recientemente en lÃ­nea</value>
+    <value>● Recientemente en línea</value>
   </data>
   <data name="Profile_Title" xml:space="preserve">
     <value>Configuración</value>
@@ -1246,7 +1246,7 @@ por favor completa esta información.</value>
     <value>Votos</value>
   </data>
   <data name="Update_Button" xml:space="preserve">
-    <value>â¬‡ï¸ Actualizar ahora</value>
+    <value>⬇️ Actualizar ahora</value>
   </data>
   <data name="Update_Message" xml:space="preserve">
     <value>Hay una nueva versión disponible. Por favor actualice la aplicación.</value>
@@ -1834,5 +1834,1045 @@ Crea uno desde la pantalla anterior.</value>
   </data>
   <data name="Friends_NoUserFound" xml:space="preserve">
     <value>Ningún usuario encontrado</value>
+  </data>
+ <data name="Party_Lobby_Waiting" xml:space="preserve">
+    <value>Esperando a que el anfitrión comience…</value>
+  </data>
+  <data name="Party_Intro_Title" xml:space="preserve">
+    <value>¡Vamos allá!</value>
+  </data>
+  <data name="Party_Intro_Subtitle" xml:space="preserve">
+    <value>Prepárate, la primera pregunta llega…</value>
+  </data>
+  <data name="Party_Question_Instruction" xml:space="preserve">
+    <value>Toca al jugador de tu elección</value>
+  </data>
+  <data name="Party_Voted_Title" xml:space="preserve">
+    <value>¡Voto registrado!</value>
+  </data>
+  <data name="Party_Finish_Title" xml:space="preserve">
+    <value>¡Partida terminada!</value>
+  </data>
+  <data name="Party_Finish_Subtitle" xml:space="preserve">
+    <value>¡Gracias por jugar! Los resultados están en la TV 📺</value>
+  </data>
+ <data name="Credit_Type_welcome" xml:space="preserve">
+    <value>🎁 Créditos de bienvenida</value>
+  </data>
+  <data name="Credit_Type_ad_reward" xml:space="preserve">
+    <value>🎬 Recompensa por anuncio</value>
+  </data>
+  <data name="Credit_Type_quiz_create" xml:space="preserve">
+    <value>❓ Cuestionario creado</value>
+  </data>
+  <data name="Credit_Type_party_create" xml:space="preserve">
+    <value>🎉 Partida creada</value>
+  </data>
+  <data name="Credit_Type_series_create" xml:space="preserve">
+    <value>🗳️ Serie de votos creada</value>
+  </data>
+  <data name="Credit_Type_series_project" xml:space="preserve">
+    <value>➕ Proyecto añadido a una serie</value>
+  </data>
+  <data name="Credit_Type_project_submit" xml:space="preserve">
+    <value>📷 Proyecto enviado</value>
+  </data>
+  <data name="Credit_Type_vote" xml:space="preserve">
+    <value>🗳️ Voto</value>
+  </data>
+  <data name="Credit_Type_vote_received" xml:space="preserve">
+    <value>📥 Voto recibido</value>
+  </data>
+  <data name="Credit_Type_refund" xml:space="preserve">
+    <value>↩️ Reembolso</value>
+  </data>
+  <data name="Common_Confirm" xml:space="preserve">
+    <value>Confirmar</value>
+  </data>
+  <data name="Common_ErrorOccurred" xml:space="preserve">
+    <value>Se ha producido un error.</value>
+  </data>
+  <data name="Common_Finish" xml:space="preserve">
+    <value>Finalizar</value>
+  </data>
+  <data name="Common_Ignore" xml:space="preserve">
+    <value>Ignorar</value>
+  </data>
+  <data name="Common_Start" xml:space="preserve">
+    <value>Iniciar</value>
+  </data>
+  <data name="Common_Success" xml:space="preserve">
+    <value>✅</value>
+  </data>
+  <data name="CreateQuiz_NavImpossible" xml:space="preserve">
+    <value>Navegación imposible: {0}</value>
+  </data>
+  <data name="CreateQuiz_SeriesIdMissing" xml:space="preserve">
+    <value>Falta SeriesId en modo edición</value>
+  </data>
+  <data name="CreateSeries_CreateFailed" xml:space="preserve">
+    <value>No se puede crear la serie.</value>
+  </data>
+  <data name="CreateSeries_Created_Msg" xml:space="preserve">
+    <value>Código de acceso: {0}\n\n¡Comparte este código para invitar a participantes!</value>
+  </data>
+  <data name="CreateSeries_Created_OK" xml:space="preserve">
+    <value>¡Genial!</value>
+  </data>
+  <data name="CreateSeries_Created_Title" xml:space="preserve">
+    <value>✅ ¡Serie creada!</value>
+  </data>
+  <data name="CreateSeries_DescLabel" xml:space="preserve">
+    <value>Descripción</value>
+  </data>
+  <data name="CreateSeries_InGroupFormat" xml:space="preserve">
+    <value>En el grupo: {0}</value>
+  </data>
+  <data name="CreateSeries_MaxPerMemberFormat" xml:space="preserve">
+    <value>{0} proyecto(s) por miembro</value>
+  </data>
+  <data name="CreateSeries_MaxPerMemberLabel" xml:space="preserve">
+    <value>Máx. proyectos por miembro</value>
+  </data>
+  <data name="CreateSeries_MaxProjectsFormat" xml:space="preserve">
+    <value>{0} proyectos máximo</value>
+  </data>
+  <data name="CreateSeries_MaxProjectsLabel" xml:space="preserve">
+    <value>Número máx. de proyectos</value>
+  </data>
+  <data name="CreateSeries_MembersAddLabel" xml:space="preserve">
+    <value>Los miembros pueden añadir proyectos</value>
+  </data>
+  <data name="CreateSeries_MissingChoice_Msg" xml:space="preserve">
+    <value>Elige si los proyectos están ocultos o visibles antes de empezar.</value>
+  </data>
+  <data name="CreateSeries_MissingChoice_Title" xml:space="preserve">
+    <value>Falta una opción</value>
+  </data>
+  <data name="CreateSeries_TitleLabel" xml:space="preserve">
+    <value>Título *</value>
+  </data>
+  <data name="CreateSeries_TitlePlaceholder" xml:space="preserve">
+    <value>Ej.: ¿Quién es el más valiente?</value>
+  </data>
+  <data name="CreateSeries_TitleRequired" xml:space="preserve">
+    <value>El título es obligatorio.</value>
+  </data>
+  <data name="CreateSeries_Visible" xml:space="preserve">
+    <value>Visibles</value>
+  </data>
+  <data name="CreateSeries_VisibleHint" xml:space="preserve">
+    <value>Todos ven todo</value>
+  </data>
+  <data name="SeriesDetail_ActivateTv" xml:space="preserve">
+    <value>📺 Activar modo TV</value>
+  </data>
+  <data name="SeriesDetail_Cannot_Title" xml:space="preserve">
+    <value>Imposible</value>
+  </data>
+  <data name="SeriesDetail_CodeCopied_Msg" xml:space="preserve">
+    <value>El código «{0}» se ha copiado al portapapeles.</value>
+  </data>
+  <data name="SeriesDetail_Copied_Title" xml:space="preserve">
+    <value>✅ Copiado</value>
+  </data>
+  <data name="SeriesDetail_Copy" xml:space="preserve">
+    <value>📋 Copiar</value>
+  </data>
+  <data name="SeriesDetail_Deactivate" xml:space="preserve">
+    <value>Desactivar</value>
+  </data>
+  <data name="SeriesDetail_DeactivateTv_Msg" xml:space="preserve">
+    <value>La TV mostrará 'Modo TV desactivado'. Puedes reactivarlo más tarde si quieres.</value>
+  </data>
+  <data name="SeriesDetail_DeactivateTv_Title" xml:space="preserve">
+    <value>❌ ¿Desactivar el modo TV?</value>
+  </data>
+  <data name="SeriesDetail_Delete" xml:space="preserve">
+    <value>🗑️ Eliminar</value>
+  </data>
+  <data name="SeriesDetail_DeleteFailed_Title" xml:space="preserve">
+    <value>❌ Eliminación imposible</value>
+  </data>
+  <data name="SeriesDetail_DeleteOtherProject_Msg" xml:space="preserve">
+    <value>«{0}» se eliminará como creador de la serie. El participante no será notificado. Esta acción es irreversible.</value>
+  </data>
+  <data name="SeriesDetail_DeleteOtherProject_Title" xml:space="preserve">
+    <value>¿Eliminar el proyecto de {0}?</value>
+  </data>
+  <data name="SeriesDetail_DeleteProject_Msg" xml:space="preserve">
+    <value>«{0}» se eliminará permanentemente. Esta acción es irreversible.</value>
+  </data>
+  <data name="SeriesDetail_DeleteProject_Title" xml:space="preserve">
+    <value>¿Eliminar este proyecto?</value>
+  </data>
+  <data name="SeriesDetail_DeleteSeriesActive_Msg" xml:space="preserve">
+    <value>Hay una sesión en curso. Todos los votos, participantes y selfies se eliminarán permanentemente. Irreversible.</value>
+  </data>
+  <data name="SeriesDetail_DeleteSeriesActive_Title" xml:space="preserve">
+    <value>⚠️ ¿Eliminar la serie en curso?</value>
+  </data>
+  <data name="SeriesDetail_DeleteSeriesFinished_Msg" xml:space="preserve">
+    <value>Esta serie ha terminado y contiene resultados. Todos los votos, proyectos y selfies se eliminarán permanentemente. Irreversible.</value>
+  </data>
+  <data name="SeriesDetail_DeleteSeriesFinished_Title" xml:space="preserve">
+    <value>⚠️ ¿Eliminar la serie terminada?</value>
+  </data>
+  <data name="SeriesDetail_DeleteSeriesNow_Msg" xml:space="preserve">
+    <value>No se puede eliminar la serie por ahora.</value>
+  </data>
+  <data name="SeriesDetail_DeleteSeries_Msg" xml:space="preserve">
+    <value>Esta acción es irreversible. Se eliminarán todos los proyectos vinculados.</value>
+  </data>
+  <data name="SeriesDetail_DeleteSeries_Title" xml:space="preserve">
+    <value>¿Eliminar la serie?</value>
+  </data>
+  <data name="SeriesDetail_EditDesc_Msg" xml:space="preserve">
+    <value>Nueva descripción (opcional):</value>
+  </data>
+  <data name="SeriesDetail_EditDesc_Title" xml:space="preserve">
+    <value>Editar descripción</value>
+  </data>
+  <data name="SeriesDetail_EditPhotos_Msg" xml:space="preserve">
+    <value>¿También quieres editar las fotos?</value>
+  </data>
+  <data name="SeriesDetail_EditQuestions" xml:space="preserve">
+    <value>✏️ Editar preguntas</value>
+  </data>
+  <data name="SeriesDetail_EditTitle_Msg" xml:space="preserve">
+    <value>Nuevo título del proyecto:</value>
+  </data>
+  <data name="SeriesDetail_EditTitle_Title" xml:space="preserve">
+    <value>Editar título</value>
+  </data>
+  <data name="SeriesDetail_Finish" xml:space="preserve">
+    <value>⏹ Finalizar</value>
+  </data>
+  <data name="SeriesDetail_FinishSeries_Msg" xml:space="preserve">
+    <value>La serie se marcará como terminada.</value>
+  </data>
+  <data name="SeriesDetail_FinishSeries_Title" xml:space="preserve">
+    <value>Finalizar la serie</value>
+  </data>
+  <data name="SeriesDetail_InviteFriends" xml:space="preserve">
+    <value>👥 Invitar amigos</value>
+  </data>
+  <data name="SeriesDetail_Later" xml:space="preserve">
+    <value>Más tarde</value>
+  </data>
+  <data name="SeriesDetail_Locked_Title" xml:space="preserve">
+    <value>Bloqueado</value>
+  </data>
+  <data name="SeriesDetail_MyProjects" xml:space="preserve">
+    <value>✨ Mis proyectos</value>
+  </data>
+  <data name="SeriesDetail_MyProjectsHint" xml:space="preserve">
+    <value>Toca un proyecto para editarlo, o usa 🗑️ para eliminarlo.</value>
+  </data>
+  <data name="SeriesDetail_NeedProject_Msg" xml:space="preserve">
+    <value>Añade al menos un proyecto antes de empezar.</value>
+  </data>
+  <data name="SeriesDetail_NeedQuestion_Msg" xml:space="preserve">
+    <value>Añade al menos una pregunta antes de empezar el quiz.</value>
+  </data>
+  <data name="SeriesDetail_NoProjectYet" xml:space="preserve">
+    <value>Aún no hay proyectos</value>
+  </data>
+  <data name="SeriesDetail_NoQuestionHint" xml:space="preserve">
+    <value>¡Toca «Editar preguntas» para añadir!</value>
+  </data>
+  <data name="SeriesDetail_NoQuestionYet" xml:space="preserve">
+    <value>Aún no hay preguntas</value>
+  </data>
+  <data name="SeriesDetail_NotAQuiz_Msg" xml:space="preserve">
+    <value>Esta serie no es un quiz.</value>
+  </data>
+  <data name="SeriesDetail_NotAllowed_Title" xml:space="preserve">
+    <value>No autorizado</value>
+  </data>
+  <data name="SeriesDetail_NotApplicable_Title" xml:space="preserve">
+    <value>No aplicable</value>
+  </data>
+  <data name="SeriesDetail_OnlyCreatorDelete_Msg" xml:space="preserve">
+    <value>Solo el creador de la serie puede eliminar los proyectos de otros.</value>
+  </data>
+  <data name="SeriesDetail_OnlyCreatorTv_Msg" xml:space="preserve">
+    <value>Solo el creador puede activar el modo TV, y solo antes de empezar.</value>
+  </data>
+  <data name="SeriesDetail_PhotoLeft" xml:space="preserve">
+    <value>📸 Foto izquierda</value>
+  </data>
+  <data name="SeriesDetail_PhotoRight" xml:space="preserve">
+    <value>📸 Foto derecha</value>
+  </data>
+  <data name="SeriesDetail_PhotoUpdated_Msg" xml:space="preserve">
+    <value>Foto actualizada.</value>
+  </data>
+  <data name="SeriesDetail_Photos_Title" xml:space="preserve">
+    <value>Fotos</value>
+  </data>
+  <data name="SeriesDetail_PollNoPhoto_Msg" xml:space="preserve">
+    <value>Una encuesta no tiene fotos. Para cambiar las opciones, elimina este proyecto y vuelve a crearlo.</value>
+  </data>
+  <data name="SeriesDetail_ProjectsLockedDelete_Msg" xml:space="preserve">
+    <value>La serie está en curso, los proyectos ya no se pueden eliminar.</value>
+  </data>
+  <data name="SeriesDetail_ProjectsLockedEdit_Msg" xml:space="preserve">
+    <value>La serie está en curso, los proyectos ya no se pueden editar.</value>
+  </data>
+  <data name="SeriesDetail_QuestionsLocked_Msg" xml:space="preserve">
+    <value>Las preguntas solo se pueden editar en preparación, por el creador.</value>
+  </data>
+  <data name="SeriesDetail_QuizQuestions" xml:space="preserve">
+    <value>🧠 Preguntas del quiz</value>
+  </data>
+  <data name="SeriesDetail_Reprepare_Msg" xml:space="preserve">
+    <value>La serie volverá al modo preparación. Podrás reiniciarla cuando quieras.</value>
+  </data>
+  <data name="SeriesDetail_Reprepare_Title" xml:space="preserve">
+    <value>Volver a preparación</value>
+  </data>
+  <data name="SeriesDetail_SeriesDeleted_Msg" xml:space="preserve">
+    <value>La serie ha sido eliminada.</value>
+  </data>
+  <data name="SeriesDetail_SeriesDeleted_Title" xml:space="preserve">
+    <value>✅ Serie eliminada</value>
+  </data>
+  <data name="SeriesDetail_StartQuiz_Msg" xml:space="preserve">
+    <value>Los jugadores podrán responder las preguntas. ¿Continuar?</value>
+  </data>
+  <data name="SeriesDetail_StartQuiz_Title" xml:space="preserve">
+    <value>Iniciar el quiz</value>
+  </data>
+  <data name="SeriesDetail_StartSeriesTv_Msg" xml:space="preserve">
+    <value>Todos los votantes conectados se sincronizarán. Una vez iniciada, no se pueden añadir más proyectos.</value>
+  </data>
+  <data name="SeriesDetail_StartSeriesTv_Title" xml:space="preserve">
+    <value>▶ ¿Iniciar la serie?</value>
+  </data>
+  <data name="SeriesDetail_StartSeries_Msg" xml:space="preserve">
+    <value>Los proyectos se revelarán a los participantes. ¿Continuar?</value>
+  </data>
+  <data name="SeriesDetail_StartSeries_Title" xml:space="preserve">
+    <value>Iniciar la serie</value>
+  </data>
+  <data name="SeriesDetail_Status_Active" xml:space="preserve">
+    <value>▶ En curso</value>
+  </data>
+  <data name="SeriesDetail_Status_Finished" xml:space="preserve">
+    <value>✓ Terminada</value>
+  </data>
+  <data name="SeriesDetail_Status_Preparing" xml:space="preserve">
+    <value>⏳ En preparación</value>
+  </data>
+  <data name="SeriesDetail_TvActivateError_Msg" xml:space="preserve">
+    <value>No se puede activar el modo TV: {0}</value>
+  </data>
+  <data name="SeriesDetail_TvActivated_Msg" xml:space="preserve">
+    <value>El código de acceso es: {0}\n\nEn la TV (PC, Smart TV, Chromecast), ve a:\nhttps://serialv2.github.io/beauoupas-web/tv/tv.html\n\nE introduce este código.</value>
+  </data>
+  <data name="SeriesDetail_TvActivated_Title" xml:space="preserve">
+    <value>📺 ¡Modo TV activado!</value>
+  </data>
+  <data name="SeriesDetail_TvHostOnly" xml:space="preserve">
+    <value>Solo presentador</value>
+  </data>
+  <data name="SeriesDetail_TvIParticipate" xml:space="preserve">
+    <value>Yo participo</value>
+  </data>
+  <data name="SeriesDetail_TvInProgress" xml:space="preserve">
+    <value>📺 Modo TV en curso</value>
+  </data>
+  <data name="SeriesDetail_TvInstruction" xml:space="preserve">
+    <value>En la TV (PC, Chromecast, Smart TV), introduce el código de abajo:</value>
+  </data>
+  <data name="SeriesDetail_TvMode_Title" xml:space="preserve">
+    <value>📺 Modo TV</value>
+  </data>
+  <data name="SeriesDetail_TvMustBeActiveShort_Msg" xml:space="preserve">
+    <value>El modo TV debe estar activo.</value>
+  </data>
+  <data name="SeriesDetail_TvMustBeActive_Msg" xml:space="preserve">
+    <value>El modo TV debe estar activado y la serie en preparación.</value>
+  </data>
+  <data name="SeriesDetail_TvParticipate_Msg" xml:space="preserve">
+    <value>¿Vas a votar tú también, o solo eres el presentador?</value>
+  </data>
+  <data name="SeriesDetail_Tv_Pause" xml:space="preserve">
+    <value>⏸️ Pausa</value>
+  </data>
+  <data name="SeriesDetail_Tv_Resume" xml:space="preserve">
+    <value>▶ Reanudar</value>
+  </data>
+  <data name="SeriesDetail_WaitingFirstProjects" xml:space="preserve">
+    <value>Esperando los primeros proyectos...</value>
+  </data>
+  <data name="SeriesDetail_WaitingRoom" xml:space="preserve">
+    <value>🎯 Sala de espera</value>
+  </data>
+  <data name="SeriesDetail_WhichPhoto_Title" xml:space="preserve">
+    <value>¿Qué foto editar?</value>
+  </data>
+  <data name="VoteFeed_CannotCancelVote_Msg" xml:space="preserve">
+    <value>No se puede anular el voto.</value>
+  </data>
+  <data name="VoteFeed_ChooseA" xml:space="preserve">
+    <value>Elegir A</value>
+  </data>
+  <data name="VoteFeed_ChooseB" xml:space="preserve">
+    <value>Elegir B</value>
+  </data>
+  <data name="VoteFeed_DatingEnable_Msg" xml:space="preserve">
+    <value>Activa las citas en tus ajustes.</value>
+  </data>
+  <data name="VoteFeed_DatingEnable_Title" xml:space="preserve">
+    <value>💘 Citas</value>
+  </data>
+  <data name="VoteFeed_DatingOff_Msg" xml:space="preserve">
+    <value>Esta función no está disponible.</value>
+  </data>
+  <data name="VoteFeed_DatingOff_Title" xml:space="preserve">
+    <value>Citas desactivadas</value>
+  </data>
+  <data name="VoteFeed_Match_Msg" xml:space="preserve">
+    <value>¡Os habéis elegido mutuamente!\nAhora podéis enviaros mensajes.</value>
+  </data>
+  <data name="VoteFeed_Match_OK" xml:space="preserve">
+    <value>🎉 ¡Genial!</value>
+  </data>
+  <data name="VoteFeed_Match_Title" xml:space="preserve">
+    <value>💘 ¡Es un Match!</value>
+  </data>
+  <data name="VoteFeed_NoCredits_Msg" xml:space="preserve">
+    <value>Necesitas {0} créditos.\n\nTienes: {1} créditos</value>
+  </data>
+  <data name="VoteFeed_NoCredits_Title" xml:space="preserve">
+    <value>💰 Créditos insuficientes</value>
+  </data>
+  <data name="VoteFeed_NoVoteToCancel_Msg" xml:space="preserve">
+    <value>No hay voto que anular.</value>
+  </data>
+  <data name="VoteFeed_Poll" xml:space="preserve">
+    <value>📊 Encuesta</value>
+  </data>
+  <data name="VoteFeed_Rewind_Title" xml:space="preserve">
+    <value>Rebobinar</value>
+  </data>
+  <data name="VoteFeed_TapToVote" xml:space="preserve">
+    <value>👆 Toca una opción para votar</value>
+  </data>
+  <data name="ProjectDetail_AvgScore" xml:space="preserve">
+    <value>Media</value>
+  </data>
+  <data name="ProjectDetail_AvsB" xml:space="preserve">
+    <value>A vs B</value>
+  </data>
+  <data name="ProjectDetail_ChooseOption" xml:space="preserve">
+    <value>Elige una opción</value>
+  </data>
+  <data name="ProjectDetail_Meh" xml:space="preserve">
+    <value>😐 Meh</value>
+  </data>
+  <data name="ProjectDetail_Men" xml:space="preserve">
+    <value>👨 Hombres</value>
+  </data>
+  <data name="ProjectDetail_NoProfile_Msg" xml:space="preserve">
+    <value>No se pudo recuperar tu perfil de usuario.</value>
+  </data>
+  <data name="ProjectDetail_NoStats" xml:space="preserve">
+    <value>Aún no hay estadísticas</value>
+  </data>
+  <data name="ProjectDetail_NoVoteYet" xml:space="preserve">
+    <value>Aún no hay votos</value>
+  </data>
+  <data name="ProjectDetail_NotConnected_Msg" xml:space="preserve">
+    <value>Debes iniciar sesión para votar.</value>
+  </data>
+  <data name="ProjectDetail_Poll" xml:space="preserve">
+    <value>📊 Encuesta</value>
+  </data>
+  <data name="ProjectDetail_TapToVote" xml:space="preserve">
+    <value>Toca para votar</value>
+  </data>
+  <data name="ProjectDetail_VoteError_Msg" xml:space="preserve">
+    <value>Se produjo un error al votar.</value>
+  </data>
+  <data name="ProjectDetail_VoteImpossible_Title" xml:space="preserve">
+    <value>Voto imposible</value>
+  </data>
+  <data name="ProjectDetail_Voters" xml:space="preserve">
+    <value>votantes</value>
+  </data>
+  <data name="ProjectDetail_Votes" xml:space="preserve">
+    <value>votos</value>
+  </data>
+  <data name="ProjectDetail_Women" xml:space="preserve">
+    <value>👩 Mujeres</value>
+  </data>
+  <data name="CreateGroup_CreateFailed" xml:space="preserve">
+    <value>No se pudo crear el grupo.</value>
+  </data>
+  <data name="CreateGroup_Created_Msg" xml:space="preserve">
+    <value>Grupo «{0}» creado con {1} miembro(s).</value>
+  </data>
+  <data name="CreateGroup_Created_OK" xml:space="preserve">
+    <value>Genial</value>
+  </data>
+  <data name="CreateGroup_Created_Title" xml:space="preserve">
+    <value>Grupo creado 🎉</value>
+  </data>
+  <data name="CreateGroup_DescLabel" xml:space="preserve">
+    <value>Descripción (opcional)</value>
+  </data>
+  <data name="CreateGroup_DescPlaceholder" xml:space="preserve">
+    <value>Describe tu grupo...</value>
+  </data>
+  <data name="CreateGroup_InviteFriends" xml:space="preserve">
+    <value>Invitar amigos</value>
+  </data>
+  <data name="CreateGroup_InviteLater" xml:space="preserve">
+    <value>Puedes invitarlos más tarde</value>
+  </data>
+  <data name="CreateGroup_NameLabel" xml:space="preserve">
+    <value>Nombre del grupo</value>
+  </data>
+  <data name="CreateGroup_NameRequired" xml:space="preserve">
+    <value>El nombre del grupo es obligatorio.</value>
+  </data>
+  <data name="CreateGroup_NoFriend" xml:space="preserve">
+    <value>Aún no tienes amigos</value>
+  </data>
+  <data name="Group_Admin" xml:space="preserve">
+    <value>Admin</value>
+  </data>
+  <data name="Group_CancelX" xml:space="preserve">
+    <value>✕ Cancelar</value>
+  </data>
+  <data name="Group_Chat" xml:space="preserve">
+    <value>💬 Chat</value>
+  </data>
+  <data name="Group_CodeCopied_Msg" xml:space="preserve">
+    <value>Código de acceso copiado: {0}</value>
+  </data>
+  <data name="Group_Copied_Title" xml:space="preserve">
+    <value>Copiado</value>
+  </data>
+  <data name="Group_Copy" xml:space="preserve">
+    <value>📋 Copiar</value>
+  </data>
+  <data name="Group_DeleteFailed_Title" xml:space="preserve">
+    <value>Error al eliminar</value>
+  </data>
+  <data name="Group_DeleteGroupBtn" xml:space="preserve">
+    <value>🗑️ Eliminar el grupo</value>
+  </data>
+  <data name="Group_DeleteGroup_Msg" xml:space="preserve">
+    <value>Este grupo y todas sus series se eliminarán definitivamente.
+
+Esta acción es definitiva.</value>
+  </data>
+  <data name="Group_DeleteGroup_Title" xml:space="preserve">
+    <value>¿Eliminar el grupo?</value>
+  </data>
+  <data name="Group_DeleteNow_Msg" xml:space="preserve">
+    <value>El grupo se ha eliminado.</value>
+  </data>
+  <data name="Group_DeleteSeries_Title" xml:space="preserve">
+    <value>¿Eliminar la serie?</value>
+  </data>
+  <data name="Group_Deleted_Title" xml:space="preserve">
+    <value>Eliminado</value>
+  </data>
+  <data name="Group_GenericError_Msg" xml:space="preserve">
+    <value>Se produjo un error: {0}</value>
+  </data>
+  <data name="Group_Members" xml:space="preserve">
+    <value>Miembros</value>
+  </data>
+  <data name="Group_MessagePlaceholder" xml:space="preserve">
+    <value>Escribe un mensaje...</value>
+  </data>
+  <data name="Group_NoMessage" xml:space="preserve">
+    <value>Aún no hay mensajes</value>
+  </data>
+  <data name="Group_NotAllowed_Title" xml:space="preserve">
+    <value>No autorizado</value>
+  </data>
+  <data name="Group_OnlyCreatorDelete_Msg" xml:space="preserve">
+    <value>Solo el creador puede eliminar.</value>
+  </data>
+  <data name="Group_PartialDelete_Title" xml:space="preserve">
+    <value>Eliminación parcial</value>
+  </data>
+  <data name="Groups_MyGroups" xml:space="preserve">
+    <value>Mis grupos</value>
+  </data>
+  <data name="Groups_NoGroup" xml:space="preserve">
+    <value>Aún no hay grupos</value>
+  </data>
+  <data name="Groups_Title" xml:space="preserve">
+    <value>Grupos</value>
+  </data>
+  <data name="CreateProject_Add2Options" xml:space="preserve">
+    <value>Añade al menos 2 opciones.</value>
+  </data>
+  <data name="CreateProject_AddBothPhotos" xml:space="preserve">
+    <value>Añade ambas fotos.</value>
+  </data>
+  <data name="CreateProject_AddPhoto" xml:space="preserve">
+    <value>Añade una foto.</value>
+  </data>
+  <data name="CreateProject_AutoSelfie" xml:space="preserve">
+    <value>Selfie automático</value>
+  </data>
+  <data name="CreateProject_AutoSelfieHint" xml:space="preserve">
+    <value>Se tomará un selfie al iniciar la votación.</value>
+  </data>
+  <data name="CreateProject_DescLabel" xml:space="preserve">
+    <value>Descripción</value>
+  </data>
+  <data name="CreateProject_Duel" xml:space="preserve">
+    <value>⚖️ Duelo</value>
+  </data>
+  <data name="CreateProject_Opt1" xml:space="preserve">
+    <value>Opción 1</value>
+  </data>
+  <data name="CreateProject_Opt2" xml:space="preserve">
+    <value>Opción 2</value>
+  </data>
+  <data name="CreateProject_Opt3" xml:space="preserve">
+    <value>Opción 3</value>
+  </data>
+  <data name="CreateProject_Opt4" xml:space="preserve">
+    <value>Opción 4</value>
+  </data>
+  <data name="CreateProject_Optional" xml:space="preserve">
+    <value>Opcional...</value>
+  </data>
+  <data name="CreateProject_Options" xml:space="preserve">
+    <value>Opciones</value>
+  </data>
+  <data name="CreateProject_Photo" xml:space="preserve">
+    <value>📷 Foto</value>
+  </data>
+  <data name="CreateProject_PhotoA" xml:space="preserve">
+    <value>Foto A</value>
+  </data>
+  <data name="CreateProject_PhotoB" xml:space="preserve">
+    <value>Foto B</value>
+  </data>
+  <data name="CreateProject_PhotoSection" xml:space="preserve">
+    <value>Foto</value>
+  </data>
+  <data name="CreateProject_PickPhoto" xml:space="preserve">
+    <value>Elegir una foto</value>
+  </data>
+  <data name="CreateProject_Survey" xml:space="preserve">
+    <value>📊 Encuesta</value>
+  </data>
+  <data name="CreateProject_TitleLabel" xml:space="preserve">
+    <value>Título</value>
+  </data>
+  <data name="CreateProject_TitlePlaceholder" xml:space="preserve">
+    <value>Título del proyecto</value>
+  </data>
+  <data name="CreateProject_TitleRequired" xml:space="preserve">
+    <value>El título es obligatorio.</value>
+  </data>
+  <data name="CreateProject_Type" xml:space="preserve">
+    <value>Tipo de proyecto</value>
+  </data>
+  <data name="CreateProject_AddOption" xml:space="preserve">
+    <value>+ Añadir una opción</value>
+  </data>
+  <data name="CreateProject_PollOpt1" xml:space="preserve">
+    <value>Opción 1</value>
+  </data>
+  <data name="CreateProject_PollOpt2" xml:space="preserve">
+    <value>Opción 2</value>
+  </data>
+  <data name="CreateProject_PollOpt3" xml:space="preserve">
+    <value>Opción 3</value>
+  </data>
+  <data name="CreateProject_PollOpt4" xml:space="preserve">
+    <value>Opción 4</value>
+  </data>
+  <data name="CreateProject_PollOpt5" xml:space="preserve">
+    <value>Opción 5</value>
+  </data>
+  <data name="CreateProject_PollOpt6" xml:space="preserve">
+    <value>Opción 6</value>
+  </data>
+  <data name="CreateProject_PollRule" xml:space="preserve">
+    <value>Añade de 2 a 6 opciones.</value>
+  </data>
+  <data name="CreateProject_RemoveOption" xml:space="preserve">
+    <value>Quitar</value>
+  </data>
+  <data name="InviteSeries_CannotInvite" xml:space="preserve">
+    <value>No se puede invitar</value>
+  </data>
+  <data name="InviteSeries_Friend" xml:space="preserve">
+    <value>Amigo</value>
+  </data>
+  <data name="InviteSeries_SearchPlaceholder" xml:space="preserve">
+    <value>Buscar un amigo...</value>
+  </data>
+  <data name="JoinSeries_CodeRequired" xml:space="preserve">
+    <value>Introduce un código de acceso.</value>
+  </data>
+  <data name="JoinSeries_JoinBtn" xml:space="preserve">
+    <value>Unirse</value>
+  </data>
+  <data name="JoinSeries_Placeholder" xml:space="preserve">
+    <value>Código de acceso</value>
+  </data>
+  <data name="MyProjects_Close_Msg" xml:space="preserve">
+    <value>Este proyecto se cerrará a votos.</value>
+  </data>
+  <data name="MyProjects_Close_Title" xml:space="preserve">
+    <value>¿Cerrar el proyecto?</value>
+  </data>
+  <data name="MyProjects_DeleteFailed_Msg" xml:space="preserve">
+    <value>No se pudo eliminar el proyecto.</value>
+  </data>
+  <data name="MyProjects_Delete_Msg" xml:space="preserve">
+    <value>Este proyecto se eliminará definitivamente.</value>
+  </data>
+  <data name="MyProjects_Delete_Title" xml:space="preserve">
+    <value>¿Eliminar el proyecto?</value>
+  </data>
+  <data name="Friends_Add" xml:space="preserve">
+    <value>Añadir</value>
+  </data>
+  <data name="Friends_InviteLinkFailed" xml:space="preserve">
+    <value>No se pudo generar el enlace de invitación.</value>
+  </data>
+  <data name="Friends_SearchPlaceholder" xml:space="preserve">
+    <value>Buscar un usuario...</value>
+  </data>
+  <data name="Friends_ShareFailed" xml:space="preserve">
+    <value>Error al compartir.</value>
+  </data>
+  <data name="Matches_ChatIdEmpty" xml:space="preserve">
+    <value>No se pudo abrir la conversación.</value>
+  </data>
+  <data name="Auth_EmailPlaceholder" xml:space="preserve">
+    <value>Correo electrónico</value>
+  </data>
+  <data name="Auth_LoggingIn" xml:space="preserve">
+    <value>Iniciando sesión...</value>
+  </data>
+  <data name="Auth_PleaseWait" xml:space="preserve">
+    <value>Por favor, espera...</value>
+  </data>
+  <data name="Profile_PhonePlaceholder" xml:space="preserve">
+    <value>Teléfono (opcional)</value>
+  </data>
+  <data name="Profile_UsernamePlaceholder" xml:space="preserve">
+    <value>Nombre de usuario</value>
+  </data>
+  <data name="SeriesVote_NextSoon" xml:space="preserve">
+    <value>Próximo proyecto en breve...</value>
+  </data>
+  <data name="SeriesVote_Paused" xml:space="preserve">
+    <value>Serie en pausa</value>
+  </data>
+  <data name="SeriesVote_PausedHint" xml:space="preserve">
+    <value>El anfitrión ha pausado la serie.</value>
+  </data>
+  <data name="SeriesVote_SelfieInProgress" xml:space="preserve">
+    <value>Tomando selfie...</value>
+  </data>
+  <data name="SeriesVote_WaitingTv" xml:space="preserve">
+    <value>Esperando la TV...</value>
+  </data>
+  <data name="SeriesResults_Selfies" xml:space="preserve">
+    <value>Selfies</value>
+  </data>
+  <data name="Series_Status_Preparing" xml:space="preserve">
+    <value>⏳ Preparación</value>
+  </data>
+  <data name="Series_Status_Active" xml:space="preserve">
+    <value>▶ En curso</value>
+  </data>
+  <data name="Series_Status_Finished" xml:space="preserve">
+    <value>✓ Finalizada</value>
+  </data>
+  <data name="Groups_MemberCount" xml:space="preserve">
+    <value>{0} miembros</value>
+  </data>
+  <data name="Groups_ActiveSeriesCount" xml:space="preserve">
+    <value>📋 {0} serie(s) activa(s)</value>
+  </data>
+  <data name="SeriesDetail_PlayButton_Quiz" xml:space="preserve">
+    <value>▶ Jugar al cuestionario</value>
+  </data>
+  <data name="SeriesDetail_PlayButton_Vote" xml:space="preserve">
+    <value>▶ Votar ahora</value>
+  </data>
+  <data name="SeriesDetail_ProjectCount" xml:space="preserve">
+    <value>{0} proyecto(s) añadido(s)</value>
+  </data>
+  <data name="Party_VotedFor" xml:space="preserve">
+    <value>Has votado por: {0}</value>
+  </data>
+  <data name="SeriesVote_ProjectIndex" xml:space="preserve">
+    <value>Proyecto {0}/{1}</value>
+  </data>
+  <data name="SeriesVote_ProjectIndexSingle" xml:space="preserve">
+    <value>Proyecto {0}</value>
+  </data>
+  <data name="SeriesVote_VoteError_Title" xml:space="preserve">
+    <value>Error al registrar el voto</value>
+  </data>
+  <data name="SeriesVote_VoteError_Msg" xml:space="preserve">
+    <value>No se pudo registrar el voto: {0}</value>
+  </data>
+  <data name="MyProjects_NoVoteYet" xml:space="preserve">
+    <value>Aún no hay votos</value>
+  </data>
+  <data name="MyProjects_PhotoSummary" xml:space="preserve">
+    <value>❤️ {0}  😐 {1}  👎 {2}  • {3} votos</value>
+  </data>
+  <data name="MyProjects_DuelSummary" xml:space="preserve">
+    <value>A: {0}%  vs  B: {1}%  • {2} votos</value>
+  </data>
+  <data name="MyProjects_PollSummary" xml:space="preserve">
+    <value>📊 Encuesta  • {0} votos</value>
+  </data>
+  <data name="MyProjects_Type_Photo" xml:space="preserve">
+    <value>📷 Voto con foto</value>
+  </data>
+  <data name="MyProjects_Type_Duel" xml:space="preserve">
+    <value>⚖️ Duelo</value>
+  </data>
+  <data name="MyProjects_Type_Poll" xml:space="preserve">
+    <value>📊 Encuesta</value>
+  </data>
+  <data name="MyProjects_Status_Pending" xml:space="preserve">
+    <value>⏳ Pendiente de validación</value>
+  </data>
+  <data name="MyProjects_Status_Online" xml:space="preserve">
+    <value>✅ En línea</value>
+  </data>
+  <data name="MyProjects_Status_Closed" xml:space="preserve">
+    <value>🔒 Cerrado</value>
+  </data>
+  <data name="MyProjects_Status_Rejected" xml:space="preserve">
+    <value>❌ Rechazado</value>
+  </data>
+  <data name="MyProjects_Status_Unknown" xml:space="preserve">
+    <value>Desconocido</value>
+  </data>
+  <data name="MyProjects_Gender_Male" xml:space="preserve">
+    <value>👨 Hombres</value>
+  </data>
+  <data name="MyProjects_Gender_Female" xml:space="preserve">
+    <value>👩 Mujeres</value>
+  </data>
+  <data name="MyProjects_Gender_All" xml:space="preserve">
+    <value>👥 Todos</value>
+  </data>
+  <data name="MyProjects_AgeRange" xml:space="preserve">
+    <value>{0}-{1} años</value>
+  </data>
+  <data name="Profile_Location_Granted" xml:space="preserve">
+    <value>✅ Ubicación autorizada</value>
+  </data>
+  <data name="Profile_Location_Request" xml:space="preserve">
+    <value>📍 Autorizar la ubicación</value>
+  </data>
+  <data name="Profile_Notif_Granted" xml:space="preserve">
+    <value>✅ Notificaciones autorizadas</value>
+  </data>
+  <data name="Profile_Notif_Request" xml:space="preserve">
+    <value>🔔 Autorizar las notificaciones</value>
+  </data>
+  <data name="Gender_Male" xml:space="preserve">
+    <value>Hombre</value>
+  </data>
+  <data name="Gender_Female" xml:space="preserve">
+    <value>Mujer</value>
+  </data>
+  <data name="Gender_Other" xml:space="preserve">
+    <value>Otro</value>
+  </data>
+  <data name="Gender_PreferNotToSay" xml:space="preserve">
+    <value>Prefiero no decirlo</value>
+  </data>
+  <data name="Dashboard_Logout_Title" xml:space="preserve">
+    <value>Cerrar sesión</value>
+  </data>
+  <data name="Dashboard_Logout_Msg" xml:space="preserve">
+    <value>¿Seguro que quieres cerrar sesión?</value>
+  </data>
+  <data name="DeleteAccount_Confirm1_Title" xml:space="preserve">
+    <value>⚠️ Eliminar mi cuenta</value>
+  </data>
+  <data name="DeleteAccount_Confirm1_Msg" xml:space="preserve">
+    <value>Esta acción es IRREVERSIBLE. Todos tus datos (proyectos, fotos, votos, mensajes, grupos) se eliminarán definitivamente.
+
+¿Estás seguro?</value>
+  </data>
+  <data name="DeleteAccount_Confirm1_Yes" xml:space="preserve">
+    <value>Continuar</value>
+  </data>
+  <data name="DeleteAccount_Confirm2_Title" xml:space="preserve">
+    <value>Confirmación final</value>
+  </data>
+  <data name="DeleteAccount_Confirm2_Msg" xml:space="preserve">
+    <value>¿Estás REALMENTE seguro? Esta acción no se puede deshacer.</value>
+  </data>
+  <data name="DeleteAccount_Confirm2_Yes" xml:space="preserve">
+    <value>Sí, eliminar definitivamente</value>
+  </data>
+  <data name="DeleteAccount_Confirm2_No" xml:space="preserve">
+    <value>No, cancelar</value>
+  </data>
+  <data name="DeleteAccount_Error_Msg" xml:space="preserve">
+    <value>No se pudo eliminar tu cuenta: {0}
+
+Inténtalo de nuevo o contacta con soporte:
+steenkiste.ai@gmail.com</value>
+  </data>
+  <data name="DeleteAccount_Exception_Msg" xml:space="preserve">
+    <value>Se produjo un error: {0}</value>
+  </data>
+  <data name="DeleteAccount_Success_Title" xml:space="preserve">
+    <value>✅ Cuenta eliminada</value>
+  </data>
+  <data name="DeleteAccount_Success_Msg" xml:space="preserve">
+    <value>Tu cuenta y todos tus datos se han eliminado definitivamente.
+
+Gracias por usar BeauOuPas. ¡Hasta pronto quizás!</value>
+  </data>
+  <data name="JoinSeries_Finished_Title" xml:space="preserve">
+    <value>Serie finalizada</value>
+  </data>
+  <data name="JoinSeries_Finished_Msg" xml:space="preserve">
+    <value>La serie «{0}» ha finalizado.</value>
+  </data>
+  <data name="Group_DeleteSeries_MsgOne" xml:space="preserve">
+    <value>¿Eliminar la serie «{0}»?
+
+Esta acción es definitiva.</value>
+  </data>
+  <data name="Group_DeleteSeries_MsgMany" xml:space="preserve">
+    <value>¿Eliminar {0} series?
+
+Esta acción es definitiva.</value>
+  </data>
+  <data name="CreateParty_AccessCodeHint" xml:space="preserve">
+    <value>Se generará un código para unirse a la partida en la TV.</value>
+  </data>
+  <data name="CreateParty_AccessCodeTitle" xml:space="preserve">
+    <value>Código de acceso automático</value>
+  </data>
+  <data name="CreateParty_CategoryHint" xml:space="preserve">
+    <value>Elige un ambiente, o «Mezcla» para sacar de todo.</value>
+  </data>
+  <data name="CreateParty_CategoryLabel" xml:space="preserve">
+    <value>Categoría</value>
+  </data>
+  <data name="CreateParty_CreateButton" xml:space="preserve">
+    <value>Iniciar la partida</value>
+  </data>
+  <data name="CreateParty_CreatedMessage" xml:space="preserve">
+    <value>Código de acceso: {0}
+{1} preguntas sorteadas.</value>
+  </data>
+  <data name="CreateParty_CreatedOK" xml:space="preserve">
+    <value>Genial</value>
+  </data>
+  <data name="CreateParty_CreatedTitle" xml:space="preserve">
+    <value>Partida creada 🎉</value>
+  </data>
+  <data name="CreateParty_CreationFailedTitle" xml:space="preserve">
+    <value>No se pudo crear</value>
+  </data>
+  <data name="CreateParty_DescriptionLabel" xml:space="preserve">
+    <value>Descripción (opcional)</value>
+  </data>
+  <data name="CreateParty_DescriptionPlaceholder" xml:space="preserve">
+    <value>Una frase de ambiente...</value>
+  </data>
+  <data name="CreateParty_Error_InsufficientCredits" xml:space="preserve">
+    <value>Créditos insuficientes para iniciar una partida.</value>
+  </data>
+  <data name="CreateParty_Error_InvalidCount" xml:space="preserve">
+    <value>Número de preguntas no válido (entre 1 y 50).</value>
+  </data>
+  <data name="CreateParty_Error_NoQuestionsAvailable" xml:space="preserve">
+    <value>No hay preguntas disponibles para esta categoría.</value>
+  </data>
+  <data name="CreateParty_Error_SqlError" xml:space="preserve">
+    <value>Error del servidor. Inténtalo de nuevo en un momento.</value>
+  </data>
+  <data name="CreateParty_Error_TitleRequired" xml:space="preserve">
+    <value>El título es obligatorio.</value>
+  </data>
+  <data name="CreateParty_Error_TitleTooLong" xml:space="preserve">
+    <value>El título es demasiado largo (máximo 120 caracteres).</value>
+  </data>
+  <data name="CreateParty_Error_Unauthenticated" xml:space="preserve">
+    <value>Debes haber iniciado sesión.</value>
+  </data>
+  <data name="CreateParty_Error_Unknown" xml:space="preserve">
+    <value>Se ha producido un error.</value>
+  </data>
+  <data name="CreateParty_Error_UserNotFound" xml:space="preserve">
+    <value>Perfil no encontrado. Vuelve a iniciar sesión e inténtalo de nuevo.</value>
+  </data>
+  <data name="CreateParty_Header" xml:space="preserve">
+    <value>Nueva partida rápida</value>
+  </data>
+  <data name="CreateParty_QuestionCountFormat" xml:space="preserve">
+    <value>{0} preguntas</value>
+  </data>
+  <data name="CreateParty_QuestionCountHint" xml:space="preserve">
+    <value>Sacadas al azar del banco de preguntas.</value>
+  </data>
+  <data name="CreateParty_QuestionCountLabel" xml:space="preserve">
+    <value>Número de preguntas</value>
+  </data>
+  <data name="CreateParty_ShowFullLeaderboard" xml:space="preserve">
+    <value>Mostrar la clasificación completa</value>
+  </data>
+  <data name="CreateParty_ShowFullLeaderboardHint" xml:space="preserve">
+    <value>Al final, muestra a todos los jugadores y no solo el podio.</value>
+  </data>
+  <data name="CreateParty_Standalone" xml:space="preserve">
+    <value>Partida independiente (sin grupo)</value>
+  </data>
+  <data name="CreateParty_Subtitle" xml:space="preserve">
+    <value>Las preguntas se sacan al azar. Durante la partida, cada uno vota por un jugador.</value>
+  </data>
+  <data name="CreateParty_Title" xml:space="preserve">
+    <value>Partida rápida</value>
+  </data>
+  <data name="CreateParty_TitleLabel" xml:space="preserve">
+    <value>Título de la partida</value>
+  </data>
+  <data name="CreateParty_TitlePlaceholder" xml:space="preserve">
+    <value>Ej.: Noche en casa de Léa</value>
+  </data>
+  <data name="CreateParty_TitleRequired" xml:space="preserve">
+    <value>Ponle un título a tu partida.</value>
+  </data>
+  <data name="CreateParty_ValidationTitle" xml:space="preserve">
+    <value>Campo faltante</value>
+  </data>
+  <data name="CreateQuiz_Error_InsufficientCredits" xml:space="preserve">
+    <value>Créditos insuficientes para crear este cuestionario.</value>
+  </data>
+  <data name="CreateQuiz_Error_UserNotFound" xml:space="preserve">
+    <value>Perfil no encontrado. Vuelve a iniciar sesión e inténtalo de nuevo.</value>
+  </data>
+  <data name="CreateSeriesType_PartyDescription" xml:space="preserve">
+    <value>Preguntas divertidas entre amigos. Se vota por un jugador: «¿Quién es el más...?»</value>
+  </data>
+  <data name="CreateSeriesType_PartyTitle" xml:space="preserve">
+    <value>🎉 Partida rápida</value>
   </data>
 </root>

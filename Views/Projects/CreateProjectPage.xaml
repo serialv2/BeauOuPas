@@ -96,7 +96,7 @@
                         StrokeThickness="2" BackgroundColor="{StaticResource SurfaceCardAlt}" Padding="20">
                     <VerticalStackLayout Spacing="8">
                         <Label Text="📊" FontSize="48" HorizontalOptions="Center"/>
-                        <Label Text="Sondage"
+                        <Label Text="{tr:Translate Key=CreateProject_Survey}"
                                FontSize="18" FontAttributes="Bold"
                                TextColor="{StaticResource TextPrimary}" HorizontalOptions="Center"/>
                         <Label Text="{tr:Translate Key=CreateProject_PollHint}"
@@ -137,8 +137,7 @@
                             <Button Grid.Column="2"
                                     Text="{tr:Translate Key=Create_GenderMale}"
                                     Command="{Binding SelectGenderMaleCommand}"
-                                    BackgroundColor="{Binding MaleColor}"
-                                    TextColor="{Binding MaleTextColor}"
+                                    BackgroundColor="{Binding MaleColor}"                                   TextColor="{Binding MaleTextColor}"
                                     CornerRadius="8" HeightRequest="40" FontSize="13"/>
                         </Grid>
                     </VerticalStackLayout>
@@ -152,7 +151,7 @@
                                FontAttributes="Bold" TextColor="{StaticResource TextSecondary}"/>
                         <Label FontSize="13" TextColor="{StaticResource Primary}">
                             <Label.Text>
-                                <MultiBinding StringFormat="De 18 à {1} ans">
+                                <MultiBinding StringFormat="De {0} à {1} ans">
                                     <Binding Path="MinAge"/>
                                     <Binding Path="MaxAge"/>
                                 </MultiBinding>
@@ -307,20 +306,20 @@
                 <!-- ✅ SONDAGE - Options -->
                 <VerticalStackLayout IsVisible="{Binding IsPoll}" Spacing="12">
                     <Label Text="Options du sondage" FontSize="13" TextColor="{StaticResource TextSecondary}"/>
-                    <Label Text="Minimum 2 options, maximum 6"
+                    <Label Text="{tr:Translate Key=CreateProject_PollRule}"
                            FontSize="11" TextColor="{StaticResource TextTertiary}"/>
 
                     <!-- Option 1 (toujours visible) -->
                     <Border Stroke="{StaticResource BorderMedium}" StrokeThickness="1" BackgroundColor="{StaticResource SurfaceCardAlt}"
                             StrokeShape="RoundRectangle 10">
-                        <Entry Text="{Binding PollOption1}" Placeholder="Option 1..."
+                        <Entry Text="{Binding PollOption1}" Placeholder="{tr:Translate Key=CreateProject_PollOpt1}"
                                PlaceholderColor="{StaticResource TextDisabled}" Margin="12,0"/>
                     </Border>
 
                     <!-- Option 2 (toujours visible) -->
                     <Border Stroke="{StaticResource BorderMedium}" StrokeThickness="1" BackgroundColor="{StaticResource SurfaceCardAlt}"
                             StrokeShape="RoundRectangle 10">
-                        <Entry Text="{Binding PollOption2}" Placeholder="Option 2..."
+                        <Entry Text="{Binding PollOption2}" Placeholder="{tr:Translate Key=CreateProject_PollOpt2}"
                                PlaceholderColor="{StaticResource TextDisabled}" Margin="12,0"/>
                     </Border>
 
@@ -328,7 +327,7 @@
                     <Border IsVisible="{Binding ShowOption3}" Stroke="{StaticResource BorderMedium}"
                             StrokeThickness="1" BackgroundColor="{StaticResource SurfaceCardAlt}"
                             StrokeShape="RoundRectangle 10">
-                        <Entry Text="{Binding PollOption3}" Placeholder="Option 3..."
+                        <Entry Text="{Binding PollOption3}" Placeholder="{tr:Translate Key=CreateProject_PollOpt3}"
                                PlaceholderColor="{StaticResource TextDisabled}" Margin="12,0"/>
                     </Border>
 
@@ -336,7 +335,7 @@
                     <Border IsVisible="{Binding ShowOption4}" Stroke="{StaticResource BorderMedium}"
                             StrokeThickness="1" BackgroundColor="{StaticResource SurfaceCardAlt}"
                             StrokeShape="RoundRectangle 10">
-                        <Entry Text="{Binding PollOption4}" Placeholder="Option 4..."
+                        <Entry Text="{Binding PollOption4}" Placeholder="{tr:Translate Key=CreateProject_PollOpt4}"
                                PlaceholderColor="{StaticResource TextDisabled}" Margin="12,0"/>
                     </Border>
 
@@ -344,7 +343,7 @@
                     <Border IsVisible="{Binding ShowOption5}" Stroke="{StaticResource BorderMedium}"
                             StrokeThickness="1" BackgroundColor="{StaticResource SurfaceCardAlt}"
                             StrokeShape="RoundRectangle 10">
-                        <Entry Text="{Binding PollOption5}" Placeholder="Option 5..."
+                        <Entry Text="{Binding PollOption5}" Placeholder="{tr:Translate Key=CreateProject_PollOpt5}"
                                PlaceholderColor="{StaticResource TextDisabled}" Margin="12,0"/>
                     </Border>
 
@@ -352,21 +351,21 @@
                     <Border IsVisible="{Binding ShowOption6}" Stroke="{StaticResource BorderMedium}"
                             StrokeThickness="1" BackgroundColor="{StaticResource SurfaceCardAlt}"
                             StrokeShape="RoundRectangle 10">
-                        <Entry Text="{Binding PollOption6}" Placeholder="Option 6..."
+                        <Entry Text="{Binding PollOption6}" Placeholder="{tr:Translate Key=CreateProject_PollOpt6}"
                                PlaceholderColor="{StaticResource TextDisabled}" Margin="12,0"/>
                     </Border>
 
                     <!-- Boutons ajouter / retirer -->
                     <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
                         <Button Grid.Column="0"
-                                Text="➕ Ajouter une option"
+                                Text="{tr:Translate Key=CreateProject_AddOption}"
                                 Command="{Binding AddPollOptionCommand}"
                                 IsEnabled="{Binding CanAddOption}"
                                 BackgroundColor="{StaticResource SuccessLight}"
                                 TextColor="{StaticResource Success}"
                                 CornerRadius="8" HeightRequest="40" FontSize="13"/>
                         <Button Grid.Column="1"
-                                Text="➖ Retirer"
+                                Text="{tr:Translate Key=CreateProject_RemoveOption}"
                                 Command="{Binding RemovePollOptionCommand}"
                                 IsEnabled="{Binding CanRemoveOption}"
                                 BackgroundColor="{StaticResource ErrorLight}"

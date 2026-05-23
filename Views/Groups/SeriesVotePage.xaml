@@ -40,7 +40,7 @@ x:DataType="vm:SeriesVoteViewModel"
                              VerticalOptions="Center" HorizontalOptions="Center"
                              Spacing="20" Padding="40">
             <Label Text="📺" FontSize="80" HorizontalOptions="Center"/>
-            <Label Text="En attente de la TV..."
+            <Label Text="{tr:Translate Key=SeriesVote_WaitingTv}"
                    FontSize="24" FontAttributes="Bold"
                    TextColor="White" HorizontalOptions="Center"/>
             <Label Text="{tr:Translate Key=SeriesVote_AnimatorWaiting}"
@@ -59,10 +59,10 @@ x:DataType="vm:SeriesVoteViewModel"
               ZIndex="100">
             <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center" Spacing="16">
                 <Label Text="⏸️" FontSize="80" HorizontalOptions="Center"/>
-                <Label Text="En pause"
+                <Label Text="{tr:Translate Key=SeriesVote_Paused}"
                        FontSize="28" FontAttributes="Bold"
                        TextColor="White" HorizontalOptions="Center"/>
-                <Label Text="L'animateur a mis la session en pause"
+                <Label Text="{tr:Translate Key=SeriesVote_PausedHint}"
                        FontSize="14" TextColor="{StaticResource TextDisabled}"
                        HorizontalOptions="Center"/>
             </VerticalStackLayout>
@@ -239,7 +239,7 @@ x:DataType="vm:SeriesVoteViewModel"
                 <Label Text="📸"
                        FontSize="80"
                        HorizontalOptions="Center"/>
-                <Label Text="Selfie en cours..."
+                <Label Text="{tr:Translate Key=SeriesVote_SelfieInProgress}"
                        FontSize="22" FontAttributes="Bold"
                        TextColor="White"
                        HorizontalOptions="Center"/>
@@ -322,7 +322,7 @@ x:DataType="vm:SeriesVoteViewModel"
             </VerticalStackLayout>
 
             <Label Grid.Row="2"
-                   Text="Projet suivant dans quelques secondes..."
+                   Text="{tr:Translate Key=SeriesVote_NextSoon}"
                    FontSize="13" TextColor="{StaticResource TextTertiary}"
                    HorizontalOptions="Center"/>
         </Grid>

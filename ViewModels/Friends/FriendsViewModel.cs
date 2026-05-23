@@ -126,7 +126,7 @@ public partial class FriendsViewModel : ObservableObject
         }
         else
         {
-            await Shell.Current.DisplayAlert("Erreur", error, "OK");
+            await Shell.Current.DisplayAlert(L.T("Common_Error"), error, L.T("Common_OK"));
         }
     }
 
@@ -167,8 +167,8 @@ public partial class FriendsViewModel : ObservableObject
 
             if (string.IsNullOrWhiteSpace(link))
             {
-                await Shell.Current.DisplayAlert("Erreur",
-                    "Impossible de générer le lien d'invitation.", "OK");
+                await Shell.Current.DisplayAlert(L.T("Common_Error"),
+                    L.T("Friends_InviteLinkFailed"), L.T("Common_OK"));
                 return;
             }
 
@@ -187,8 +187,8 @@ public partial class FriendsViewModel : ObservableObject
         catch (Exception ex)
         {
             System.Diagnostics.Debug.WriteLine($"InviteFriend error: {ex.Message}");
-            await Shell.Current.DisplayAlert("Erreur",
-                "Le partage n'a pas pu être lancé.", "OK");
+            await Shell.Current.DisplayAlert(L.T("Common_Error"),
+                L.T("Friends_ShareFailed"), L.T("Common_OK"));
         }
     }
 

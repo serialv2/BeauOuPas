@@ -413,7 +413,25 @@ public class AuthService
             return (false, GetFriendlyError(ex.Message));
         }
     }
-
+    public async Task<(bool Success, string ErrorMessage)> ResendConfirmationAsync(string email)
+    {
+        try
+        {
+            // Ré-inscription avec le même email → Supabase renvoie l'email de confirmation
+            // sans créer de doublon si le compte existe déjà mais n'est pas confirmé
+            await _supabase.Auth.SignUp(email, Guid.NewGuid().ToString(),
+                new Supabase.Gotrue.SignUpOptions
+                {
+                    RedirectTo = "https://serialv2.github.io/beauoupas-web/email-confirmed.html"
+                });
+            return (true, string.Empty);
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"[AuthService] ResendConfirmation: {ex.Message}");
+            return (false, GetFriendlyError(ex.Message));
+        }
+    }
     public async Task<Profile?> GetCurrentProfileAsync()
     {
         try
@@ -603,4 +621,4 @@ public class AuthService
             System.Diagnostics.Debug.WriteLine($"[AuthService] SaveLanguageAsync: {ex.Message}");
         }
     }
-}
+}

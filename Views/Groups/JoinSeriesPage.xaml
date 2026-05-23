@@ -10,7 +10,7 @@ x:DataType="vm:JoinSeriesViewModel"
     BackgroundColor="{StaticResource BackgroundPage}">
 
     <ContentPage.ToolbarItems>
-        <ToolbarItem Text="Annuler" Command="{Binding CancelCommand}"/>
+        <ToolbarItem Text="{tr:Translate Key=Common_Cancel}" Command="{Binding CancelCommand}"/>
     </ContentPage.ToolbarItems>
 
     <VerticalStackLayout Padding="32,40" Spacing="0" VerticalOptions="Center">
@@ -36,7 +36,7 @@ x:DataType="vm:JoinSeriesViewModel"
                 StrokeThickness="2"
                 Padding="20,16"
                 Margin="0,0,0,16">
-            <Entry Placeholder="Ex: AB3X7K"
+            <Entry Placeholder="{tr:Translate Key=JoinSeries_Placeholder}"
                    Text="{Binding Code}"
                    FontSize="28"
                    FontAttributes="Bold"
@@ -75,7 +75,7 @@ x:DataType="vm:JoinSeriesViewModel"
                 <ActivityIndicator IsRunning="{Binding IsLoading}"
                                    IsVisible="{Binding IsLoading}"
                                    Color="White"/>
-                <Label Text="🎟️ Rejoindre"
+                <Label Text="{tr:Translate Key=JoinSeries_JoinBtn}"
                        IsVisible="{Binding IsLoading, Converter={StaticResource InverseBoolConverter}}"
                        FontSize="18" FontAttributes="Bold"
                        TextColor="White" HorizontalOptions="Center"/>

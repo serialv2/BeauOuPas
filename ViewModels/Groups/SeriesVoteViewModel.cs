@@ -2,6 +2,7 @@
 using CommunityToolkit.Mvvm.Input;
 using BeauOuPas.Models;
 using BeauOuPas.Services;
+using BeauOuPas.Localization;
 using Supabase.Realtime.PostgresChanges;
 using Supabase.Realtime.Socket;
 
@@ -87,8 +88,8 @@ public partial class SeriesVoteViewModel : ObservableObject, IDisposable
 
     public int DisplayIndex => CurrentIndex + 1;
     public string ProjectIndexLabel => TotalProjects > 0
-        ? $"Projet {DisplayIndex}/{TotalProjects}"
-        : $"Projet {DisplayIndex}";
+        ? L.F("SeriesVote_ProjectIndex", DisplayIndex, TotalProjects)
+        : L.F("SeriesVote_ProjectIndexSingle", DisplayIndex);
 
     [ObservableProperty] private string _photoUrl = string.Empty;
     [ObservableProperty] private bool _isPhotoType = false;
@@ -424,9 +425,9 @@ public partial class SeriesVoteViewModel : ObservableObject, IDisposable
         {
             HasVoted = false;
             await Shell.Current.DisplayAlert(
-                "Erreur d'enregistrement du vote",
-                $"Le vote n'a pas pu être enregistré : {error}",
-                "OK");
+                L.T("SeriesVote_VoteError_Title"),
+                L.F("SeriesVote_VoteError_Msg", error),
+                L.T("Common_OK"));
             return;
         }
 

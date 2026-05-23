@@ -197,7 +197,7 @@ public partial class HomeViewModel : ObservableObject
             }
 
             JoinCode = string.Empty;
-            await Shell.Current.GoToAsync($"SeriesDetailPage?seriesId={series.Id}");
+            await Shell.Current.GoToAsync($"SeriesDetailPage?SeriesId={series.Id}");
         }
         catch (Exception ex)
         {

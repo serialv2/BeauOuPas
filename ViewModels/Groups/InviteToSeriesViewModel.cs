@@ -2,6 +2,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using BeauOuPas.Models;
 using BeauOuPas.Services;
+using BeauOuPas.Localization;
 using System.Collections.ObjectModel;
 
 namespace BeauOuPas.ViewModels.Groups;
@@ -105,7 +106,7 @@ public partial class InviteToSeriesViewModel : ObservableObject
             else
             {
                 item.IsInviting = false;
-                await Shell.Current.DisplayAlert("Impossible d'inviter", error, "OK");
+                await Shell.Current.DisplayAlert(L.T("InviteSeries_CannotInvite"), error, L.T("Common_OK"));
             }
         }
         catch (Exception ex)
@@ -122,7 +123,7 @@ public partial class InviteToSeriesViewModel : ObservableObject
 /// <summary>État UI d'un utilisateur dans la liste de recherche.</summary>
 public partial class UserInviteItem : ObservableObject
 {
-    public string UserId   { get; set; } = string.Empty;
+    public string UserId { get; set; } = string.Empty;
     public string Username { get; set; } = string.Empty;
     public string? AvatarUrl { get; set; }
     public bool IsFriend { get; set; }

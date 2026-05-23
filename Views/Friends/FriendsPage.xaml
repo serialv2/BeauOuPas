@@ -24,7 +24,7 @@
             <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
                 <SearchBar Grid.Column="0"
                            Text="{Binding SearchQuery}"
-                           Placeholder="🔍 Rechercher un utilisateur..."
+                           Placeholder="{tr:Translate Key=Friends_SearchPlaceholder}"
                            PlaceholderColor="{StaticResource TextDisabled}"
                            BackgroundColor="Transparent"
                            SearchCommand="{Binding SearchUsersCommand}"
@@ -105,7 +105,7 @@
                                     <!-- Actions -->
                                     <!-- Ajouter -->
                                     <Button Grid.Column="2"
-                                            Text="➕ Ajouter"
+                                            Text="{tr:Translate Key=Friends_Add}"
                                             IsVisible="{Binding CanAdd}"
                                             Command="{Binding Source={RelativeSource AncestorType={x:Type vm:FriendsViewModel}},
                                                               Path=SendFriendRequestCommand}"
@@ -116,7 +116,7 @@
                                             VerticalOptions="Center"/>
                                     <!-- Accepter demande reçue -->
                                     <Button Grid.Column="2"
-                                            Text="✅ Accepter"
+                                            Text="{tr:Translate Key=Friends_Accept}"
                                             IsVisible="{Binding IsPendingReceived}"
                                             Command="{Binding Source={RelativeSource AncestorType={x:Type vm:FriendsViewModel}},
                                                               Path=AcceptFromSearchCommand}"

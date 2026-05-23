@@ -65,9 +65,47 @@ public partial class RegisterViewModel : ObservableObject
 
         IsLoading = false;
 
-        if (!success) { ShowError(error); return; }
+        if (!success)
+        {
+            // Cas email déjà utilisé — proposer les options
+            if (error.Contains("existe déjà") || error.Contains("already registered"))
+            {
+                var choice = await Shell.Current.DisplayActionSheet(
+                    "Email déjà utilisé",
+                    L.T("Common_Cancel"),
+                    null,
+                    "Se connecter",
+                    "Renvoyer l'email de confirmation");
 
-        await Shell.Current.DisplayAlert(L.T("Register_SuccessTitle"), L.T("Register_SuccessMessage"), L.T("Common_OK"));
+                if (choice == "Se connecter")
+                {
+                    await Shell.Current.GoToAsync("//LoginPage");
+                }
+                else if (choice == "Renvoyer l'email de confirmation")
+                {
+                    IsLoading = true;
+                    var (resendOk, resendError) = await _authService.ResendConfirmationAsync(Email);
+                    IsLoading = false;
+
+                    if (resendOk)
+                        await Shell.Current.DisplayAlert(
+                            "Email envoyé",
+                            "Un nouvel email de confirmation a été envoyé. Vérifiez votre boîte mail.",
+                            L.T("Common_OK"));
+                    else
+                        ShowError(resendError);
+                }
+                return;
+            }
+
+            ShowError(error);
+            return;
+        }
+
+        await Shell.Current.DisplayAlert(
+            L.T("Register_SuccessTitle"),
+            L.T("Register_SuccessMessage"),
+            L.T("Common_OK"));
         await Shell.Current.GoToAsync("//LoginPage");
     }
 
@@ -92,8 +130,6 @@ public partial class RegisterViewModel : ObservableObject
     [RelayCommand]
     private async Task GoToLoginAsync() => await Shell.Current.GoToAsync("//LoginPage");
 
-    // ⚡ FIX BUG : Liens CGU et Politique de confidentialité cliquables
-    // Ouvrent les pages légales dans le navigateur système (Browser MAUI).
     [RelayCommand]
     private async Task OpenTermsAsync()
     {

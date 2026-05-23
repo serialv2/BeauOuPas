@@ -70,11 +70,11 @@ public partial class ProfileSettingsViewModel : ObservableObject
     [ObservableProperty] private bool _locationGranted = false;
     [ObservableProperty] private bool _notifGranted = false;
     public string LocationButtonText => LocationGranted
-        ? "✅ Géolocalisation autorisée" : "📍 Autoriser la géolocalisation";
+        ? L.T("Profile_Location_Granted") : L.T("Profile_Location_Request");
     public Color LocationButtonColor => LocationGranted
         ? GetColor("Success") : GetColor("Primary");
     public string NotifButtonText => NotifGranted
-        ? "✅ Notifications autorisées" : "🔔 Autoriser les notifications";
+        ? L.T("Profile_Notif_Granted") : L.T("Profile_Notif_Request");
     public Color NotifButtonColor => NotifGranted
         ? GetColor("Success") : GetColor("Primary");
 
@@ -111,10 +111,10 @@ public partial class ProfileSettingsViewModel : ObservableObject
 
     public List<string> GenderOptions { get; } = new()
     {
-        "Homme",
-        "Femme",
-        "Autre",
-        "Préfère ne pas préciser"
+        L.T("Gender_Male"),
+        L.T("Gender_Female"),
+        L.T("Gender_Other"),
+        L.T("Gender_PreferNotToSay")
     };
 
     // ─── Charger le profil ───────────────────────────────────────────
@@ -144,11 +144,11 @@ public partial class ProfileSettingsViewModel : ObservableObject
 
             SelectedGender = profile.Gender switch
             {
-                "male" => "Homme",
-                "female" => "Femme",
-                "other" => "Autre",
-                "prefer_not_to_say" => "Préfère ne pas préciser",
-                _ => "Préfère ne pas préciser"
+                "male" => L.T("Gender_Male"),
+                "female" => L.T("Gender_Female"),
+                "other" => L.T("Gender_Other"),
+                "prefer_not_to_say" => L.T("Gender_PreferNotToSay"),
+                _ => L.T("Gender_PreferNotToSay")
             };
 
             Email = _authService.CurrentUser?.Email ?? string.Empty;
@@ -216,14 +216,11 @@ public partial class ProfileSettingsViewModel : ObservableObject
                 return;
             }
 
-            var genderDb = SelectedGender switch
-            {
-                "Homme" => "male",
-                "Femme" => "female",
-                "Autre" => "other",
-                "Préfère ne pas préciser" => "prefer_not_to_say",
-                _ => "prefer_not_to_say"
-            };
+            var genderDb =
+                  SelectedGender == L.T("Gender_Male") ? "male"
+                : SelectedGender == L.T("Gender_Female") ? "female"
+                : SelectedGender == L.T("Gender_Other") ? "other"
+                : "prefer_not_to_say";
 
             await _supabase
                 .From<Models.Profile>()
@@ -371,19 +368,19 @@ public partial class ProfileSettingsViewModel : ObservableObject
     {
         // Première confirmation
         bool confirm = await Shell.Current.DisplayAlert(
-            "⚠️ Supprimer mon compte",
-            "Cette action est IRRÉVERSIBLE. Toutes vos données (projets, photos, votes, messages, groupes) seront supprimées définitivement.\n\nÊtes-vous certain ?",
-            "Continuer",
-            "Annuler");
+            L.T("DeleteAccount_Confirm1_Title"),
+            L.T("DeleteAccount_Confirm1_Msg"),
+            L.T("DeleteAccount_Confirm1_Yes"),
+            L.T("Common_Cancel"));
 
         if (!confirm) return;
 
         // Deuxième confirmation (Google Play exige 2 étapes)
         bool confirm2 = await Shell.Current.DisplayAlert(
-            "Confirmation finale",
-            "Êtes-vous VRAIMENT sûr ? Cette action ne peut pas être annulée.",
-            "Oui, supprimer définitivement",
-            "Non, annuler");
+            L.T("DeleteAccount_Confirm2_Title"),
+            L.T("DeleteAccount_Confirm2_Msg"),
+            L.T("DeleteAccount_Confirm2_Yes"),
+            L.T("DeleteAccount_Confirm2_No"));
 
         if (!confirm2) return;
 
@@ -396,17 +393,17 @@ public partial class ProfileSettingsViewModel : ObservableObject
             if (!success)
             {
                 await Shell.Current.DisplayAlert(
-                    "Erreur",
-                    $"Impossible de supprimer votre compte : {error}\n\nVeuillez réessayer ou contacter le support :\nsteenkiste.ai@gmail.com",
-                    "OK");
+                    L.T("Common_Error"),
+                    L.F("DeleteAccount_Error_Msg", error),
+                    L.T("Common_OK"));
                 return;
             }
 
             // Suppression réussie → confirmer à l'utilisateur
             await Shell.Current.DisplayAlert(
-                "✅ Compte supprimé",
-                "Votre compte et toutes vos données ont été supprimés définitivement.\n\nMerci d'avoir utilisé BeauOuPas. À bientôt peut-être !",
-                "OK");
+                L.T("DeleteAccount_Success_Title"),
+                L.T("DeleteAccount_Success_Msg"),
+                L.T("Common_OK"));
 
             // Rediriger vers l'écran d'auth
             if (Shell.Current is AppShell shell)
@@ -415,9 +412,9 @@ public partial class ProfileSettingsViewModel : ObservableObject
         catch (Exception ex)
         {
             await Shell.Current.DisplayAlert(
-                "Erreur",
-                $"Une erreur est survenue : {ex.Message}",
-                "OK");
+                L.T("Common_Error"),
+                L.F("DeleteAccount_Exception_Msg", ex.Message),
+                L.T("Common_OK"));
         }
         finally
         {
@@ -430,9 +427,9 @@ public partial class ProfileSettingsViewModel : ObservableObject
     private async Task LogoutAsync()
     {
         bool confirm = await Shell.Current.DisplayAlert(
-            "Déconnexion",
-            "Voulez-vous vraiment vous déconnecter ?",
-            "Oui", "Non");
+            L.T("Dashboard_Logout_Title"),
+            L.T("Dashboard_Logout_Msg"),
+            L.T("Common_Yes"), L.T("Common_No"));
 
         if (!confirm) return;
 
@@ -520,4 +517,4 @@ public partial class ProfileSettingsViewModel : ObservableObject
         // Fallback si la ressource n'existe pas (ne devrait jamais arriver)
         return Colors.Gray;
     }
-}
+}

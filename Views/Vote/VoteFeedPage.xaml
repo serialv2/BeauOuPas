@@ -128,7 +128,7 @@
                             </Border>
                             <Border BackgroundColor="#99000000" StrokeShape="RoundRectangle 20"
                                     Padding="12,6" HorizontalOptions="Center" VerticalOptions="End" Margin="0,0,0,10">
-                                <Label Text="Choisir A" TextColor="White" FontSize="14" FontAttributes="Bold"/>
+                                <Label Text="{tr:Translate Key=VoteFeed_ChooseA}" TextColor="White" FontSize="14" FontAttributes="Bold"/>
                             </Border>
                             <Grid.GestureRecognizers>
                                 <TapGestureRecognizer Command="{Binding VoteDuelCommand}" CommandParameter="left"/>
@@ -150,7 +150,7 @@
                             </Border>
                             <Border BackgroundColor="#99000000" StrokeShape="RoundRectangle 20"
                                     Padding="12,6" HorizontalOptions="Center" VerticalOptions="End" Margin="0,0,0,10">
-                                <Label Text="Choisir B" TextColor="White" FontSize="14" FontAttributes="Bold"/>
+                                <Label Text="{tr:Translate Key=VoteFeed_ChooseB}" TextColor="White" FontSize="14" FontAttributes="Bold"/>
                             </Border>
                             <Grid.GestureRecognizers>
                                 <TapGestureRecognizer Command="{Binding VoteDuelCommand}" CommandParameter="right"/>
@@ -186,7 +186,7 @@
                         <!-- Badge -->
                         <Border BackgroundColor="{StaticResource Accent}" StrokeShape="RoundRectangle 20"
                                 Padding="12,6" HorizontalOptions="Center">
-                            <Label Text="📊 Sondage" TextColor="{StaticResource TextOnAccent}"
+                            <Label Text="{tr:Translate Key=VoteFeed_Poll}" TextColor="{StaticResource TextOnAccent}"
                                    FontSize="13" FontAttributes="Bold"/>
                         </Border>
 
@@ -228,7 +228,7 @@
                             </CollectionView.ItemTemplate>
                         </CollectionView>
 
-                        <Label Text="👆 Appuie sur une option pour voter"
+                        <Label Text="{tr:Translate Key=VoteFeed_TapToVote}"
                                FontSize="13" TextColor="#E8DDCC"
                                HorizontalOptions="Center"/>
 

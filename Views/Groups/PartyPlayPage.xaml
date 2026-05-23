@@ -198,7 +198,7 @@
                    FontSize="22" FontAttributes="Bold"
                    TextColor="{StaticResource Success}"
                    HorizontalTextAlignment="Center"/>
-            <Label Text="{Binding VotedForName, StringFormat='Tu as voté pour : {0}'}"
+            <Label Text="{Binding VotedForLabel}"
                    IsVisible="{Binding HasVotedForName}"
                    FontSize="16"
                    TextColor="{StaticResource TextPrimary}"

@@ -2,6 +2,7 @@
 using CommunityToolkit.Mvvm.Input;
 using BeauOuPas.Models;
 using BeauOuPas.Services;
+using BeauOuPas.Localization;
 using System.Text.Json;
 
 namespace BeauOuPas.ViewModels.Groups;
@@ -170,9 +171,9 @@ public partial class GroupDetailViewModel : ObservableObject
                         IsQuiz = isQuiz,
                         StatusLabel = status switch
                         {
-                            "preparing" => "⏳ Préparation",
-                            "active" => "▶ En cours",
-                            "finished" => "✓ Terminée",
+                            "preparing" => L.T("Series_Status_Preparing"),
+                            "active" => L.T("Series_Status_Active"),
+                            "finished" => L.T("Series_Status_Finished"),
                             _ => status
                         },
                         StatusColor = status switch
@@ -361,9 +362,9 @@ public partial class GroupDetailViewModel : ObservableObject
         {
             await Clipboard.Default.SetTextAsync(series.AccessCode);
             await Shell.Current.DisplayAlert(
-                "✅ Copié",
-                $"Le code « {series.AccessCode} » a été copié dans le presse-papiers.",
-                "OK");
+                L.T("Group_Copied_Title"),
+                L.F("Group_CodeCopied_Msg", series.AccessCode),
+                L.T("Common_OK"));
         }
         catch (Exception ex)
         {
@@ -383,16 +384,15 @@ public partial class GroupDetailViewModel : ObservableObject
         if (!IsOwner)
         {
             await Shell.Current.DisplayAlert(
-                "Non autorisé",
-                "Seul le créateur du groupe peut le supprimer.",
-                "OK");
+                L.T("Group_NotAllowed_Title"),
+                L.T("Group_OnlyCreatorDelete_Msg"),
+                L.T("Common_OK"));
             return;
         }
 
         bool confirm = await Shell.Current.DisplayAlert(
-            "Supprimer le groupe ?",
-            "Cette action est irréversible. Les séries rattachées seront conservées " +
-            "(sans groupe). Les messages du chat seront définitivement supprimés.",
+            L.T("Group_DeleteGroup_Title"),
+            L.T("Group_DeleteGroup_Msg"),
             "Supprimer", "Annuler");
 
         if (!confirm) return;
@@ -405,17 +405,17 @@ public partial class GroupDetailViewModel : ObservableObject
             if (result.Success)
             {
                 await Shell.Current.DisplayAlert(
-                    "✅ Groupe supprimé",
+                    L.T("Group_Deleted_Title"),
                     result.Message,
-                    "OK");
+                    L.T("Common_OK"));
                 await Shell.Current.GoToAsync("..");
             }
             else
             {
                 await Shell.Current.DisplayAlert(
-                    "❌ Suppression impossible",
+                    L.T("Group_DeleteFailed_Title"),
                     string.IsNullOrEmpty(result.Message)
-                        ? "Une erreur est survenue."
+                        ? L.T("Common_ErrorOccurred")
                         : result.Message,
                     "OK");
             }
@@ -424,9 +424,9 @@ public partial class GroupDetailViewModel : ObservableObject
         {
             System.Diagnostics.Debug.WriteLine($"DeleteGroupAsync: {ex.Message}");
             await Shell.Current.DisplayAlert(
-                "❌ Erreur",
-                "Impossible de supprimer le groupe pour l'instant.",
-                "OK");
+                L.T("Common_Error"),
+                L.T("Group_DeleteNow_Msg"),
+                L.T("Common_OK"));
         }
         finally
         {
@@ -519,14 +519,12 @@ public partial class GroupDetailViewModel : ObservableObject
         if (toDelete.Count == 0) return;
 
         bool confirm = await Shell.Current.DisplayAlert(
-            "Supprimer ?",
+            L.T("Group_DeleteSeries_Title"),
             toDelete.Count == 1
-                ? $"Supprimer la série « {toDelete[0].Title} » ?\n\n" +
-                  "Cette action est définitive."
-                : $"Supprimer {toDelete.Count} séries ?\n\n" +
-                  "Cette action est définitive.",
-            "Supprimer",
-            "Annuler");
+                ? L.F("Group_DeleteSeries_MsgOne", toDelete[0].Title)
+                : L.F("Group_DeleteSeries_MsgMany", toDelete.Count),
+            L.T("Common_Delete"),
+            L.T("Common_Cancel"));
         if (!confirm) return;
 
         IsLoading = true;
@@ -564,7 +562,7 @@ public partial class GroupDetailViewModel : ObservableObject
                     .FirstOrDefault() ?? "Erreur inconnue";
 
                 await Shell.Current.DisplayAlert(
-                    "Suppression partielle",
+                    L.T("Group_PartialDelete_Title"),
                     $"{okCount} supprimée(s), {koCount} échec(s).\n\n" +
                     $"Premier message d'erreur : {firstError}",
                     "OK");
@@ -574,9 +572,9 @@ public partial class GroupDetailViewModel : ObservableObject
         {
             System.Diagnostics.Debug.WriteLine($"DeleteSelectedSeries: {ex.Message}");
             await Shell.Current.DisplayAlert(
-                "Erreur",
-                $"Une erreur est survenue : {ex.Message}",
-                "OK");
+                L.T("Common_Error"),
+                L.F("Group_GenericError_Msg", ex.Message),
+                L.T("Common_OK"));
         }
         finally
         {

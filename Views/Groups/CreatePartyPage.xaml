@@ -63,11 +63,7 @@
                 </VerticalStackLayout>
             </Border>
 
-            <!-- ═══════════════════════════════════════════════════════
-                 🎲 NOMBRE DE QUESTIONS (stepper)
-                 Les questions sont tirées AU HASARD côté serveur dans la
-                 banque party_questions (selon langue + catégorie).
-                 ═══════════════════════════════════════════════════════ -->
+            <!-- Nombre de questions -->
             <Border BackgroundColor="White" StrokeShape="RoundRectangle 14"
                     Stroke="{StaticResource BorderLight}" StrokeThickness="1" Padding="16" Margin="0,0,0,12">
                 <VerticalStackLayout Spacing="10">
@@ -76,60 +72,52 @@
                            TextColor="{StaticResource TextTertiary}" TextTransform="Uppercase"/>
                     <Label Text="{tr:Translate Key=CreateParty_QuestionCountHint}"
                            FontSize="12" TextColor="{StaticResource TextTertiary}"/>
-
                     <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="14" Margin="0,4,0,0">
-
-                        <!-- Bouton − -->
                         <Border Grid.Column="0"
                                 BackgroundColor="{StaticResource SurfaceMuted}"
                                 StrokeShape="RoundRectangle 12"
-                                Stroke="Transparent"
-                                Padding="16,8"
+                                Stroke="Transparent" Padding="16,8"
                                 IsEnabled="{Binding CanDecrease}"
                                 Opacity="{Binding CanDecrease, Converter={StaticResource BoolToOpacityConverter}, FallbackValue=1}">
                             <Border.GestureRecognizers>
                                 <TapGestureRecognizer Command="{Binding DecreaseCountCommand}"/>
                             </Border.GestureRecognizers>
-                            <Label Text="−"
-                                   FontSize="22" FontAttributes="Bold"
-                                   TextColor="{StaticResource Primary}"
-                                   HorizontalOptions="Center"/>
+                            <Label Text="−" FontSize="22" FontAttributes="Bold"
+                                   TextColor="{StaticResource Primary}" HorizontalOptions="Center"/>
                         </Border>
 
-                        <!-- Valeur centrale -->
-                        <Label Grid.Column="1"
-                               Text="{Binding QuestionCountLabel}"
-                               FontSize="18" FontAttributes="Bold"
-                               TextColor="{StaticResource TextPrimary}"
-                               HorizontalTextAlignment="Center"
-                               VerticalOptions="Center"/>
+                        <!-- ⚡ BUG 4A — Saisie directe -->
+                        <Border Grid.Column="1"
+                                BackgroundColor="{StaticResource SurfaceMuted}"
+                                StrokeShape="RoundRectangle 12"
+                                Stroke="Transparent" Padding="8,4">
+                            <Entry Text="{Binding QuestionCountText}"
+                                   FontSize="18" FontAttributes="Bold"
+                                   TextColor="{StaticResource TextPrimary}"
+                                   HorizontalTextAlignment="Center"
+                                   VerticalOptions="Center"
+                                   Keyboard="Numeric"
+                                   MaxLength="2"
+                                   BackgroundColor="Transparent"
+                                   ReturnCommand="{Binding ValidateCountCommand}"/>
+                        </Border>
 
-                        <!-- Bouton + -->
                         <Border Grid.Column="2"
                                 BackgroundColor="{StaticResource SurfaceMuted}"
                                 StrokeShape="RoundRectangle 12"
-                                Stroke="Transparent"
-                                Padding="16,8"
+                                Stroke="Transparent" Padding="16,8"
                                 IsEnabled="{Binding CanIncrease}"
                                 Opacity="{Binding CanIncrease, Converter={StaticResource BoolToOpacityConverter}, FallbackValue=1}">
                             <Border.GestureRecognizers>
                                 <TapGestureRecognizer Command="{Binding IncreaseCountCommand}"/>
                             </Border.GestureRecognizers>
-                            <Label Text="+"
-                                   FontSize="22" FontAttributes="Bold"
-                                   TextColor="{StaticResource Primary}"
-                                   HorizontalOptions="Center"/>
+                            <Label Text="+" FontSize="22" FontAttributes="Bold"
+                                   TextColor="{StaticResource Primary}" HorizontalOptions="Center"/>
                         </Border>
                     </Grid>
                 </VerticalStackLayout>
             </Border>
-
-            <!-- ═══════════════════════════════════════════════════════
-                 🏷️ CATÉGORIE (picker dynamique, option B)
-                 Liste chargée depuis party_questions via la RPC
-                 get_party_categories. "🎲 Mélange" est toujours en tête
-                 (= toutes catégories confondues).
-                 ═══════════════════════════════════════════════════════ -->
+            <!-- Catégorie -->
             <Border BackgroundColor="White" StrokeShape="RoundRectangle 14"
                     Stroke="{StaticResource BorderLight}" StrokeThickness="1" Padding="16" Margin="0,0,0,20">
                 <VerticalStackLayout Spacing="10">
@@ -138,7 +126,6 @@
                            TextColor="{StaticResource TextTertiary}" TextTransform="Uppercase"/>
                     <Label Text="{tr:Translate Key=CreateParty_CategoryHint}"
                            FontSize="12" TextColor="{StaticResource TextTertiary}"/>
-
                     <Grid>
                         <Picker ItemsSource="{Binding Categories}"
                                 SelectedItem="{Binding SelectedCategory}"
@@ -150,22 +137,20 @@
                         <ActivityIndicator IsRunning="{Binding IsLoadingCategories}"
                                            IsVisible="{Binding IsLoadingCategories}"
                                            Color="{StaticResource Primary}"
-                                           HorizontalOptions="End"
-                                           VerticalOptions="Center"
+                                           HorizontalOptions="End" VerticalOptions="Center"
                                            WidthRequest="20" HeightRequest="20"/>
                     </Grid>
                 </VerticalStackLayout>
             </Border>
 
-            <!-- Toggle "Afficher classement complet" -->
+            <!-- Toggle classement complet -->
             <Border BackgroundColor="White" StrokeShape="RoundRectangle 14"
-                    Stroke="{StaticResource BorderLight}" StrokeThickness="1" Padding="16" Margin="0,0,0,20">
+                    Stroke="{StaticResource BorderLight}" StrokeThickness="1" Padding="16" Margin="0,0,0,12">
                 <Border.GestureRecognizers>
                     <TapGestureRecognizer Command="{Binding ToggleShowFullLeaderboardCommand}"/>
                 </Border.GestureRecognizers>
                 <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="14">
-                    <Label Grid.Column="0" Text="🏆"
-                           FontSize="28" VerticalOptions="Center"/>
+                    <Label Grid.Column="0" Text="🏆" FontSize="28" VerticalOptions="Center"/>
                     <VerticalStackLayout Grid.Column="1" Spacing="4" VerticalOptions="Center">
                         <Label Text="{tr:Translate Key=CreateParty_ShowFullLeaderboard}"
                                FontSize="14" FontAttributes="Bold"
@@ -173,10 +158,29 @@
                         <Label Text="{tr:Translate Key=CreateParty_ShowFullLeaderboardHint}"
                                FontSize="11" TextColor="{StaticResource TextTertiary}"/>
                     </VerticalStackLayout>
-                    <Switch Grid.Column="2"
-                            IsToggled="{Binding ShowFullLeaderboard}"
-                            OnColor="{StaticResource Primary}"
-                            ThumbColor="White"
+                    <Switch Grid.Column="2" IsToggled="{Binding ShowFullLeaderboard}"
+                            OnColor="{StaticResource Primary}" ThumbColor="White"
+                            VerticalOptions="Center"/>
+                </Grid>
+            </Border>
+
+            <!-- ⚡ BUG 5 — Toggle selfies -->
+            <Border BackgroundColor="White" StrokeShape="RoundRectangle 14"
+                    Stroke="{StaticResource BorderLight}" StrokeThickness="1" Padding="16" Margin="0,0,0,20">
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding ToggleSelfieEnabledCommand}"/>
+                </Border.GestureRecognizers>
+                <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="14">
+                    <Label Grid.Column="0" Text="📸" FontSize="28" VerticalOptions="Center"/>
+                    <VerticalStackLayout Grid.Column="1" Spacing="4" VerticalOptions="Center">
+                        <Label Text="Selfies pendant la partie"
+                               FontSize="14" FontAttributes="Bold"
+                               TextColor="{StaticResource TextPrimary}"/>
+                        <Label Text="Les participants pourront prendre des selfies"
+                               FontSize="11" TextColor="{StaticResource TextTertiary}"/>
+                    </VerticalStackLayout>
+                    <Switch Grid.Column="2" IsToggled="{Binding SelfieEnabled}"
+                            OnColor="{StaticResource Primary}" ThumbColor="White"
                             VerticalOptions="Center"/>
                 </Grid>
             </Border>

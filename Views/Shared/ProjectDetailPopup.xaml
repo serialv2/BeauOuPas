@@ -105,7 +105,7 @@ x:DataType="vm:ProjectDetailViewModel"
                         <VerticalStackLayout VerticalOptions="Center"
                                              Padding="20,12"
                                              Spacing="6">
-                            <Label Text="📊 Sondage"
+                            <Label Text="{tr:Translate Key=ProjectDetail_Poll}"
                                    FontSize="12"
                                    TextColor="{StaticResource Primary}"
                                    FontAttributes="Bold"
@@ -194,7 +194,7 @@ x:DataType="vm:ProjectDetailViewModel"
                                        FontSize="26" FontAttributes="Bold"
                                        TextColor="White"
                                        HorizontalOptions="Center"/>
-                                <Label Text="votes" FontSize="12"
+                                <Label Text="{tr:Translate Key=ProjectDetail_Votes}" FontSize="12"
                                        TextColor="{StaticResource TextDisabled}"
                                        HorizontalOptions="Center"/>
                             </VerticalStackLayout>
@@ -206,7 +206,7 @@ x:DataType="vm:ProjectDetailViewModel"
                                        FontSize="26" FontAttributes="Bold"
                                        TextColor="{StaticResource Primary}"
                                        HorizontalOptions="Center"/>
-                                <Label Text="score moyen" FontSize="12"
+                                <Label Text="{tr:Translate Key=ProjectDetail_AvgScore}" FontSize="12"
                                        TextColor="{StaticResource TextDisabled}"
                                        HorizontalOptions="Center"/>
                             </VerticalStackLayout>
@@ -265,11 +265,11 @@ x:DataType="vm:ProjectDetailViewModel"
 
                         <BoxView HeightRequest="1" BackgroundColor="{StaticResource TextPrimary}"/>
 
-                        <Label Text="Votants" FontSize="13"
+                        <Label Text="{tr:Translate Key=ProjectDetail_Voters}" FontSize="13"
                                FontAttributes="Bold" TextColor="{StaticResource TextDisabled}"/>
 
                         <Grid ColumnDefinitions="80,*,40" ColumnSpacing="8">
-                            <Label Grid.Column="0" Text="👨 Hommes"
+                            <Label Grid.Column="0" Text="{tr:Translate Key=ProjectDetail_Men}"
                                    FontSize="12" TextColor="White"
                                    VerticalOptions="Center"/>
                             <ProgressBar Grid.Column="1"
@@ -286,7 +286,7 @@ x:DataType="vm:ProjectDetailViewModel"
                         </Grid>
 
                         <Grid ColumnDefinitions="80,*,40" ColumnSpacing="8">
-                            <Label Grid.Column="0" Text="👩 Femmes"
+                            <Label Grid.Column="0" Text="{tr:Translate Key=ProjectDetail_Women}"
                                    FontSize="12" TextColor="White"
                                    VerticalOptions="Center"/>
                             <ProgressBar Grid.Column="1"
@@ -316,12 +316,12 @@ x:DataType="vm:ProjectDetailViewModel"
                                    FontSize="26" FontAttributes="Bold"
                                    TextColor="White"
                                    HorizontalOptions="Center"/>
-                            <Label Text="votes" FontSize="12"
+                            <Label Text="{tr:Translate Key=ProjectDetail_Votes}" FontSize="12"
                                    TextColor="{StaticResource TextDisabled}"
                                    HorizontalOptions="Center"/>
                         </VerticalStackLayout>
 
-                        <Label Text="A vs B" FontSize="13"
+                        <Label Text="{tr:Translate Key=ProjectDetail_AvsB}" FontSize="13"
                                FontAttributes="Bold" TextColor="{StaticResource TextDisabled}"/>
 
                         <Grid ColumnDefinitions="24,*,40" ColumnSpacing="8">
@@ -362,11 +362,11 @@ x:DataType="vm:ProjectDetailViewModel"
 
                         <BoxView HeightRequest="1" BackgroundColor="{StaticResource TextPrimary}"/>
 
-                        <Label Text="Votants" FontSize="13"
+                        <Label Text="{tr:Translate Key=ProjectDetail_Voters}" FontSize="13"
                                FontAttributes="Bold" TextColor="{StaticResource TextDisabled}"/>
 
                         <Grid ColumnDefinitions="80,*,40" ColumnSpacing="8">
-                            <Label Grid.Column="0" Text="👨 Hommes"
+                            <Label Grid.Column="0" Text="{tr:Translate Key=ProjectDetail_Men}"
                                    FontSize="12" TextColor="White"
                                    VerticalOptions="Center"/>
                             <ProgressBar Grid.Column="1"
@@ -383,7 +383,7 @@ x:DataType="vm:ProjectDetailViewModel"
                         </Grid>
 
                         <Grid ColumnDefinitions="80,*,40" ColumnSpacing="8">
-                            <Label Grid.Column="0" Text="👩 Femmes"
+                            <Label Grid.Column="0" Text="{tr:Translate Key=ProjectDetail_Women}"
                                    FontSize="12" TextColor="White"
                                    VerticalOptions="Center"/>
                             <ProgressBar Grid.Column="1"
@@ -458,7 +458,7 @@ x:DataType="vm:ProjectDetailViewModel"
 
                     <!-- Aucune stat -->
                     <Label IsVisible="{Binding NoStats}"
-                           Text="Aucun vote pour l'instant"
+                           Text="{tr:Translate Key=ProjectDetail_NoVoteYet}"
                            FontSize="14" TextColor="{StaticResource TextDisabled}"
                            HorizontalOptions="Center"
                            Padding="16,16"/>

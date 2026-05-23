@@ -10,7 +10,7 @@ x:DataType="vm:SeriesResultsViewModel"
     BackgroundColor="#1A1A2E">
 
     <ContentPage.ToolbarItems>
-        <ToolbarItem Text="Fermer" Command="{Binding CloseCommand}"/>
+        <ToolbarItem Text="{tr:Translate Key=Common_Close}" Command="{Binding CloseCommand}"/>
     </ContentPage.ToolbarItems>
 
     <ScrollView>
@@ -70,7 +70,7 @@ x:DataType="vm:SeriesResultsViewModel"
 
                                 <!-- Selfies -->
                                 <VerticalStackLayout IsVisible="{Binding HasSelfies}" Spacing="8">
-                                    <Label Text="📸 Selfies"
+                                    <Label Text="{tr:Translate Key=SeriesResults_Selfies}"
                                            FontSize="13" TextColor="{StaticResource TextTertiary}"/>
                                     <CollectionView ItemsSource="{Binding SelfieUrls}"
                                                     SelectionMode="None"

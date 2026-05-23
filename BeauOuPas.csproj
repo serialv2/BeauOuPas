@@ -26,25 +26,39 @@
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">23.0</SupportedOSPlatformVersion>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">15.0</SupportedOSPlatformVersion>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</SupportedOSPlatformVersion>
+
 		<TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</TargetPlatformMinVersion>
 	</PropertyGroup>
 
+	<!-- CONFIGURATION iOS -->
+	<PropertyGroup Condition="$(TargetFramework.Contains('-ios'))">
+		<MtouchSdkVersion>18.4</MtouchSdkVersion>
+
+		<!-- Signature manuelle -->
+		<ProvisioningType>manual</ProvisioningType>
+
+		<!-- Team Apple -->
+		<CodesignTeam>44QZR9QVQ6</CodesignTeam>
+
+		<!-- Certificat Apple -->
+		<CodesignKey>Apple Development: steenkiste.ai@gmail.com (44QZR9QVQ6)</CodesignKey>
+	</PropertyGroup>
+
 	<!-- ═══════════════════════════════════════════════════════════════ -->
-	<!-- CONFIGURATION RELEASE ANDROID (AAB signé Play Store)            -->
-	<!-- Mots de passe keystore retirés du csproj (sécurité Git).        -->
-	<!-- Les fournir en CLI pour la release Android :                    -->
-	<!--   dotnet build BeauOuPas.csproj -f net9.0-android -c Release    -->
-	<!--     -p:AndroidSigningStorePass=MOT_DE_PASSE                     -->
-	<!--     -p:AndroidSigningKeyPass=MOT_DE_PASSE                       -->
+	<!-- CONFIGURATION RELEASE ANDROID -->
 	<!-- ═══════════════════════════════════════════════════════════════ -->
+
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net9.0-android|AnyCPU'">
 		<AndroidPackageFormat>aab</AndroidPackageFormat>
 		<AndroidKeyStore>true</AndroidKeyStore>
+
 		<AndroidSigningKeyStore>D:\Users\Steen\source\BeauOuPas\BeauOuPas\BeauOuPas\beauoupas.keystore</AndroidSigningKeyStore>
 		<AndroidSigningKeyAlias>beauoupas</AndroidSigningKeyAlias>
+
 		<AndroidLinkMode>None</AndroidLinkMode>
 		<PublishTrimmed>false</PublishTrimmed>
 		<RunAOTCompilation>false</RunAOTCompilation>
+
 		<DebugType>portable</DebugType>
 		<DebugSymbols>true</DebugSymbols>
 	</PropertyGroup>
@@ -54,11 +68,20 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<MauiIcon Include="Resources\AppIcon\appicon.png" ForegroundFile="Resources\AppIcon\appiconfg.png" Color="#FF6B35" />
-		<MauiSplashScreen Include="Resources\Splash\splash.png" Color="#F4EFE6" BaseSize="200,200" />
+		<MauiIcon Include="Resources\AppIcon\appicon.png"
+				  ForegroundFile="Resources\AppIcon\appiconfg.png"
+				  Color="#FF6B35" />
+
+		<MauiSplashScreen Include="Resources\Splash\splash.png"
+						  Color="#F4EFE6"
+						  BaseSize="200,200" />
+
 		<MauiImage Include="Resources\Images\*" />
+
 		<MauiFont Include="Resources\Fonts\*" />
-		<MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
+
+		<MauiAsset Include="Resources\Raw\**"
+				   LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
 	</ItemGroup>
 
 	<ItemGroup Condition="$(TargetFramework.Contains('-android'))">
@@ -110,36 +133,6 @@
 
 	<ItemGroup Condition="$(TargetFramework.Contains('-windows'))">
 		<PackageReference Include="ImageCropper.Maui" Version="1.2.3" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<MauiXaml Update="Views\Groups\CreateGroupPage.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</MauiXaml>
-		<MauiXaml Update="Views\Groups\CreatePartyPage.xaml">
-		  <Generator>MSBuild:Compile</Generator>
-		</MauiXaml>
-		<MauiXaml Update="Views\Groups\CreateQuizPage.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</MauiXaml>
-		<MauiXaml Update="Views\Groups\CreateSeriesPage.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</MauiXaml>
-		<MauiXaml Update="Views\Groups\CreateSeriesTypePage.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</MauiXaml>
-		<MauiXaml Update="Views\Groups\EditQuizQuestionsPage.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</MauiXaml>
-		<MauiXaml Update="Views\Groups\GroupsPage.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</MauiXaml>
-		<MauiXaml Update="Views\Groups\NewPage1.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</MauiXaml>
-		<MauiXaml Update="Views\Home\HomePage.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</MauiXaml>
 	</ItemGroup>
 
 </Project>

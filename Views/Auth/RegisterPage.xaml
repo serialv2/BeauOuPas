@@ -45,7 +45,7 @@
                    TextColor="{StaticResource TextSecondary}" Margin="0,0,0,4"/>
             <Border Stroke="{StaticResource BorderMedium}" StrokeThickness="1" BackgroundColor="White"
                     StrokeShape="RoundRectangle 10" Margin="0,0,0,16">
-                <Entry Text="{Binding Email}" Placeholder="votre@email.com"
+                <Entry Text="{Binding Email}" Placeholder="{tr:Translate Key=Auth_EmailPlaceholder}"
                        Keyboard="Email" PlaceholderColor="{StaticResource TextDisabled}" Margin="12,0"/>
             </Border>
 

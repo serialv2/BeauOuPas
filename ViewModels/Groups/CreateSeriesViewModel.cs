@@ -1,6 +1,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using BeauOuPas.Services;
+using BeauOuPas.Localization;
 
 namespace BeauOuPas.ViewModels.Groups;
 
@@ -25,25 +26,25 @@ public partial class CreateSeriesViewModel : ObservableObject
     partial void OnGroupIdChanged(string? value)
         => HasGroup = !string.IsNullOrEmpty(value);
 
-    // ─── Max projets ──────────────────────────────────────────────
+    // ─── Max projets ───
     [ObservableProperty] private int _maxProjects = 10;
     [ObservableProperty] private bool _max5 = false;
     [ObservableProperty] private bool _max10 = true;
     [ObservableProperty] private bool _max15 = false;
     [ObservableProperty] private bool _max20 = false;
 
-    // ─── Max par membre ───────────────────────────────────────────
+    // ─── Max par membre ───
     [ObservableProperty] private int _maxPerMember = 2;
     [ObservableProperty] private bool _per1 = false;
     [ObservableProperty] private bool _per2 = true;
     [ObservableProperty] private bool _per3 = false;
     [ObservableProperty] private bool _perAll = false;
 
-    // ─── ⚡ NOUVEAU : Visibilité des projets ──────────────────────
+    // ─── Visibilite des projets ───
     /// <summary>
-    /// null = pas encore choisi (validation : doit être true ou false avant Create).
-    /// true = projets cachés (effet surprise).
-    /// false = projets visibles par tous dès l'ajout.
+    /// null = pas encore choisi (validation : doit etre true ou false avant Create).
+    /// true = projets caches (effet surprise).
+    /// false = projets visibles par tous des l ajout.
     /// </summary>
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(VisibilityChosen))]
@@ -67,11 +68,11 @@ public partial class CreateSeriesViewModel : ObservableObject
         };
     }
 
-    // ─── ⚡ NOUVEAU : Affichage des statistiques détaillées ────────
+    // ─── Affichage des statistiques detaillees ───
     /// <summary>
-    /// true = la TV affichera la phase stats (par genre/âge) après chaque projet.
+    /// true = la TV affichera la phase stats (par genre/age) apres chaque projet.
     /// false = la TV sautera cette phase, plus rapide.
-    /// Activé par défaut.
+    /// Active par defaut.
     /// </summary>
     [ObservableProperty] private bool _showStats = true;
 
@@ -81,8 +82,8 @@ public partial class CreateSeriesViewModel : ObservableObject
         ShowStats = !ShowStats;
     }
 
-    // ⚡ MAI 2026 — B2 : autorisation pour les membres invités d'ajouter
-    // leurs propres projets à la série. True par défaut (mode collaboratif).
+    // MAI 2026 - B2 : autorisation pour les membres invites d ajouter
+    // leurs propres projets a la serie. True par defaut (mode collaboratif).
     [ObservableProperty] private bool _membersCanAddProjects = true;
 
     [RelayCommand]
@@ -112,17 +113,17 @@ public partial class CreateSeriesViewModel : ObservableObject
     {
         if (string.IsNullOrWhiteSpace(Title))
         {
-            await Shell.Current.DisplayAlert("Erreur", "Le titre est obligatoire.", "OK");
+            await Shell.Current.DisplayAlert(L.T("Common_Error"), L.T("CreateSeries_TitleRequired"), L.T("Common_OK"));
             return;
         }
 
-        // ⚡ Validation du choix de visibilité (obligatoire).
+        // Validation du choix de visibilite (obligatoire).
         if (!ProjectsHidden.HasValue)
         {
             await Shell.Current.DisplayAlert(
-                "Choix manquant",
-                "Choisis si les projets sont cachés ou visibles avant le démarrage.",
-                "OK");
+                L.T("CreateSeries_MissingChoice_Title"),
+                L.T("CreateSeries_MissingChoice_Msg"),
+                L.T("Common_OK"));
             return;
         }
 
@@ -144,25 +145,25 @@ public partial class CreateSeriesViewModel : ObservableObject
 
             if (series == null)
             {
-                await Shell.Current.DisplayAlert("Erreur", "Impossible de créer la série.", "OK");
+                await Shell.Current.DisplayAlert(L.T("Common_Error"), L.T("CreateSeries_CreateFailed"), L.T("Common_OK"));
                 return;
             }
 
             await Shell.Current.DisplayAlert(
-                "✅ Série créée !",
-                $"Code d'accès : {series.AccessCode}\n\nPartage ce code pour inviter des participants !",
-                "Super !");
+                L.T("CreateSeries_Created_Title"),
+                L.F("CreateSeries_Created_Msg", series.AccessCode),
+                L.T("CreateSeries_Created_OK"));
 
-            // Rediriger vers la série créée (route absolue → reset la pile,
-            // le bouton retour ne ramène pas au menu de choix ni au formulaire)
-            // Retirer le formulaire de la pile, puis aller au détail de la série créée
+            // Rediriger vers la serie creee (route absolue, reset la pile,
+            // le bouton retour ne ramene pas au menu de choix ni au formulaire)
+            // Retirer le formulaire de la pile, puis aller au detail de la serie creee
             await Shell.Current.GoToAsync("..");
             await Shell.Current.GoToAsync(
                 $"SeriesDetailPage?SeriesId={series.Id}&SeriesTitle={Uri.EscapeDataString(series.Title ?? string.Empty)}&GroupId={effectiveGroupId ?? string.Empty}");
         }
         catch (Exception ex)
         {
-            await Shell.Current.DisplayAlert("Erreur", ex.Message, "OK");
+            await Shell.Current.DisplayAlert(L.T("Common_Error"), ex.Message, L.T("Common_OK"));
         }
         finally { IsLoading = false; }
     }

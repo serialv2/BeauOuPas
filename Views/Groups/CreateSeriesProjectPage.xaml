@@ -10,7 +10,7 @@ x:DataType="vm:CreateSeriesProjectViewModel"
     BackgroundColor="{StaticResource BackgroundPage}">
 
     <ContentPage.ToolbarItems>
-        <ToolbarItem Text="Annuler" Command="{Binding CancelCommand}"/>
+        <ToolbarItem Text="{tr:Translate Key=Common_Cancel}" Command="{Binding CancelCommand}"/>
     </ContentPage.ToolbarItems>
 
     <ScrollView>
@@ -27,7 +27,7 @@ x:DataType="vm:CreateSeriesProjectViewModel"
                    Margin="0,0,0,20"/>
 
             <!-- ─── Sélection type ─────────────────────────────── -->
-            <Label Text="Type de projet"
+            <Label Text="{tr:Translate Key=CreateProject_Type}"
                    FontSize="15"
                    FontAttributes="Bold"
                    TextColor="{StaticResource TextPrimary}"
@@ -46,7 +46,7 @@ x:DataType="vm:CreateSeriesProjectViewModel"
                     </Border.GestureRecognizers>
                     <VerticalStackLayout Spacing="4">
                         <Label Text="📷" FontSize="22" HorizontalOptions="Center"/>
-                        <Label Text="Photo" FontSize="12" FontAttributes="Bold"
+                        <Label Text="{tr:Translate Key=CreateProject_Photo}" FontSize="12" FontAttributes="Bold"
                                TextColor="{Binding IsPhotoType, Converter={StaticResource BoolToTextColorConverter}}"
                                HorizontalOptions="Center"/>
                     </VerticalStackLayout>
@@ -63,7 +63,7 @@ x:DataType="vm:CreateSeriesProjectViewModel"
                     </Border.GestureRecognizers>
                     <VerticalStackLayout Spacing="4">
                         <Label Text="⚖️" FontSize="22" HorizontalOptions="Center"/>
-                        <Label Text="Duel" FontSize="12" FontAttributes="Bold"
+                        <Label Text="{tr:Translate Key=CreateProject_Duel}" FontSize="12" FontAttributes="Bold"
                                TextColor="{Binding IsDuelType, Converter={StaticResource BoolToTextColorConverter}}"
                                HorizontalOptions="Center"/>
                     </VerticalStackLayout>
@@ -80,7 +80,7 @@ x:DataType="vm:CreateSeriesProjectViewModel"
                     </Border.GestureRecognizers>
                     <VerticalStackLayout Spacing="4">
                         <Label Text="📊" FontSize="22" HorizontalOptions="Center"/>
-                        <Label Text="Sondage" FontSize="12" FontAttributes="Bold"
+                        <Label Text="{tr:Translate Key=CreateProject_Survey}" FontSize="12" FontAttributes="Bold"
                                TextColor="{Binding IsPollType, Converter={StaticResource BoolToTextColorConverter}}"
                                HorizontalOptions="Center"/>
                     </VerticalStackLayout>
@@ -95,9 +95,9 @@ x:DataType="vm:CreateSeriesProjectViewModel"
                     Padding="16"
                     Margin="0,0,0,12">
                 <VerticalStackLayout Spacing="8">
-                    <Label Text="Titre *" FontSize="13" FontAttributes="Bold"
+                    <Label Text="{tr:Translate Key=CreateProject_TitleLabel}" FontSize="13" FontAttributes="Bold"
                            TextColor="{StaticResource TextTertiary}" TextTransform="Uppercase"/>
-                    <Entry Placeholder="Ex: Qui est le plus beau ?"
+                    <Entry Placeholder="{tr:Translate Key=CreateProject_TitlePlaceholder}"
                            Text="{Binding Title}"
                            FontSize="16" TextColor="{StaticResource TextPrimary}"
                            PlaceholderColor="{StaticResource TextDisabled}"
@@ -113,9 +113,9 @@ x:DataType="vm:CreateSeriesProjectViewModel"
                     Padding="16"
                     Margin="0,0,0,20">
                 <VerticalStackLayout Spacing="8">
-                    <Label Text="Description" FontSize="13" FontAttributes="Bold"
+                    <Label Text="{tr:Translate Key=CreateProject_DescLabel}" FontSize="13" FontAttributes="Bold"
                            TextColor="{StaticResource TextTertiary}" TextTransform="Uppercase"/>
-                    <Editor Placeholder="Optionnel..."
+                    <Editor Placeholder="{tr:Translate Key=CreateProject_Optional}"
                             Text="{Binding Description}"
                             FontSize="15" TextColor="{StaticResource TextPrimary}"
                             PlaceholderColor="{StaticResource TextDisabled}"
@@ -127,7 +127,7 @@ x:DataType="vm:CreateSeriesProjectViewModel"
 
             <!-- ─── PHOTO VOTE ─────────────────────────────────── -->
             <VerticalStackLayout IsVisible="{Binding IsPhotoType}" Spacing="12" Margin="0,0,0,20">
-                <Label Text="Photo" FontSize="15" FontAttributes="Bold" TextColor="{StaticResource TextPrimary}"/>
+                <Label Text="{tr:Translate Key=CreateProject_PhotoSection}" FontSize="15" FontAttributes="Bold" TextColor="{StaticResource TextPrimary}"/>
                 <Border BackgroundColor="White"
                         StrokeShape="RoundRectangle 14"
                         Stroke="{StaticResource BorderLight}"
@@ -140,7 +140,7 @@ x:DataType="vm:CreateSeriesProjectViewModel"
                         <VerticalStackLayout IsVisible="{Binding PhotoSource, Converter={StaticResource NullToBoolConverter}, ConverterParameter=inverse}"
                                              VerticalOptions="Center" HorizontalOptions="Center" Spacing="8">
                             <Label Text="📷" FontSize="40" HorizontalOptions="Center"/>
-                            <Label Text="Appuyer pour choisir une photo"
+                            <Label Text="{tr:Translate Key=CreateProject_PickPhoto}"
                                    FontSize="13" TextColor="{StaticResource TextTertiary}" HorizontalOptions="Center"/>
                         </VerticalStackLayout>
                         <Image Source="{Binding PhotoSource}"
@@ -168,7 +168,7 @@ x:DataType="vm:CreateSeriesProjectViewModel"
                             <VerticalStackLayout IsVisible="{Binding PhotoLeftSource, Converter={StaticResource NullToBoolConverter}, ConverterParameter=inverse}"
                                                  VerticalOptions="Center" HorizontalOptions="Center" Spacing="6">
                                 <Label Text="📷" FontSize="32" HorizontalOptions="Center"/>
-                                <Label Text="Photo A" FontSize="13" FontAttributes="Bold"
+                                <Label Text="{tr:Translate Key=CreateProject_PhotoA}" FontSize="13" FontAttributes="Bold"
                                        TextColor="{StaticResource Primary}" HorizontalOptions="Center"/>
                             </VerticalStackLayout>
                             <Image Source="{Binding PhotoLeftSource}"
@@ -190,7 +190,7 @@ x:DataType="vm:CreateSeriesProjectViewModel"
                             <VerticalStackLayout IsVisible="{Binding PhotoRightSource, Converter={StaticResource NullToBoolConverter}, ConverterParameter=inverse}"
                                                  VerticalOptions="Center" HorizontalOptions="Center" Spacing="6">
                                 <Label Text="📷" FontSize="32" HorizontalOptions="Center"/>
-                                <Label Text="Photo B" FontSize="13" FontAttributes="Bold"
+                                <Label Text="{tr:Translate Key=CreateProject_PhotoB}" FontSize="13" FontAttributes="Bold"
                                        TextColor="{StaticResource Primary}" HorizontalOptions="Center"/>
                             </VerticalStackLayout>
                             <Image Source="{Binding PhotoRightSource}"
@@ -203,28 +203,28 @@ x:DataType="vm:CreateSeriesProjectViewModel"
 
             <!-- ─── SONDAGE ────────────────────────────────────── -->
             <VerticalStackLayout IsVisible="{Binding IsPollType}" Spacing="10" Margin="0,0,0,20">
-                <Label Text="Options (2 minimum)" FontSize="15" FontAttributes="Bold" TextColor="{StaticResource TextPrimary}"/>
+                <Label Text="{tr:Translate Key=CreateProject_Options}" FontSize="15" FontAttributes="Bold" TextColor="{StaticResource TextPrimary}"/>
                 <Border BackgroundColor="White" StrokeShape="RoundRectangle 12"
                         Stroke="{StaticResource BorderLight}" StrokeThickness="1" Padding="14,10">
-                    <Entry Placeholder="Option 1 *" Text="{Binding Option1}"
+                    <Entry Placeholder="{tr:Translate Key=CreateProject_Opt1}" Text="{Binding Option1}"
                            FontSize="15" TextColor="{StaticResource TextPrimary}" PlaceholderColor="{StaticResource TextDisabled}"
                            BackgroundColor="Transparent"/>
                 </Border>
                 <Border BackgroundColor="White" StrokeShape="RoundRectangle 12"
                         Stroke="{StaticResource BorderLight}" StrokeThickness="1" Padding="14,10">
-                    <Entry Placeholder="Option 2 *" Text="{Binding Option2}"
+                    <Entry Placeholder="{tr:Translate Key=CreateProject_Opt2}" Text="{Binding Option2}"
                            FontSize="15" TextColor="{StaticResource TextPrimary}" PlaceholderColor="{StaticResource TextDisabled}"
                            BackgroundColor="Transparent"/>
                 </Border>
                 <Border BackgroundColor="White" StrokeShape="RoundRectangle 12"
                         Stroke="{StaticResource BorderLight}" StrokeThickness="1" Padding="14,10">
-                    <Entry Placeholder="Option 3 (facultatif)" Text="{Binding Option3}"
+                    <Entry Placeholder="{tr:Translate Key=CreateProject_Opt3}" Text="{Binding Option3}"
                            FontSize="15" TextColor="{StaticResource TextPrimary}" PlaceholderColor="{StaticResource TextDisabled}"
                            BackgroundColor="Transparent"/>
                 </Border>
                 <Border BackgroundColor="White" StrokeShape="RoundRectangle 12"
                         Stroke="{StaticResource BorderLight}" StrokeThickness="1" Padding="14,10">
-                    <Entry Placeholder="Option 4 (facultatif)" Text="{Binding Option4}"
+                    <Entry Placeholder="{tr:Translate Key=CreateProject_Opt4}" Text="{Binding Option4}"
                            FontSize="15" TextColor="{StaticResource TextPrimary}" PlaceholderColor="{StaticResource TextDisabled}"
                            BackgroundColor="Transparent"/>
                 </Border>
@@ -239,10 +239,10 @@ x:DataType="vm:CreateSeriesProjectViewModel"
                     Margin="0,0,0,20">
                 <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
                     <VerticalStackLayout Grid.Column="0" Spacing="2" VerticalOptions="Center">
-                        <Label Text="📸 Selfie automatique"
+                        <Label Text="{tr:Translate Key=CreateProject_AutoSelfie}"
                                FontSize="15" FontAttributes="Bold"
                                TextColor="{StaticResource TextPrimary}"/>
-                        <Label Text="Capture le selfie des votants pendant le countdown"
+                        <Label Text="{tr:Translate Key=CreateProject_AutoSelfieHint}"
                                FontSize="12" TextColor="{StaticResource TextTertiary}"/>
                     </VerticalStackLayout>
                     <Switch Grid.Column="1"

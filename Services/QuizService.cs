@@ -287,19 +287,19 @@ public class QuizService
     /// JArray.ToString() pour que Supabase sérialise correctement le tableau JSONB côté SQL.
     /// </summary>
     public async Task<(bool Success, string ErrorCode, string? SeriesId, string? AccessCode)> CreateQuizAsync(
-        string? groupId,
-        string title,
-        string? description,
-        string quizStyle,
-        bool showFullLeaderboard,
-        List<QuizQuestionItem> questions)
+    string? groupId,
+    string title,
+    string? description,
+    string quizStyle,
+    bool showFullLeaderboard,
+    List<QuizQuestionItem> questions,
+    bool selfieEnabled = true)  // ⚡ BUG 5
     {
         try
         {
             var userId = CurrentUserId;
             if (userId == null) return (false, "unauthenticated", null, null);
 
-            // Construction du payload en objets natifs C#
             var questionsList = new List<Dictionary<string, object?>>();
             foreach (var q in questions)
             {
@@ -307,18 +307,18 @@ public class QuizService
                 foreach (var opt in q.Options)
                 {
                     optionsList.Add(new Dictionary<string, object?>
-                    {
-                        { "text", opt.Text ?? string.Empty },
-                        { "is_correct", opt.IsCorrect }
-                    });
+                {
+                    { "text", opt.Text ?? string.Empty },
+                    { "is_correct", opt.IsCorrect }
+                });
                 }
 
                 var qDict = new Dictionary<string, object?>
-                {
-                    { "title", q.Title ?? string.Empty },
-                    { "question_text", q.QuestionText ?? string.Empty },
-                    { "options", optionsList }
-                };
+            {
+                { "title", q.Title ?? string.Empty },
+                { "question_text", q.QuestionText ?? string.Empty },
+                { "options", optionsList }
+            };
 
                 if (!string.IsNullOrEmpty(q.PhotoUrl))
                     qDict["photo_url"] = q.PhotoUrl;
@@ -327,17 +327,18 @@ public class QuizService
             }
 
             System.Diagnostics.Debug.WriteLine(
-                $"[QuizService] CreateQuiz: title={title}, questions={questions.Count}, style={quizStyle}");
+                $"[QuizService] CreateQuiz: title={title}, questions={questions.Count}, style={quizStyle}, selfie={selfieEnabled}");
 
             var parameters = new Dictionary<string, object>
-            {
-                { "p_user_id", userId },
-                { "p_title", title },
-                { "p_description", description ?? string.Empty },
-                { "p_quiz_style", quizStyle },
-                { "p_show_full_leaderboard", showFullLeaderboard },
-                { "p_questions", questionsList }
-            };
+        {
+            { "p_user_id", userId },
+            { "p_title", title },
+            { "p_description", description ?? string.Empty },
+            { "p_quiz_style", quizStyle },
+            { "p_show_full_leaderboard", showFullLeaderboard },
+            { "p_selfie_enabled", selfieEnabled },  // ⚡ BUG 5
+            { "p_questions", questionsList }
+        };
 
             if (!string.IsNullOrEmpty(groupId))
                 parameters["p_group_id"] = groupId;

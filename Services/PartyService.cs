@@ -324,14 +324,15 @@ public class PartyService
     // Tirage aléatoire de p_count questions côté serveur, atomique.
     // p_category = null → "Mélange" (toutes catégories).
     public async Task<(bool Success, string ErrorCode, string? SeriesId,
-        string? AccessCode, int QuestionsCount)> CreatePartyAsync(
-            string title,
-            string? description,
-            int count,
-            string lang,
-            string? category,
-            string? groupId,
-            bool showFullLeaderboard)
+     string? AccessCode, int QuestionsCount)> CreatePartyAsync(
+         string title,
+         string? description,
+         int count,
+         string lang,
+         string? category,
+         string? groupId,
+         bool showFullLeaderboard,
+         bool selfieEnabled = true)  // ⚡ BUG 5
     {
         try
         {
@@ -339,16 +340,16 @@ public class PartyService
             if (userId == null) return (false, "unauthenticated", null, null, 0);
 
             var parameters = new Dictionary<string, object>
-            {
-                { "p_user_id", userId },
-                { "p_title", title },
-                { "p_description", description ?? string.Empty },
-                { "p_count", count },
-                { "p_lang", lang },
-                { "p_show_full_leaderboard", showFullLeaderboard }
-            };
+        {
+            { "p_user_id", userId },
+            { "p_title", title },
+            { "p_description", description ?? string.Empty },
+            { "p_count", count },
+            { "p_lang", lang },
+            { "p_show_full_leaderboard", showFullLeaderboard },
+            { "p_selfie_enabled", selfieEnabled }  // ⚡ BUG 5
+        };
 
-            // "Mélange" → on envoie le sentinel '__all__' compris par la RPC
             parameters["p_category"] =
                 string.IsNullOrEmpty(category) ? "__all__" : category;
 
@@ -358,7 +359,7 @@ public class PartyService
                 parameters["p_group_id"] = null!;
 
             System.Diagnostics.Debug.WriteLine(
-                $"[PartyService] CreateParty: title={title}, count={count}, lang={lang}, cat={category ?? "__all__"}");
+                $"[PartyService] CreateParty: title={title}, count={count}, lang={lang}, cat={category ?? "__all__"}, selfie={selfieEnabled}");
 
             var res = await _supabase.Rpc("create_party_series", parameters);
 
@@ -366,8 +367,7 @@ public class PartyService
             if (string.IsNullOrEmpty(content))
                 return (false, "empty_response", null, null, 0);
 
-            System.Diagnostics.Debug.WriteLine(
-                $"[PartyService] CreateParty raw: {content}");
+            System.Diagnostics.Debug.WriteLine($"[PartyService] CreateParty raw: {content}");
 
             var json = JObject.Parse(content);
             var success = json.Value<bool?>("success") ?? false;
@@ -375,8 +375,7 @@ public class PartyService
             if (!success)
             {
                 var errorCode = json.Value<string>("error") ?? "unknown_error";
-                System.Diagnostics.Debug.WriteLine(
-                    $"[PartyService] CreateParty FAILED: {errorCode}");
+                System.Diagnostics.Debug.WriteLine($"[PartyService] CreateParty FAILED: {errorCode}");
                 return (false, errorCode, null, null, 0);
             }
 
@@ -392,13 +391,11 @@ public class PartyService
         catch (Exception ex)
         {
             var msg = $"{ex.GetType().Name}: {ex.Message}";
-            System.Diagnostics.Debug.WriteLine(
-                $"[PartyService] CreateParty EXCEPTION: {msg}");
+            System.Diagnostics.Debug.WriteLine($"[PartyService] CreateParty EXCEPTION: {msg}");
             return (false, "exception", null, null, 0);
         }
     }
 }
-
 /// <summary>
 /// Catégorie de questions party (pour le picker dynamique).
 /// </summary>

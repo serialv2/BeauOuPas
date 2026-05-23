@@ -57,7 +57,7 @@
                            FontSize="13" TextColor="{StaticResource TextSecondary}"/>
                     <Border Stroke="{StaticResource BorderMedium}" StrokeThickness="1"
                             BackgroundColor="{StaticResource SurfaceCardAlt}" StrokeShape="RoundRectangle 10">
-                        <Entry Text="{Binding Username}" Placeholder="@monpseudo"
+                        <Entry Text="{Binding Username}" Placeholder="{tr:Translate Key=Profile_UsernamePlaceholder}"
                                PlaceholderColor="{StaticResource TextDisabled}" Margin="12,0"/>
                     </Border>
                     <Label Text="{tr:Translate Key=Profile_Email}"
@@ -90,7 +90,7 @@
                            FontSize="13" TextColor="{StaticResource TextSecondary}"/>
                     <Border Stroke="{StaticResource BorderMedium}" StrokeThickness="1"
                             BackgroundColor="{StaticResource SurfaceCardAlt}" StrokeShape="RoundRectangle 10">
-                        <Entry Text="{Binding Phone}" Placeholder="+33 6 00 00 00 00"
+                        <Entry Text="{Binding Phone}" Placeholder="{tr:Translate Key=Profile_PhonePlaceholder}"
                                Keyboard="Telephone"
                                PlaceholderColor="{StaticResource TextDisabled}" Margin="12,0"/>
                     </Border>

@@ -1,6 +1,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using BeauOuPas.Services;
+using BeauOuPas.Localization;
 
 namespace BeauOuPas.ViewModels.Dashboard;
 
@@ -85,9 +86,9 @@ public partial class DashboardViewModel : ObservableObject
     private async Task LogoutAsync()
     {
         bool confirm = await Shell.Current.DisplayAlert(
-            "Déconnexion",
-            "Voulez-vous vraiment vous déconnecter ?",
-            "Oui", "Non");
+            L.T("Dashboard_Logout_Title"),
+            L.T("Dashboard_Logout_Msg"),
+            L.T("Common_Yes"), L.T("Common_No"));
         if (!confirm) return;
 
         await _authService.LogoutAsync();

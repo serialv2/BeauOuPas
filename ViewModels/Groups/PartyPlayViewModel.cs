@@ -158,9 +158,13 @@ public partial class PartyPlayViewModel : ObservableObject, IDisposable
     /// </summary>
     public bool HasVotedForName => !string.IsNullOrWhiteSpace(VotedForName);
 
+    // Oubli i18n : libellé "Tu as voté pour : {0}" traduit (StringFormat retiré du XAML)
+    public string VotedForLabel => L.F("Party_VotedFor", VotedForName);
+
     partial void OnVotedForNameChanged(string value)
     {
         OnPropertyChanged(nameof(HasVotedForName));
+        OnPropertyChanged(nameof(VotedForLabel));
     }
 
     // ═══════════════════════════════════════════════════════════════

@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using BeauOuPas.Services;
+using BeauOuPas.Localization;
 
 namespace BeauOuPas.ViewModels.Dating;
 
@@ -50,7 +51,7 @@ public partial class MatchesViewModel : ObservableObject
         if (string.IsNullOrEmpty(chatId))
         {
             await Shell.Current.DisplayAlert(
-                "Debug", "ChatId est vide !", "OK");
+                L.T("Common_Error"), L.T("Matches_ChatIdEmpty"), L.T("Common_OK"));
             return;
         }
 

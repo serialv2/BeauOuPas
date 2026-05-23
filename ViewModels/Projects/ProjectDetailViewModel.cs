@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using BeauOuPas.Models;
 using BeauOuPas.Models.Stats;
 using BeauOuPas.Services;
+using BeauOuPas.Localization;
 
 namespace BeauOuPas.ViewModels;
 
@@ -307,9 +308,9 @@ public partial class ProjectDetailViewModel : ObservableObject
             if (voterProfile == null)
             {
                 await Shell.Current.DisplayAlert(
-                    "Erreur",
-                    "Impossible de récupérer ton profil utilisateur.",
-                    "OK");
+                    L.T("Common_Error"),
+                    L.T("ProjectDetail_NoProfile_Msg"),
+                    L.T("Common_OK"));
                 return;
             }
 
@@ -321,9 +322,9 @@ public partial class ProjectDetailViewModel : ObservableObject
             if (!result.Success)
             {
                 await Shell.Current.DisplayAlert(
-                    "Vote impossible",
+                    L.T("ProjectDetail_VoteImpossible_Title"),
                     result.Error,
-                    "OK");
+                    L.T("Common_OK"));
                 return;
             }
 
@@ -345,9 +346,9 @@ public partial class ProjectDetailViewModel : ObservableObject
             System.Diagnostics.Debug.WriteLine($"[ProjectDetail] VotePhoto error: {ex.Message}");
 
             await Shell.Current.DisplayAlert(
-                "Erreur",
-                "Une erreur est survenue pendant le vote.",
-                "OK");
+                L.T("Common_Error"),
+                L.T("ProjectDetail_VoteError_Msg"),
+                L.T("Common_OK"));
         }
         finally
         {
@@ -384,9 +385,9 @@ public partial class ProjectDetailViewModel : ObservableObject
             if (voterProfile == null)
             {
                 await Shell.Current.DisplayAlert(
-                    "Erreur",
-                    "Impossible de récupérer ton profil utilisateur.",
-                    "OK");
+                    L.T("Common_Error"),
+                    L.T("ProjectDetail_NoProfile_Msg"),
+                    L.T("Common_OK"));
                 return;
             }
 
@@ -398,9 +399,9 @@ public partial class ProjectDetailViewModel : ObservableObject
             if (!result.Success)
             {
                 await Shell.Current.DisplayAlert(
-                    "Vote impossible",
+                    L.T("ProjectDetail_VoteImpossible_Title"),
                     result.Error,
-                    "OK");
+                    L.T("Common_OK"));
                 return;
             }
 
@@ -422,9 +423,9 @@ public partial class ProjectDetailViewModel : ObservableObject
             System.Diagnostics.Debug.WriteLine($"[ProjectDetail] VoteDuel error: {ex.Message}");
 
             await Shell.Current.DisplayAlert(
-                "Erreur",
-                "Une erreur est survenue pendant le vote.",
-                "OK");
+                L.T("Common_Error"),
+                L.T("ProjectDetail_VoteError_Msg"),
+                L.T("Common_OK"));
         }
         finally
         {
@@ -448,7 +449,7 @@ public partial class ProjectDetailViewModel : ObservableObject
             var userId = _supabase.Auth.CurrentUser?.Id;
             if (string.IsNullOrEmpty(userId))
             {
-                await Shell.Current.DisplayAlert("Erreur", "Non connecté.", "OK");
+                await Shell.Current.DisplayAlert(L.T("Common_Error"), L.T("ProjectDetail_NotConnected_Msg"), L.T("Common_OK"));
                 return;
             }
 
@@ -473,9 +474,9 @@ public partial class ProjectDetailViewModel : ObservableObject
             System.Diagnostics.Debug.WriteLine($"[ProjectDetail] VotePoll error: {ex.Message}");
 
             await Shell.Current.DisplayAlert(
-                "Erreur",
-                "Une erreur est survenue pendant le vote.",
-                "OK");
+                L.T("Common_Error"),
+                L.T("ProjectDetail_VoteError_Msg"),
+                L.T("Common_OK"));
         }
         finally
         {

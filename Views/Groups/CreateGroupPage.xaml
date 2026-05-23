@@ -10,7 +10,7 @@ x:DataType="vm:CreateGroupViewModel"
     BackgroundColor="{StaticResource BackgroundPage}">
 
     <ContentPage.ToolbarItems>
-        <ToolbarItem Text="Annuler" Command="{Binding CancelCommand}"/>
+        <ToolbarItem Text="{tr:Translate Key=Common_Cancel}" Command="{Binding CancelCommand}"/>
     </ContentPage.ToolbarItems>
 
     <ScrollView>
@@ -30,7 +30,7 @@ x:DataType="vm:CreateGroupViewModel"
                     Padding="16"
                     Margin="0,0,0,12">
                 <VerticalStackLayout Spacing="8">
-                    <Label Text="Nom du groupe *"
+                    <Label Text="{tr:Translate Key=CreateGroup_NameLabel}"
                            FontSize="13"
                            FontAttributes="Bold"
                            TextColor="{StaticResource TextTertiary}"
@@ -52,12 +52,12 @@ x:DataType="vm:CreateGroupViewModel"
                     Padding="16"
                     Margin="0,0,0,20">
                 <VerticalStackLayout Spacing="8">
-                    <Label Text="Description"
+                    <Label Text="{tr:Translate Key=CreateGroup_DescLabel}"
                            FontSize="13"
                            FontAttributes="Bold"
                            TextColor="{StaticResource TextTertiary}"
                            TextTransform="Uppercase"/>
-                    <Editor Placeholder="De quoi parle ce groupe ?"
+                    <Editor Placeholder="{tr:Translate Key=CreateGroup_DescPlaceholder}"
                             Text="{Binding Description}"
                             FontSize="15"
                             TextColor="{StaticResource TextPrimary}"
@@ -69,7 +69,7 @@ x:DataType="vm:CreateGroupViewModel"
             </Border>
 
             <!-- Inviter des amis -->
-            <Label Text="Inviter des amis"
+            <Label Text="{tr:Translate Key=CreateGroup_InviteFriends}"
                    FontSize="17"
                    FontAttributes="Bold"
                    TextColor="{StaticResource TextPrimary}"
@@ -157,11 +157,11 @@ x:DataType="vm:CreateGroupViewModel"
                     IsVisible="{Binding HasFriends, Converter={StaticResource InverseBoolConverter}}">
                 <VerticalStackLayout Spacing="8" HorizontalOptions="Center">
                     <Label Text="👥" FontSize="36" HorizontalOptions="Center"/>
-                    <Label Text="Aucun ami pour l'instant"
+                    <Label Text="{tr:Translate Key=CreateGroup_NoFriend}"
                            FontSize="14"
                            TextColor="{StaticResource TextTertiary}"
                            HorizontalOptions="Center"/>
-                    <Label Text="Tu pourras inviter des amis plus tard"
+                    <Label Text="{tr:Translate Key=CreateGroup_InviteLater}"
                            FontSize="12"
                            TextColor="{StaticResource TextDisabled}"
                            HorizontalOptions="Center"/>

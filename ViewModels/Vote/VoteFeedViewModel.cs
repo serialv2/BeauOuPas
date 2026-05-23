@@ -315,15 +315,15 @@ public partial class VoteFeedViewModel : ObservableObject
         var meetEnabled = await _settingsService.IsMeetEnabledAsync();
         if (!meetEnabled)
         {
-            await Shell.Current.DisplayAlert("Rencontres désactivées",
-                "Cette fonctionnalité n'est pas disponible.", "OK");
+            await Shell.Current.DisplayAlert(L.T("VoteFeed_DatingOff_Title"),
+                L.T("VoteFeed_DatingOff_Msg"), L.T("Common_OK"));
             return;
         }
 
         if (!_currentProfile.DatingEnabled)
         {
-            await Shell.Current.DisplayAlert("💘 Rencontres",
-                "Activez les rencontres dans vos paramètres.", "OK");
+            await Shell.Current.DisplayAlert(L.T("VoteFeed_DatingEnable_Title"),
+                L.T("VoteFeed_DatingEnable_Msg"), L.T("Common_OK"));
             return;
         }
 
@@ -332,8 +332,8 @@ public partial class VoteFeedViewModel : ObservableObject
 
         if (credits < cost)
         {
-            await Shell.Current.DisplayAlert("💰 Crédits insuffisants",
-                $"Il vous faut {cost} crédits.\n\nVous avez : {credits} crédits", "OK");
+            await Shell.Current.DisplayAlert(L.T("VoteFeed_NoCredits_Title"),
+                L.F("VoteFeed_NoCredits_Msg", cost, credits), L.T("Common_OK"));
             return;
         }
 
@@ -347,7 +347,7 @@ public partial class VoteFeedViewModel : ObservableObject
         _shownInSession.Add(projectId);
 
         var (success, error) = await _creditService.SpendForMeetAsync();
-        if (!success) { await Shell.Current.DisplayAlert("Erreur", error, "OK"); return; }
+        if (!success) { await Shell.Current.DisplayAlert(L.T("Common_Error"), error, L.T("Common_OK")); return; }
 
         VoteAnimation = "💘";
         ShowAnimation = true;
@@ -364,9 +364,9 @@ public partial class VoteFeedViewModel : ObservableObject
 
         if (isMatch)
         {
-            await Shell.Current.DisplayAlert("💘 C'est un Match !",
-                "Vous vous êtes mutuellement choisis !\nVous pouvez maintenant vous envoyer des messages.",
-                "🎉 Super !");
+            await Shell.Current.DisplayAlert(L.T("VoteFeed_Match_Title"),
+                L.T("VoteFeed_Match_Msg"),
+                L.T("VoteFeed_Match_OK"));
         }
     }
 
@@ -378,14 +378,14 @@ public partial class VoteFeedViewModel : ObservableObject
 
         if (_rewindHistory.Count == 0)
         {
-            await Shell.Current.DisplayAlert("Rewind", "Aucun vote à annuler.", "OK");
+            await Shell.Current.DisplayAlert(L.T("VoteFeed_Rewind_Title"), L.T("VoteFeed_NoVoteToCancel_Msg"), L.T("Common_OK"));
             return;
         }
 
         var (success, error) = await _creditService.SpendForRewindAsync();
         if (!success)
         {
-            await Shell.Current.DisplayAlert("💰 Crédits insuffisants", error, "OK");
+            await Shell.Current.DisplayAlert(L.T("VoteFeed_NoCredits_Title"), error, L.T("Common_OK"));
             return;
         }
 
@@ -442,7 +442,7 @@ public partial class VoteFeedViewModel : ObservableObject
                 await _creditService.AddCreditsAsync(
                     await _settingsService.GetCreditsCostRewindAsync(),
                     "rewind_refund", "Remboursement rewind (erreur)");
-                await Shell.Current.DisplayAlert("Erreur", "Impossible d'annuler le vote.", "OK");
+                await Shell.Current.DisplayAlert(L.T("Common_Error"), L.T("VoteFeed_CannotCancelVote_Msg"), L.T("Common_OK"));
                 _rewindHistory.Push(projectToRewind);
                 CanRewind = true;
                 return;
@@ -492,7 +492,7 @@ public partial class VoteFeedViewModel : ObservableObject
         ShowNextProject();
 
         if (success)
-            await Shell.Current.DisplayAlert("✅", L.T("Report_Success"), L.T("Common_OK"));
+            await Shell.Current.DisplayAlert(L.T("Common_Success"), L.T("Report_Success"), L.T("Common_OK"));
     }
 
     // ─── Post-vote ────────────────────────────────────────────────────

@@ -6,9 +6,9 @@ using BeauOuPas.ViewModels.Projects;
 using Supabase.Realtime.PostgresChanges;
 using Supabase.Realtime.Socket;
 using System.Text.Json;
+using BeauOuPas.Localization;
 
 namespace BeauOuPas.ViewModels.Groups;
-
 [QueryProperty(nameof(SeriesId), "SeriesId")]
 [QueryProperty(nameof(SeriesTitle), "SeriesTitle")]
 [QueryProperty(nameof(GroupId), "GroupId")]
@@ -57,7 +57,12 @@ public partial class SeriesDetailViewModel : ObservableObject
     [ObservableProperty] private string? _accessCode = null;
     [ObservableProperty] private bool _isStandalone = false;
     [ObservableProperty] private int _maxProjects = 10;
-    [ObservableProperty] private int _projectCount = 0;
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(ProjectCountLabel))]
+    private int _projectCount = 0;
+
+    // Oubli i18n : libellé "X projet(s) ajouté(s)" traduit (StringFormat retiré du XAML)
+    public string ProjectCountLabel => L.F("SeriesDetail_ProjectCount", ProjectCount);
 
     // ⚡ NOUVEAU : true si le créateur a coché "cacher les projets jusqu'au démarrage".
     [ObservableProperty] private bool _projectsHidden = true;
@@ -126,7 +131,8 @@ public partial class SeriesDetailViewModel : ObservableObject
 
     // ⚡ LOT 1 : libellé du bouton de jeu dynamique selon le type
     // ("▶ Voter maintenant" vs "▶ Jouer au quiz")
-    [ObservableProperty] private string _playButtonLabel = "▶ Voter maintenant";
+    // Valeur d'init neutre : écrasée par L.T(...) au chargement (voir UpdateFromSeries)
+    [ObservableProperty] private string _playButtonLabel = string.Empty;
 
     // ⚡ LOT 1 : peut-on modifier les questions du quiz (créateur + preparing) ?
     [ObservableProperty] private bool _canEditQuiz = false;
@@ -241,7 +247,7 @@ public partial class SeriesDetailViewModel : ObservableObject
             // ⚡ LOT 1 : drapeaux dérivés pour faciliter les bindings XAML
             IsQuizMode = IsQuiz;
             IsVoteMode = !IsQuiz;
-            PlayButtonLabel = IsQuiz ? "▶ Jouer au quiz" : "▶ Voter maintenant";
+            PlayButtonLabel = IsQuiz ? L.T("SeriesDetail_PlayButton_Quiz") : L.T("SeriesDetail_PlayButton_Vote");
 
             // projects_hidden peut être null (legacy) → traiter comme caché par sécurité
             if (seriesEl.TryGetProperty("projects_hidden", out var phEl)
@@ -266,11 +272,12 @@ public partial class SeriesDetailViewModel : ObservableObject
 
             StatusLabel = Status switch
             {
-                "preparing" => "⏳ En préparation",
-                "active" => "▶ En cours",
-                "finished" => "✓ Terminée",
+                "preparing" => L.T("SeriesDetail_Status_Preparing"),
+                "active" => L.T("SeriesDetail_Status_Active"),
+                "finished" => L.T("SeriesDetail_Status_Finished"),
                 _ => Status
             };
+
             StatusColor = Status switch
             {
                 "preparing" => Color.FromArgb("#C9943E"),
@@ -675,17 +682,19 @@ public partial class SeriesDetailViewModel : ObservableObject
         if (!IsQuiz)
         {
             await Shell.Current.DisplayAlert(
-                "Non applicable",
-                "Cette série n'est pas un quiz.",
-                "OK");
+                L.T("SeriesDetail_NotApplicable_Title"),
+                L.T("SeriesDetail_NotAQuiz_Msg"),
+                L.T("Common_OK"));
+
             return;
         }
         if (!IsCreator || Status != "preparing")
         {
             await Shell.Current.DisplayAlert(
-                "Verrouillé",
-                "Les questions ne peuvent être modifiées qu'en préparation, par le créateur.",
-                "OK");
+                 L.T("SeriesDetail_Locked_Title"),
+                L.T("SeriesDetail_QuestionsLocked_Msg"),
+                L.T("Common_OK"));
+
             return;
         }
 
@@ -724,28 +733,30 @@ public partial class SeriesDetailViewModel : ObservableObject
             if (QuestionCount == 0)
             {
                 await Shell.Current.DisplayAlert(
-                    "Impossible",
-                    "Ajoute au moins une question avant de démarrer le quiz.",
-                    "OK");
+                   L.T("SeriesDetail_Cannot_Title"),
+                    L.T("SeriesDetail_NeedQuestion_Msg"),
+                    L.T("Common_OK"));
+
                 return;
             }
             bool confirm = await Shell.Current.DisplayAlert(
-                "Démarrer le quiz",
-                "Les joueurs pourront répondre aux questions. Continuer ?",
-                "Démarrer", "Annuler");
+                 L.T("SeriesDetail_StartQuiz_Title"),
+                 L.T("SeriesDetail_StartQuiz_Msg"),
+                 L.T("Common_Start"), L.T("Common_Cancel"));
             if (!confirm) return;
         }
         else
         {
             if (ProjectCount == 0)
             {
-                await Shell.Current.DisplayAlert("Impossible", "Ajoute au moins un projet avant de démarrer.", "OK");
+                await Shell.Current.DisplayAlert(L.T("SeriesDetail_Cannot_Title"), L.T("SeriesDetail_NeedProject_Msg"), L.T("Common_OK"));
                 return;
             }
             bool confirm = await Shell.Current.DisplayAlert(
-                "Démarrer la série",
-                "Les projets seront révélés aux participants. Continuer ?",
-                "Démarrer", "Annuler");
+                L.T("SeriesDetail_StartSeries_Title"),
+                L.T("SeriesDetail_StartSeries_Msg"),
+                L.T("Common_Start"), L.T("Common_Cancel"));
+
             if (!confirm) return;
         }
 
@@ -779,9 +790,10 @@ public partial class SeriesDetailViewModel : ObservableObject
     private async Task StopSeriesAsync()
     {
         bool confirm = await Shell.Current.DisplayAlert(
-            "Terminer la série",
-            "La série sera marquée comme terminée.",
-            "Terminer", "Annuler");
+            L.T("SeriesDetail_FinishSeries_Title"),
+            L.T("SeriesDetail_FinishSeries_Msg"),
+            L.T("Common_Finish"), L.T("Common_Cancel"));
+
         if (!confirm) return;
 
         var ok = await _seriesService.StopSeriesAsync(SeriesId);
@@ -793,9 +805,10 @@ public partial class SeriesDetailViewModel : ObservableObject
     private async Task ResetSeriesAsync()
     {
         bool confirm = await Shell.Current.DisplayAlert(
-            "Remettre en préparation",
-            "La série repassera en mode préparation. Tu pourras la redémarrer quand tu veux.",
-            "Confirmer", "Annuler");
+             L.T("SeriesDetail_Reprepare_Title"),
+            L.T("SeriesDetail_Reprepare_Msg"),
+            L.T("Common_Confirm"), L.T("Common_Cancel"));
+
         if (!confirm) return;
 
         var ok = await _seriesService.ResetSeriesAsync(SeriesId);
@@ -810,29 +823,31 @@ public partial class SeriesDetailViewModel : ObservableObject
         if (Status != "preparing")
         {
             await Shell.Current.DisplayAlert(
-                "Verrouillé",
-                "La série est en cours, les projets ne peuvent plus être modifiés.",
-                "OK");
+                L.T("SeriesDetail_Locked_Title"),
+                L.T("SeriesDetail_ProjectsLockedEdit_Msg"),
+                L.T("Common_OK"));
+
+
             return;
         }
 
         var newTitle = await Shell.Current.DisplayPromptAsync(
-            "Modifier le titre",
-            "Nouveau titre du projet :",
-            initialValue: item.Title,
-            accept: "Suivant",
-            cancel: "Annuler",
-            maxLength: 100);
-
+                   L.T("SeriesDetail_EditTitle_Title"),
+                   L.T("SeriesDetail_EditTitle_Msg"),
+                   initialValue: item.Title,
+                   accept: L.T("Common_Next"),
+                   cancel: L.T("Common_Cancel"),
+                   maxLength: 100);
         if (string.IsNullOrWhiteSpace(newTitle)) return;
 
         var newDescription = await Shell.Current.DisplayPromptAsync(
-            "Modifier la description",
-            "Nouvelle description (optionnelle) :",
-            initialValue: item.Description,
-            accept: "Enregistrer",
-            cancel: "Ignorer",
-            maxLength: 500);
+             L.T("SeriesDetail_EditDesc_Title"),
+             L.T("SeriesDetail_EditDesc_Msg"),
+             initialValue: item.Description,
+             accept: L.T("Common_Save"),
+             cancel: L.T("Common_Ignore"),
+             maxLength: 500);
+
 
         var descriptionToSave = newDescription ?? item.Description;
 
@@ -841,16 +856,17 @@ public partial class SeriesDetailViewModel : ObservableObject
 
         if (!ok)
         {
-            await Shell.Current.DisplayAlert("Erreur", error, "OK");
+            await Shell.Current.DisplayAlert(L.T("Common_Error"), error, L.T("Common_OK"));
             return;
         }
 
         if (item.Type != "poll")
         {
             bool wantPhotos = await Shell.Current.DisplayAlert(
-                "Photos",
-                "Veux-tu aussi modifier les photos ?",
-                "Oui", "Plus tard");
+               L.T("SeriesDetail_Photos_Title"),
+                L.T("SeriesDetail_EditPhotos_Msg"),
+                L.T("Common_Yes"), L.T("SeriesDetail_Later"));
+
 
             if (wantPhotos)
             {
@@ -878,18 +894,19 @@ public partial class SeriesDetailViewModel : ObservableObject
         if (Status != "preparing")
         {
             await Shell.Current.DisplayAlert(
-                "Verrouillé",
-                "La série est en cours, les projets ne peuvent plus être modifiés.",
-                "OK");
+                L.T("SeriesDetail_Locked_Title"),
+                L.T("SeriesDetail_ProjectsLockedEdit_Msg"),
+                L.T("Common_OK"));
             return;
         }
 
         if (item.Type == "poll")
         {
             await Shell.Current.DisplayAlert(
-                "Non applicable",
-                "Un sondage n'a pas de photos. Pour modifier les options, supprime ce projet et recrée-le.",
-                "OK");
+               L.T("SeriesDetail_NotApplicable_Title"),
+                L.T("SeriesDetail_PollNoPhoto_Msg"),
+                L.T("Common_OK"));
+
             return;
         }
 
@@ -902,17 +919,18 @@ public partial class SeriesDetailViewModel : ObservableObject
                 item.ProjectId, "single", stream, pick.FileName);
             if (!ok)
             {
-                await Shell.Current.DisplayAlert("Erreur", error, "OK");
+                await Shell.Current.DisplayAlert(L.T("Common_Error"), error, L.T("Common_OK"));
                 return;
             }
-            await Shell.Current.DisplayAlert("✅", "Photo mise à jour.", "OK");
+            await Shell.Current.DisplayAlert(L.T("Common_Success"), L.T("SeriesDetail_PhotoUpdated_Msg"), L.T("Common_OK"));
         }
         else if (item.Type == "duel")
         {
             var side = await Shell.Current.DisplayActionSheet(
-                "Quelle photo modifier ?",
-                "Annuler", null,
-                "📸 Photo de gauche", "📸 Photo de droite");
+                L.T("SeriesDetail_WhichPhoto_Title"),
+                L.T("Common_Cancel"), null,
+                L.T("SeriesDetail_PhotoLeft"), L.T("SeriesDetail_PhotoRight"));
+
 
             string sideKey = side switch
             {
@@ -929,10 +947,10 @@ public partial class SeriesDetailViewModel : ObservableObject
                 item.ProjectId, sideKey, stream, pick.FileName);
             if (!ok)
             {
-                await Shell.Current.DisplayAlert("Erreur", error, "OK");
+                await Shell.Current.DisplayAlert(L.T("Common_Error"), error, L.T("Common_OK"));
                 return;
             }
-            await Shell.Current.DisplayAlert("✅", "Photo mise à jour.", "OK");
+            await Shell.Current.DisplayAlert(L.T("Common_Success"), L.T("SeriesDetail_PhotoUpdated_Msg"), L.T("Common_OK"));
         }
 
         await LoadAsync();
@@ -946,16 +964,18 @@ public partial class SeriesDetailViewModel : ObservableObject
         if (Status != "preparing")
         {
             await Shell.Current.DisplayAlert(
-                "Verrouillé",
-                "La série est en cours, les projets ne peuvent plus être supprimés.",
-                "OK");
+               L.T("SeriesDetail_Locked_Title"),
+                L.T("SeriesDetail_ProjectsLockedDelete_Msg"),
+                L.T("Common_OK"));
+
+
             return;
         }
 
         bool confirm = await Shell.Current.DisplayAlert(
-            "Supprimer ce projet ?",
-            $"« {item.Title} » sera définitivement supprimé. Cette action est irréversible.",
-            "Supprimer", "Annuler");
+            L.T("SeriesDetail_DeleteProject_Title"),
+            L.F("SeriesDetail_DeleteProject_Msg", item.Title),
+            L.T("Common_Delete"), L.T("Common_Cancel"));
         if (!confirm) return;
 
         var (ok, error) = await _seriesService.DeleteSeriesProjectAsync(
@@ -963,8 +983,8 @@ public partial class SeriesDetailViewModel : ObservableObject
 
         if (!ok)
         {
-            await Shell.Current.DisplayAlert("Erreur", error, "OK");
-            return;
+            await Shell.Current.DisplayAlert(L.T("Common_Error"), error, L.T("Common_OK"));           
+                return;
         }
 
         await LoadAsync();
@@ -978,17 +998,19 @@ public partial class SeriesDetailViewModel : ObservableObject
         if (!IsCreator)
         {
             await Shell.Current.DisplayAlert(
-                "Non autorisé",
-                "Seul le créateur de la série peut supprimer les projets des autres.",
-                "OK");
+               L.T("SeriesDetail_NotAllowed_Title"),
+                L.T("SeriesDetail_OnlyCreatorDelete_Msg"),
+                L.T("Common_OK"));
+
+
             return;
         }
         if (Status != "preparing")
         {
             await Shell.Current.DisplayAlert(
-                "Verrouillé",
-                "La série est en cours, les projets ne peuvent plus être supprimés.",
-                "OK");
+                L.T("SeriesDetail_Locked_Title"),
+                L.T("SeriesDetail_ProjectsLockedDelete_Msg"),
+                L.T("Common_OK"));
             return;
         }
 
@@ -997,10 +1019,9 @@ public partial class SeriesDetailViewModel : ObservableObject
             : item.AuthorUsername;
 
         bool confirm = await Shell.Current.DisplayAlert(
-            $"Supprimer le projet de {authorName} ?",
-            $"« {item.Title} » sera supprimé en tant que créateur de la série. " +
-            $"Le participant ne sera pas notifié. Cette action est irréversible.",
-            "Supprimer", "Annuler");
+          L.F("SeriesDetail_DeleteOtherProject_Title", authorName),
+            L.F("SeriesDetail_DeleteOtherProject_Msg", item.Title),
+            L.T("Common_Delete"), L.T("Common_Cancel"));
         if (!confirm) return;
 
         var (ok, error) = await _seriesService.DeleteSeriesProjectAsync(
@@ -1008,8 +1029,7 @@ public partial class SeriesDetailViewModel : ObservableObject
 
         if (!ok)
         {
-            await Shell.Current.DisplayAlert("Erreur", error, "OK");
-            return;
+            await Shell.Current.DisplayAlert(L.T("Common_Error"), error, L.T("Common_OK")); return;
         }
 
         await LoadAsync();
@@ -1035,28 +1055,24 @@ public partial class SeriesDetailViewModel : ObservableObject
         switch (Status)
         {
             case "active":
-                title = "⚠️ Supprimer la série en cours ?";
-                message = "Une session est en cours. Tous les votes, participants " +
-                          "et selfies seront définitivement supprimés. " +
-                          "Cette action est irréversible.";
+                title = L.T("SeriesDetail_DeleteSeriesActive_Title");
+                message = L.T("SeriesDetail_DeleteSeriesActive_Msg");
                 break;
 
             case "finished":
-                title = "⚠️ Supprimer la série terminée ?";
-                message = "Cette série est terminée et contient des résultats. " +
-                          "Tous les votes, projets et selfies seront définitivement " +
-                          "supprimés. Cette action est irréversible.";
+                title = L.T("SeriesDetail_DeleteSeriesFinished_Title");
+                message = L.T("SeriesDetail_DeleteSeriesFinished_Msg");
                 break;
 
             default: // "preparing" ou autre
-                title = "Supprimer la série ?";
-                message = "Cette action est irréversible. Tous les projets liés " +
-                          "seront supprimés.";
+                title = L.T("SeriesDetail_DeleteSeries_Title");
+                message = L.T("SeriesDetail_DeleteSeries_Msg");
                 break;
+
         }
 
         bool confirm = await Shell.Current.DisplayAlert(
-            title, message, "Supprimer", "Annuler");
+title, message, L.T("Common_Delete"), L.T("Common_Cancel"));
         if (!confirm) return;
 
         // 2) Appel de la RPC (avec suppression Storage en amont)
@@ -1068,30 +1084,33 @@ public partial class SeriesDetailViewModel : ObservableObject
             if (result.Success)
             {
                 await Shell.Current.DisplayAlert(
-                    "✅ Série supprimée",
-                    string.IsNullOrEmpty(result.Message)
-                        ? "La série a été supprimée."
-                        : result.Message,
-                    "OK");
+                L.T("SeriesDetail_SeriesDeleted_Title"),
+                string.IsNullOrEmpty(result.Message)
+                    ? L.T("SeriesDetail_SeriesDeleted_Msg")
+                    : result.Message,
+                L.T("Common_OK"));
                 await Shell.Current.GoToAsync("..");
             }
             else
             {
                 await Shell.Current.DisplayAlert(
-                    "❌ Suppression impossible",
+                     L.T("SeriesDetail_DeleteFailed_Title"),
                     string.IsNullOrEmpty(result.Message)
-                        ? "Une erreur est survenue."
+                       ? L.T("Common_ErrorOccurred")
                         : result.Message,
-                    "OK");
+
+                    L.T("Common_OK"));
+
             }
         }
         catch (Exception ex)
         {
             System.Diagnostics.Debug.WriteLine($"DeleteSeriesAsync VM: {ex.Message}");
             await Shell.Current.DisplayAlert(
-                "❌ Erreur",
-                "Impossible de supprimer la série pour l'instant.",
-                "OK");
+                L.T("Common_Error"),
+                L.T("SeriesDetail_DeleteSeriesNow_Msg"),
+                L.T("Common_OK"));
+
         }
         finally
         {
@@ -1108,17 +1127,19 @@ public partial class SeriesDetailViewModel : ObservableObject
         if (!IsCreator || Status != "preparing")
         {
             await Shell.Current.DisplayAlert(
-                "Non autorisé",
-                "Seul le créateur peut activer le mode TV, et seulement avant le démarrage.",
-                "OK");
+               L.T("SeriesDetail_NotAllowed_Title"),
+                L.T("SeriesDetail_OnlyCreatorTv_Msg"),
+                L.T("Common_OK"));
+
             return;
         }
 
         bool animatorParticipates = await Shell.Current.DisplayAlert(
-            "📺 Mode TV",
-            "Vas-tu participer au vote toi aussi, ou tu es uniquement animateur ?",
-            "Je participe",
-            "Juste animateur");
+            L.T("SeriesDetail_TvMode_Title"),
+            L.T("SeriesDetail_TvParticipate_Msg"),
+            L.T("SeriesDetail_TvIParticipate"),
+            L.T("SeriesDetail_TvHostOnly"));
+
 
         var (ok, code, error) = await _seriesService.ActivateTvModeAsync(
             SeriesId, animatorParticipates);
@@ -1126,9 +1147,11 @@ public partial class SeriesDetailViewModel : ObservableObject
         if (!ok)
         {
             await Shell.Current.DisplayAlert(
-                "Erreur",
-                $"Impossible d'activer le mode TV : {error}",
-                "OK");
+               L.T("Common_Error"),
+                L.F("SeriesDetail_TvActivateError_Msg", error),
+                L.T("Common_OK"));
+
+
             return;
         }
 
@@ -1138,13 +1161,9 @@ public partial class SeriesDetailViewModel : ObservableObject
         }
 
         await Shell.Current.DisplayAlert(
-            "📺 Mode TV activé !",
-            $"Le code d'accès est : {code}\n\n" +
-            "Sur la TV (PC, Smart TV, Chromecast), va sur :\n" +
-            "https://serialv2.github.io/beauoupas-web/tv/tv.html\n\n" +
-            "Et tape ce code.",
-            "OK");
-
+           L.T("SeriesDetail_TvActivated_Title"),
+            L.F("SeriesDetail_TvActivated_Msg", code),
+            L.T("Common_OK"));
         await LoadAsync();
     }
 
@@ -1154,9 +1173,10 @@ public partial class SeriesDetailViewModel : ObservableObject
         if (!IsCreator || !TvActive || Status != "preparing")
         {
             await Shell.Current.DisplayAlert(
-                "Non autorisé",
-                "Le mode TV doit être activé et la série en préparation.",
-                "OK");
+                L.T("SeriesDetail_NotAllowed_Title"),
+                L.T("SeriesDetail_TvMustBeActive_Msg"),
+                L.T("Common_OK"));
+
             return;
         }
 
@@ -1165,23 +1185,22 @@ public partial class SeriesDetailViewModel : ObservableObject
         if (IsQuiz && QuestionCount == 0)
         {
             await Shell.Current.DisplayAlert(
-                "Impossible",
-                "Ajoute au moins une question avant de démarrer le quiz.",
-                "OK");
+                L.T("SeriesDetail_Cannot_Title"),
+                L.T("SeriesDetail_NeedQuestion_Msg"),
+                L.T("Common_OK"));
             return;
         }
 
         bool confirm = await Shell.Current.DisplayAlert(
-            "▶ Démarrer la série ?",
-            "Tous les votants connectés seront synchronisés. " +
-            "Une fois démarrée, plus aucun projet ne pourra être ajouté.",
-            "Démarrer", "Annuler");
+            L.T("SeriesDetail_StartSeriesTv_Title"),
+            L.T("SeriesDetail_StartSeriesTv_Msg"),
+            L.T("Common_Start"), L.T("Common_Cancel"));
         if (!confirm) return;
 
         var (ok, error) = await _seriesService.StartTvSeriesAsync(SeriesId);
         if (!ok)
         {
-            await Shell.Current.DisplayAlert("Erreur", error, "OK");
+            await Shell.Current.DisplayAlert(L.T("Common_Error"), error, L.T("Common_OK"));
             return;
         }
 
@@ -1194,21 +1213,22 @@ public partial class SeriesDetailViewModel : ObservableObject
         if (!IsCreator || !TvActive)
         {
             await Shell.Current.DisplayAlert(
-                "Non autorisé",
-                "Le mode TV doit être actif.",
-                "OK");
+                L.T("SeriesDetail_NotAllowed_Title"),
+                L.T("SeriesDetail_TvMustBeActiveShort_Msg"),
+                L.T("Common_OK"));
+
             return;
         }
 
         var (ok, nowPaused, error) = await _seriesService.ToggleTvPauseAsync(SeriesId);
         if (!ok)
         {
-            await Shell.Current.DisplayAlert("Erreur", error, "OK");
+            await Shell.Current.DisplayAlert(L.T("Common_Error"), error, L.T("Common_OK"));
             return;
         }
 
         TvPaused = nowPaused;
-        TvPauseLabel = nowPaused ? "▶ Reprendre" : "⏸️ Pause";
+        TvPauseLabel = nowPaused ? L.T("SeriesDetail_Tv_Resume") : L.T("SeriesDetail_Tv_Pause");
     }
 
     [RelayCommand]
@@ -1217,16 +1237,15 @@ public partial class SeriesDetailViewModel : ObservableObject
         if (!IsCreator || !TvActive) return;
 
         bool confirm = await Shell.Current.DisplayAlert(
-            "❌ Désactiver le mode TV ?",
-            "La TV affichera 'Mode TV désactivé'. " +
-            "Tu pourras le réactiver plus tard si tu veux.",
-            "Désactiver", "Annuler");
+            L.T("SeriesDetail_DeactivateTv_Title"),
+            L.T("SeriesDetail_DeactivateTv_Msg"),
+            L.T("SeriesDetail_Deactivate"), L.T("Common_Cancel"));
         if (!confirm) return;
 
         var (ok, error) = await _seriesService.DeactivateTvModeAsync(SeriesId);
         if (!ok)
         {
-            await Shell.Current.DisplayAlert("Erreur", error, "OK");
+            await Shell.Current.DisplayAlert(L.T("Common_Error"), error, L.T("Common_OK"));
             return;
         }
 
@@ -1242,9 +1261,11 @@ public partial class SeriesDetailViewModel : ObservableObject
         {
             await Clipboard.Default.SetTextAsync(AccessCode);
             await Shell.Current.DisplayAlert(
-                "✅ Copié",
-                $"Le code « {AccessCode} » a été copié dans le presse-papiers.",
-                "OK");
+               L.T("SeriesDetail_Copied_Title"),
+                L.F("SeriesDetail_CodeCopied_Msg", AccessCode),
+                L.T("Common_OK"));
+
+
         }
         catch (Exception ex)
         {
@@ -1271,11 +1292,12 @@ public partial class SeriesDetailViewModel : ObservableObject
             TvPaused = series.TvPaused;
             StatusLabel = newStatus switch
             {
-                "preparing" => "⏳ En préparation",
-                "active" => "▶ En cours",
-                "finished" => "✓ Terminée",
+                "preparing" => L.T("SeriesDetail_Status_Preparing"),
+                "active" => L.T("SeriesDetail_Status_Active"),
+                "finished" => L.T("SeriesDetail_Status_Finished"),
                 _ => newStatus
             };
+
             StatusColor = newStatus switch
             {
                 "preparing" => Color.FromArgb("#C9943E"),
@@ -1284,8 +1306,7 @@ public partial class SeriesDetailViewModel : ObservableObject
                 _ => Color.FromArgb("#8A6F4A")
             };
             CanVote = newStatus == "active";
-            TvPauseLabel = TvPaused ? "▶ Reprendre" : "⏸️ Pause";
-
+            TvPauseLabel = TvPaused ? L.T("SeriesDetail_Tv_Resume") : L.T("SeriesDetail_Tv_Pause");
             if (oldStatus != "active" && newStatus == "active" && !IsCreator && IsCurrentUserParticipant)
             {
                 // 🎉 PARTIE RAPIDE : bascule auto vers PartyPlayPage si 'party'.

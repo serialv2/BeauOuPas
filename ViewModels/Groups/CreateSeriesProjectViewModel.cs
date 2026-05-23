@@ -1,6 +1,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using BeauOuPas.Services;
+using BeauOuPas.Localization;
 
 namespace BeauOuPas.ViewModels.Groups;
 
@@ -120,7 +121,7 @@ public partial class CreateSeriesProjectViewModel : ObservableObject
         if (string.IsNullOrWhiteSpace(Title))
         {
             System.Diagnostics.Debug.WriteLine("[CreateProject-DIAG] Titre vide → abort");
-            await Shell.Current.DisplayAlert("Erreur", "Le titre est obligatoire.", "OK");
+            await Shell.Current.DisplayAlert(L.T("Common_Error"), L.T("CreateProject_TitleRequired"), L.T("Common_OK"));
             return;
         }
 
@@ -136,7 +137,7 @@ public partial class CreateSeriesProjectViewModel : ObservableObject
                 if (_photoBytes == null)
                 {
                     System.Diagnostics.Debug.WriteLine("[CreateProject-DIAG] Pas de photo → abort");
-                    await Shell.Current.DisplayAlert("Erreur", "Ajoute une photo.", "OK");
+                    await Shell.Current.DisplayAlert(L.T("Common_Error"), L.T("CreateProject_AddPhoto"), L.T("Common_OK"));
                     return;
                 }
                 System.Diagnostics.Debug.WriteLine("[CreateProject-DIAG] AVANT CreateSeriesPhotoProjectAsync");
@@ -145,7 +146,7 @@ public partial class CreateSeriesProjectViewModel : ObservableObject
                     new MemoryStream(_photoBytes), _photoFileName);
                 System.Diagnostics.Debug.WriteLine(
                     $"[CreateProject-DIAG] APRÈS CreateSeriesPhotoProjectAsync: success={success}, error={error}, id={id}");
-                if (!success) { await Shell.Current.DisplayAlert("Erreur", error, "OK"); return; }
+                if (!success) { await Shell.Current.DisplayAlert(L.T("Common_Error"), error, L.T("Common_OK")); return; }
                 projectId = id;
             }
             else if (SelectedType == "duel")
@@ -155,7 +156,7 @@ public partial class CreateSeriesProjectViewModel : ObservableObject
                 if (_photoLeftBytes == null || _photoRightBytes == null)
                 {
                     System.Diagnostics.Debug.WriteLine("[CreateProject-DIAG] Photos duel manquantes → abort");
-                    await Shell.Current.DisplayAlert("Erreur", "Ajoute les deux photos.", "OK");
+                    await Shell.Current.DisplayAlert(L.T("Common_Error"), L.T("CreateProject_AddBothPhotos"), L.T("Common_OK"));
                     return;
                 }
                 System.Diagnostics.Debug.WriteLine("[CreateProject-DIAG] AVANT CreateSeriesDuelProjectAsync");
@@ -165,7 +166,7 @@ public partial class CreateSeriesProjectViewModel : ObservableObject
                     new MemoryStream(_photoRightBytes), _photoRightFileName);
                 System.Diagnostics.Debug.WriteLine(
                     $"[CreateProject-DIAG] APRÈS CreateSeriesDuelProjectAsync: success={success}, error={error}, id={id}");
-                if (!success) { await Shell.Current.DisplayAlert("Erreur", error, "OK"); return; }
+                if (!success) { await Shell.Current.DisplayAlert(L.T("Common_Error"), error, L.T("Common_OK")); return; }
                 projectId = id;
             }
             else if (SelectedType == "poll")
@@ -177,7 +178,7 @@ public partial class CreateSeriesProjectViewModel : ObservableObject
                 if (options.Count < 2)
                 {
                     System.Diagnostics.Debug.WriteLine("[CreateProject-DIAG] < 2 options → abort");
-                    await Shell.Current.DisplayAlert("Erreur", "Ajoute au moins 2 options.", "OK");
+                    await Shell.Current.DisplayAlert(L.T("Common_Error"), L.T("CreateProject_Add2Options"), L.T("Common_OK"));
                     return;
                 }
                 System.Diagnostics.Debug.WriteLine("[CreateProject-DIAG] AVANT CreateSeriesPollProjectAsync");
@@ -185,7 +186,7 @@ public partial class CreateSeriesProjectViewModel : ObservableObject
                     Title, Description, options);
                 System.Diagnostics.Debug.WriteLine(
                     $"[CreateProject-DIAG] APRÈS CreateSeriesPollProjectAsync: success={success}, error={error}, id={id}");
-                if (!success) { await Shell.Current.DisplayAlert("Erreur", error, "OK"); return; }
+                if (!success) { await Shell.Current.DisplayAlert(L.T("Common_Error"), error, L.T("Common_OK")); return; }
                 projectId = id;
             }
 
@@ -198,7 +199,7 @@ public partial class CreateSeriesProjectViewModel : ObservableObject
                 $"[CreateProject-DIAG] APRÈS AddProjectToSeriesAsync: success={addSuccess}, error={addError}");
             if (!addSuccess)
             {
-                await Shell.Current.DisplayAlert("Erreur", addError, "OK");
+                await Shell.Current.DisplayAlert(L.T("Common_Error"), addError, L.T("Common_OK"));
                 return;
             }
 
@@ -217,7 +218,7 @@ public partial class CreateSeriesProjectViewModel : ObservableObject
                 System.Diagnostics.Debug.WriteLine(
                     $"[CreateProject-DIAG] INNER: {ex.InnerException.Message}");
             }
-            await Shell.Current.DisplayAlert("Erreur", ex.Message, "OK");
+            await Shell.Current.DisplayAlert(L.T("Common_Error"), ex.Message, L.T("Common_OK"));
         }
         finally
         {

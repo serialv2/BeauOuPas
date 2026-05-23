@@ -46,7 +46,7 @@ x:DataType="vm:GroupsViewModel"
                     <Border.GestureRecognizers>
                         <TapGestureRecognizer Tapped="OnTabGroupsTapped"/>
                     </Border.GestureRecognizers>
-                    <Label Text="👥 Groupes"
+                    <Label Text="{tr:Translate Key=Groups_Title}"
                            FontSize="13"
                            FontAttributes="Bold"
                            TextColor="White"
@@ -117,7 +117,7 @@ x:DataType="vm:GroupsViewModel"
                                 SelectionMode="None">
                     <CollectionView.Header>
                         <VerticalStackLayout Padding="16,12,16,0">
-                            <Label Text="👥 Mes Groupes"
+                            <Label Text="{tr:Translate Key=Groups_MyGroups}"
                                    FontSize="24"
                                    FontAttributes="Bold"
                                    TextColor="{StaticResource TextPrimary}"
@@ -168,7 +168,7 @@ x:DataType="vm:GroupsViewModel"
                                                    LineBreakMode="TailTruncation"
                                                    VerticalOptions="Center"/>
                                         </HorizontalStackLayout>
-                                        <Label Text="{Binding MemberCount, StringFormat='{0} membres'}"
+                                        <Label Text="{Binding MemberCountLabel}"
                                                FontSize="13"
                                                TextColor="{StaticResource TextTertiary}"/>
                                         <Label Text="{Binding ActiveSeriesLabel}"
@@ -192,7 +192,7 @@ x:DataType="vm:GroupsViewModel"
                                              Spacing="16"
                                              Padding="40">
                             <Label Text="👥" FontSize="64" HorizontalOptions="Center"/>
-                            <Label Text="Aucun groupe"
+                            <Label Text="{tr:Translate Key=Groups_NoGroup}"
                                    FontSize="20"
                                    FontAttributes="Bold"
                                    TextColor="{StaticResource TextPrimary}"
@@ -330,7 +330,7 @@ x:DataType="vm:GroupsViewModel"
                                                     Command="{Binding Source={RelativeSource AncestorType={x:Type vm:GroupsViewModel}}, Path=CopyAccessCodeCommand}"
                                                     CommandParameter="{Binding .}"/>
                                             </Border.GestureRecognizers>
-                                            <Label Text="📋 Copier"
+                                            <Label Text="{tr:Translate Key=Group_Copy}"
                                                    FontSize="12"
                                                    FontAttributes="Bold"
                                                    TextColor="{StaticResource Primary}"/>

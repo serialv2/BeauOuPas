@@ -10,7 +10,7 @@ x:DataType="vm:InviteToSeriesViewModel"
     BackgroundColor="{StaticResource BackgroundPage}">
 
     <ContentPage.ToolbarItems>
-        <ToolbarItem Text="Fermer" Command="{Binding CloseCommand}"/>
+        <ToolbarItem Text="{tr:Translate Key=Common_Close}" Command="{Binding CloseCommand}"/>
     </ContentPage.ToolbarItems>
 
     <Grid RowDefinitions="Auto,Auto,Auto,*" Padding="16,12">
@@ -36,7 +36,7 @@ x:DataType="vm:InviteToSeriesViewModel"
                 <Label Grid.Column="0" Text="🔍" FontSize="16"
                        VerticalOptions="Center" Margin="0,0,8,0"/>
                 <Entry Grid.Column="1"
-                       Placeholder="Rechercher par nom d'utilisateur..."
+                       Placeholder="{tr:Translate Key=InviteSeries_SearchPlaceholder}"
                        Text="{Binding SearchQuery, Mode=TwoWay}"
                        FontSize="15" TextColor="{StaticResource TextPrimary}"
                        PlaceholderColor="{StaticResource TextDisabled}"
@@ -96,7 +96,7 @@ x:DataType="vm:InviteToSeriesViewModel"
                                 <Label Text="{Binding Username}"
                                        FontSize="15" FontAttributes="Bold"
                                        TextColor="{StaticResource TextPrimary}"/>
-                                <Label Text="✅ Ami"
+                                <Label Text="{tr:Translate Key=InviteSeries_Friend}"
                                        FontSize="12" TextColor="{StaticResource Success}"
                                        IsVisible="{Binding IsFriend}"/>
                             </VerticalStackLayout>

@@ -2,6 +2,7 @@
 using CommunityToolkit.Mvvm.Input;
 using BeauOuPas.Models;
 using BeauOuPas.Services;
+using BeauOuPas.Localization;
 using System.Text.Json;
 
 namespace BeauOuPas.ViewModels.Groups;
@@ -155,9 +156,9 @@ public partial class GroupsViewModel : ObservableObject
                 AccessCode = s.AccessCode ?? string.Empty,
                 StatusLabel = s.Status switch
                 {
-                    "preparing" => "⏳ Préparation",
-                    "active" => "▶ En cours",
-                    "finished" => "✓ Terminée",
+                    "preparing" => L.T("Series_Status_Preparing"),
+                    "active" => L.T("Series_Status_Active"),
+                    "finished" => L.T("Series_Status_Finished"),
                     _ => s.Status
                 },
                 StatusColor = s.Status switch
@@ -234,9 +235,9 @@ public partial class GroupsViewModel : ObservableObject
         {
             await Clipboard.Default.SetTextAsync(series.AccessCode);
             await Shell.Current.DisplayAlert(
-                "✅ Copié",
-                $"Le code « {series.AccessCode} » a été copié dans le presse-papiers.",
-                "OK");
+                L.T("Group_Copied_Title"),
+                L.F("Group_CodeCopied_Msg", series.AccessCode),
+                L.T("Common_OK"));
         }
         catch (Exception ex)
         {
@@ -259,10 +260,11 @@ public class GroupItem
     public bool IsOwnedByMe { get; set; } = false;
 
     public int MemberCount { get; set; }
+    public string MemberCountLabel => L.F("Groups_MemberCount", MemberCount);
     public int ActiveSeriesCount { get; set; }
     public bool HasActiveSeries => ActiveSeriesCount > 0;
     public string ActiveSeriesLabel => ActiveSeriesCount > 0
-        ? $"📋 {ActiveSeriesCount} série(s) active(s)" : string.Empty;
+        ? L.F("Groups_ActiveSeriesCount", ActiveSeriesCount) : string.Empty;
 }
 
 public class StandaloneSeriesItem

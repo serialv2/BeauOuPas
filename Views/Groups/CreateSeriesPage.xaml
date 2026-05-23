@@ -10,7 +10,7 @@ x:DataType="vm:CreateSeriesViewModel"
     BackgroundColor="{StaticResource BackgroundPage}">
 
     <ContentPage.ToolbarItems>
-        <ToolbarItem Text="Annuler" Command="{Binding CancelCommand}"/>
+        <ToolbarItem Text="{tr:Translate Key=Common_Cancel}" Command="{Binding CancelCommand}"/>
     </ContentPage.ToolbarItems>
 
     <ScrollView>
@@ -21,7 +21,7 @@ x:DataType="vm:CreateSeriesViewModel"
                    TextColor="{StaticResource TextPrimary}" Margin="0,0,0,6"/>
 
             <!-- Contexte groupe si applicable -->
-            <Label Text="{Binding GroupName, StringFormat='Dans le groupe : {0}'}"
+            <Label Text="{Binding GroupName, StringFormat={tr:Translate Key=CreateSeries_InGroupFormat}}"
                    IsVisible="{Binding HasGroup}"
                    FontSize="13" TextColor="{StaticResource Primary}" Margin="0,0,0,16"/>
             <Label Text="{tr:Translate Key=CreateSeriesType_Standalone}"
@@ -32,9 +32,9 @@ x:DataType="vm:CreateSeriesViewModel"
             <Border BackgroundColor="White" StrokeShape="RoundRectangle 14"
                     Stroke="{StaticResource BorderLight}" StrokeThickness="1" Padding="16" Margin="0,0,0,12">
                 <VerticalStackLayout Spacing="8">
-                    <Label Text="Titre *" FontSize="13" FontAttributes="Bold"
+                    <Label Text="{tr:Translate Key=CreateSeries_TitleLabel}" FontSize="13" FontAttributes="Bold"
                            TextColor="{StaticResource TextTertiary}" TextTransform="Uppercase"/>
-                    <Entry Placeholder="Ex: Qui est le plus courageux ?"
+                    <Entry Placeholder="{tr:Translate Key=CreateSeries_TitlePlaceholder}"
                            Text="{Binding Title}" FontSize="16"
                            TextColor="{StaticResource TextPrimary}" PlaceholderColor="{StaticResource TextDisabled}"
                            BackgroundColor="Transparent"/>
@@ -45,7 +45,7 @@ x:DataType="vm:CreateSeriesViewModel"
             <Border BackgroundColor="White" StrokeShape="RoundRectangle 14"
                     Stroke="{StaticResource BorderLight}" StrokeThickness="1" Padding="16" Margin="0,0,0,20">
                 <VerticalStackLayout Spacing="8">
-                    <Label Text="Description" FontSize="13" FontAttributes="Bold"
+                    <Label Text="{tr:Translate Key=CreateSeries_DescLabel}" FontSize="13" FontAttributes="Bold"
                            TextColor="{StaticResource TextTertiary}" TextTransform="Uppercase"/>
                     <Editor Placeholder="{tr:Translate Key=CreateSeries_DescriptionLabel}"
                             Text="{Binding Description}" FontSize="15"
@@ -56,10 +56,10 @@ x:DataType="vm:CreateSeriesViewModel"
             </Border>
 
             <!-- Max projets -->
-            <Label Text="Nombre max de projets"
+            <Label Text="{tr:Translate Key=CreateSeries_MaxProjectsLabel}"
                    FontSize="17" FontAttributes="Bold"
                    TextColor="{StaticResource TextPrimary}" Margin="0,0,0,10"/>
-            <Label Text="{Binding MaxProjects, StringFormat='{0} projets maximum'}"
+            <Label Text="{Binding MaxProjects, StringFormat={tr:Translate Key=CreateSeries_MaxProjectsFormat}}"
                    FontSize="13" TextColor="{StaticResource Primary}" Margin="0,0,0,10"/>
             <Grid ColumnDefinitions="*,*,*,*" ColumnSpacing="8" Margin="0,0,0,20">
                 <Border Grid.Column="0" x:Name="BtnMax5"
@@ -101,10 +101,10 @@ x:DataType="vm:CreateSeriesViewModel"
             </Grid>
 
             <!-- Max par membre -->
-            <Label Text="Projets max par membre"
+            <Label Text="{tr:Translate Key=CreateSeries_MaxPerMemberLabel}"
                    FontSize="17" FontAttributes="Bold"
                    TextColor="{StaticResource TextPrimary}" Margin="0,0,0,10"/>
-            <Label Text="{Binding MaxPerMember, StringFormat='{0} projet(s) par membre'}"
+            <Label Text="{Binding MaxPerMember, StringFormat={tr:Translate Key=CreateSeries_MaxPerMemberFormat}}"
                    FontSize="13" TextColor="{StaticResource Primary}" Margin="0,0,0,10"/>
             <Grid ColumnDefinitions="*,*,*,*" ColumnSpacing="8" Margin="0,0,0,24">
                 <Border Grid.Column="0" x:Name="BtnPer1"
@@ -191,11 +191,11 @@ x:DataType="vm:CreateSeriesViewModel"
                     </Border.GestureRecognizers>
                     <VerticalStackLayout Spacing="6" HorizontalOptions="Center">
                         <Label Text="👀" FontSize="32" HorizontalOptions="Center"/>
-                        <Label Text="Visibles"
+                        <Label Text="{tr:Translate Key=CreateSeries_Visible}"
                                FontSize="14" FontAttributes="Bold"
                                TextColor="{StaticResource TextPrimary}"
                                HorizontalOptions="Center"/>
-                        <Label Text="Tout le monde voit tout"
+                        <Label Text="{tr:Translate Key=CreateSeries_VisibleHint}"
                                FontSize="11" TextColor="{StaticResource TextTertiary}"
                                HorizontalTextAlignment="Center"
                                HorizontalOptions="Center"/>
@@ -252,7 +252,7 @@ x:DataType="vm:CreateSeriesViewModel"
                            VerticalOptions="Center"/>
 
                     <VerticalStackLayout Grid.Column="1" Spacing="4" VerticalOptions="Center">
-                        <Label Text="Les membres peuvent ajouter des projets"
+                        <Label Text="{tr:Translate Key=CreateSeries_MembersAddLabel}"
                                FontSize="14" FontAttributes="Bold"
                                TextColor="{StaticResource TextPrimary}"/>
                         <Label Text="{tr:Translate Key=CreateSeries_MembersAddHint}"

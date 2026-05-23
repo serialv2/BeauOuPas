@@ -3,6 +3,7 @@ using BeauOuPas.Services;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System.Collections.ObjectModel;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace BeauOuPas.ViewModels.Projects;
 
@@ -172,9 +173,8 @@ public partial class CreateProjectViewModel : ObservableObject
         OnPropertyChanged(nameof(FemaleTextColor)); OnPropertyChanged(nameof(MaleTextColor));
     }
 
-    partial void OnMinAgeChanged(int value) { if (value > MaxAge) MaxAge = value; }
-    partial void OnMaxAgeChanged(int value) { if (value < MinAge) MinAge = value; }
-
+    partial void OnMinAgeChanged(int value) { if (value > MaxAge) MinAge = value - 1; }
+    partial void OnMaxAgeChanged(int value) { if (value < MinAge) MaxAge = value + 1; }
     // ─── Navigation ──────────────────────────────────────────────────
     [RelayCommand]
     private void GoToStep3() => NavigateToStep(3);

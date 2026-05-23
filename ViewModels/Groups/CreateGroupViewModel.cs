@@ -1,15 +1,13 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
+﻿using BeauOuPas.Localization;
 using BeauOuPas.Models;
 using BeauOuPas.Services;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using static Android.Util.EventLogTags;
+using static Java.Util.Jar.Attributes;
 
 namespace BeauOuPas.ViewModels.Groups;
 
-// ⚡ MODIFIÉ : ajout d'un QueryProperty "ChainCreate".
-// Quand l'utilisateur arrive depuis CreateContextPage (option "Nouveau groupe"),
-// ce flag est mis à true. Une fois le groupe créé, on enchaîne automatiquement
-// sur CreateSeriesTypePage avec le GroupId tout neuf — au lieu de revenir
-// simplement en arrière.
 [QueryProperty(nameof(ChainCreate), "ChainCreate")]
 public partial class CreateGroupViewModel : ObservableObject
 {
@@ -28,12 +26,6 @@ public partial class CreateGroupViewModel : ObservableObject
     [ObservableProperty] private bool _isLoadingFriends = false;
     [ObservableProperty] private List<FriendSelectItem> _friends = new();
     [ObservableProperty] private bool _hasFriends = false;
-
-    /// <summary>
-    /// Si vrai, après création du groupe on enchaîne sur CreateSeriesTypePage
-    /// au lieu de revenir en arrière. Reçu via QueryProperty depuis
-    /// CreateContextPage.
-    /// </summary>
     [ObservableProperty] private bool _chainCreate = false;
 
     public int SelectedCount => Friends.Count(f => f.IsSelected);
@@ -72,7 +64,6 @@ public partial class CreateGroupViewModel : ObservableObject
 
         Friends[idx].IsSelected = !Friends[idx].IsSelected;
 
-        // Forcer le rafraîchissement de la liste
         var updated = Friends.ToList();
         Friends = null!;
         Friends = updated;
@@ -85,7 +76,7 @@ public partial class CreateGroupViewModel : ObservableObject
     {
         if (string.IsNullOrWhiteSpace(Name))
         {
-            await Shell.Current.DisplayAlert("Erreur", "Le nom du groupe est obligatoire.", "OK");
+            await Shell.Current.DisplayAlert(L.T("Common_Error"), L.T("CreateGroup_NameRequired"), L.T("Common_OK"));
             return;
         }
 
@@ -95,30 +86,21 @@ public partial class CreateGroupViewModel : ObservableObject
             var group = await _groupService.CreateGroupAsync(Name.Trim(), Description.Trim());
             if (group == null)
             {
-                await Shell.Current.DisplayAlert("Erreur", "Impossible de créer le groupe.", "OK");
+                await Shell.Current.DisplayAlert(L.T("Common_Error"), L.T("CreateGroup_CreateFailed"), L.T("Common_OK"));
                 return;
             }
 
-            // Ajouter les amis sélectionnés
             var selected = Friends.Where(f => f.IsSelected).ToList();
             foreach (var friend in selected)
                 await _groupService.AddMemberAsync(group.Id, friend.UserId);
 
-            await Shell.Current.DisplayAlert("✅ Groupe créé !",
-                $"Le groupe \"{group.Name}\" a été créé avec {selected.Count + 1} membre(s).", "Super !");
+            await Shell.Current.DisplayAlert(L.T("CreateGroup_Created_Title"),
+                L.F("CreateGroup_Created_Msg", group.Name, selected.Count + 1), L.T("CreateGroup_Created_OK"));
 
-            // ⚡ NOUVEAU : si on est dans le flow "créer groupe puis créer série",
-            // on enchaîne sur CreateSeriesTypePage avec le GroupId tout neuf.
-            // Sinon comportement classique : retour en arrière.
             if (ChainCreate)
             {
-                // On retire d'abord la page courante (CreateGroupPage) pour
-                // que le retour arrière depuis CreateSeriesTypePage ne ramène
-                // pas l'utilisateur sur le formulaire de création de groupe.
-                // On revient à HomePage puis on pousse CreateSeriesTypePage
-                // avec le GroupId tout neuf.
                 await Shell.Current.GoToAsync("..");
-                await Task.Delay(50); // laisse le temps à la nav de se stabiliser
+                await Task.Delay(50);
                 await Shell.Current.GoToAsync("CreateSeriesTypePage",
                     new Dictionary<string, object>
                     {
@@ -134,7 +116,7 @@ public partial class CreateGroupViewModel : ObservableObject
         catch (Exception ex)
         {
             System.Diagnostics.Debug.WriteLine($"CreateGroup: {ex.Message}");
-            await Shell.Current.DisplayAlert("Erreur", ex.Message, "OK");
+            await Shell.Current.DisplayAlert(L.T("Common_Error"), ex.Message, L.T("Common_OK"));
         }
         finally { IsLoading = false; }
     }

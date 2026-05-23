@@ -1,6 +1,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using BeauOuPas.Services;
+using BeauOuPas.Localization;
 
 namespace BeauOuPas.ViewModels.Groups;
 
@@ -23,7 +24,7 @@ public partial class JoinSeriesViewModel : ObservableObject
     {
         if (string.IsNullOrWhiteSpace(Code))
         {
-            ErrorMessage = "Saisis un code d'accès.";
+            ErrorMessage = L.T("JoinSeries_CodeRequired");
             HasError = true;
             return;
         }
@@ -72,9 +73,9 @@ public partial class JoinSeriesViewModel : ObservableObject
             else
             {
                 await Shell.Current.DisplayAlert(
-                    "Série terminée",
-                    $"La série \"{series.Title}\" est terminée.",
-                    "OK");
+                    L.T("JoinSeries_Finished_Title"),
+                    L.F("JoinSeries_Finished_Msg", series.Title),
+                    L.T("Common_OK"));
             }
         }
         catch (Exception ex)

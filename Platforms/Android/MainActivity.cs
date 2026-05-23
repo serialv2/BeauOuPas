@@ -1,3 +1,4 @@
+
 using Android.App;
 using Android.Content;
 using Android.Content.PM;
@@ -8,8 +9,6 @@ using Plugin.MauiMtAdmob;
 using CommunityToolkit.Maui.Views;
 
 namespace BeauOuPas;
-
-
 
 [IntentFilter(
     new[] { Intent.ActionView },
@@ -25,7 +24,12 @@ namespace BeauOuPas;
     new[] { Intent.ActionView },
     Categories = new[] { Intent.CategoryDefault, Intent.CategoryBrowsable },
     DataScheme = "beauoupas",
-    DataHost = "join")]   // ⚡ NOUVEAU : scan QR code TV pour rejoindre une série
+    DataHost = "join")]
+[IntentFilter(
+    new[] { Intent.ActionView },
+    Categories = new[] { Intent.CategoryDefault, Intent.CategoryBrowsable },
+    DataScheme = "beauoupas",
+    DataHost = "email-confirmed")]  // ⚡ BUG 1 — Deep link confirmation email
 [Activity(
     Theme = "@style/Maui.SplashTheme",
     MainLauncher = true,
@@ -39,7 +43,6 @@ public class MainActivity : MauiAppCompatActivity
     {
         base.OnCreate(savedInstanceState);
 
-        // ✅ Init recadrage - version compatible
         new ImageCropper.Maui.Platform().Init(this);
 
         CrossMauiMTAdmob.Current.Init(this, "ca-app-pub-5814544077070305~4139208130");
@@ -68,8 +71,6 @@ public class MainActivity : MauiAppCompatActivity
 
                 if (host == "join")
                 {
-                    // ⚡ NOUVEAU : QR code TV scanné → stocker le code de série
-                    // L'app récupèrera ce code au lancement et navigera vers JoinSeriesPage
                     var query = Intent.Data.EncodedQuery ?? string.Empty;
                     var seriesCode = ExtractCodeFromQuery(query);
                     if (!string.IsNullOrEmpty(seriesCode))
@@ -81,7 +82,7 @@ public class MainActivity : MauiAppCompatActivity
                 }
                 else
                 {
-                    // beauoupas://callback, beauoupas://email-confirmed → OAuth flow
+                    // beauoupas://callback, beauoupas://email-confirmed, etc.
                     var uri = new Uri(Intent.Data.ToString()!);
                     HandleOAuthCallback(uri);
                 }
@@ -117,7 +118,6 @@ public class MainActivity : MauiAppCompatActivity
 
                 if (host == "join")
                 {
-                    // ⚡ NOUVEAU : QR code TV scanné depuis app déjà ouverte
                     var query = intent.Data.EncodedQuery ?? string.Empty;
                     var seriesCode = ExtractCodeFromQuery(query);
                     if (!string.IsNullOrEmpty(seriesCode))
@@ -126,7 +126,6 @@ public class MainActivity : MauiAppCompatActivity
                         System.Diagnostics.Debug.WriteLine(
                             $"[MainActivity] Series code stocké (NewIntent): {seriesCode}");
 
-                        // L'app est déjà ouverte → on déclenche immédiatement le traitement
                         MainThread.BeginInvokeOnMainThread(async () =>
                         {
                             if (Microsoft.Maui.Controls.Application.Current is App app)
@@ -136,6 +135,7 @@ public class MainActivity : MauiAppCompatActivity
                 }
                 else
                 {
+                    // beauoupas://callback, beauoupas://email-confirmed, etc.
                     var uri = new Uri(intent.Data.ToString()!);
                     HandleOAuthCallback(uri);
                 }
@@ -143,10 +143,6 @@ public class MainActivity : MauiAppCompatActivity
         }
     }
 
-    /// <summary>
-    /// Extrait le paramètre code= depuis une query string.
-    /// Ex : "code=ABC123&type=tv" → "ABC123"
-    /// </summary>
     private string ExtractCodeFromQuery(string query)
     {
         if (string.IsNullOrEmpty(query)) return string.Empty;
@@ -170,7 +166,6 @@ public class MainActivity : MauiAppCompatActivity
         global::Android.Content.Intent? data)
     {
         base.OnActivityResult(requestCode, resultCode, data);
-        // ✅ Compatibilité recadrage
         new ImageCropper.Maui.Platform().OnActivityResult(requestCode, (int)resultCode, data);
     }
 

@@ -1,7 +1,7 @@
-﻿
-using Postgrest.Attributes;
+﻿using Postgrest.Attributes;
 using Postgrest.Models;
 using System.Text.Json.Serialization;
+using BeauOuPas.Resources.Strings;
 
 namespace BeauOuPas.Models;
 
@@ -35,23 +35,51 @@ public class CreditTransaction : BaseModel
         ? $"+{Amount} crédit{(Amount > 1 ? "s" : "")}"
         : $"{Amount} crédit{(Math.Abs(Amount) > 1 ? "s" : "")}";
 
-    // ⚡ FIX: ajout des cas manquants. Avant, "series_project" tombait dans le
-    // default `_ => Type` et s'affichait brut dans la page Mes Crédits.
-    // Note: les libellés sont aujourd'hui hardcodés en français (cohérent avec
-    // l'existant); une refonte i18n via converter pourra venir plus tard.
+    // ─── Libellé du type (i18n) ──────────────────────────────────────
+    // Le libellé est désormais TRADUIT via AppResources (cohérent avec
+    // le reste de l'app, 7 langues), au lieu d'être codé en dur en FR.
+    //
+    // Mapping : chaque `Type` (valeur de credit_transactions.type) est
+    // mappé vers une clé de ressource "Credit_Type_<Type>".
+    //
+    // Fallback ROBUSTE en cascade :
+    //   1) clé de traduction "Credit_Type_<Type>" si elle existe
+    //   2) sinon, la Description de la transaction (déjà lisible,
+    //      ex. "Création d'une partie rapide")
+    //   3) sinon, le Type brut (dernier recours, ne devrait pas arriver)
+    //
+    // Ainsi un type inconnu (futur) n'affichera JAMAIS de code technique
+    // brut tant que la transaction a une description, et restera
+    // correct dès qu'on ajoute la clé .resx correspondante.
     [JsonIgnore]
-    public string TypeLabel => Type switch
+    public string TypeLabel
     {
-        "welcome" => "🎁 Bienvenue",
-        "vote" => "🗳️ Vote",
-        "ad_banner" => "📢 Pub bannière",
-        "ad_reward" => "🎬 Pub rewarded",
-        "project_submit" => "📷 Projet soumis",
-        "project_boost" => "🚀 Boost projet",
-        "meet" => "💘 Rencontre",
-        "rewind" => "↩️ Rewind",
-        "series_project" => "🎬 Projet en série",
-        "friend_invite" => "👥 Ami invité",
-        _ => Type
-    };
+        get
+        {
+            // 1) Tentative de traduction via la clé Credit_Type_<Type>
+            if (!string.IsNullOrWhiteSpace(Type))
+            {
+                try
+                {
+                    var rm = AppResources.ResourceManager;
+                    var culture = AppResources.Culture;
+                    var key = "Credit_Type_" + Type;
+                    var translated = rm.GetString(key, culture);
+                    if (!string.IsNullOrWhiteSpace(translated))
+                        return translated;
+                }
+                catch
+                {
+                    // ResourceManager indisponible : on passe au fallback
+                }
+            }
+
+            // 2) Fallback : description de la transaction (déjà lisible)
+            if (!string.IsNullOrWhiteSpace(Description))
+                return Description!;
+
+            // 3) Dernier recours : le type brut
+            return Type;
+        }
+    }
 }

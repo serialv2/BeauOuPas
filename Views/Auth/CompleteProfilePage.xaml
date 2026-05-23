@@ -31,7 +31,7 @@
                 <Border Stroke="{StaticResource BorderMedium}" StrokeThickness="1"
                         StrokeShape="RoundRectangle 10" BackgroundColor="White">
                     <Entry Text="{Binding Username}"
-                           Placeholder="@monpseudo"
+                           Placeholder="{tr:Translate Key=Profile_UsernamePlaceholder}"
                            PlaceholderColor="{StaticResource TextDisabled}" Margin="14,0"/>
                 </Border>
             </VerticalStackLayout>

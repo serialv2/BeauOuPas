@@ -42,7 +42,6 @@ public partial class CreateQuizViewModel : ObservableObject
     [ObservableProperty] private string? _groupId;
     [ObservableProperty] private string? _groupName;
 
-    // 🔧 LOT 1.5 : EditMode
     [ObservableProperty] private string? _seriesId;
     [ObservableProperty] private string? _seriesTitle;
     [ObservableProperty] private string? _editMode;
@@ -60,14 +59,10 @@ public partial class CreateQuizViewModel : ObservableObject
 
     partial void OnSeriesIdChanged(string? value)
     {
-        // Quand le SeriesId est setté en mode édition, on charge les questions
         if (!string.IsNullOrEmpty(value) && IsEditMode)
-        {
             _ = LoadExistingQuizAsync();
-        }
     }
 
-    // Labels dynamiques selon mode
     public string SaveButtonLabel => IsEditMode
         ? L.T("CreateQuiz_UpdateButton")
         : L.T("CreateQuiz_CreateButton");
@@ -95,36 +90,39 @@ public partial class CreateQuizViewModel : ObservableObject
     [NotifyPropertyChangedFor(nameof(StyleWeakestBorder))]
     private string _quizStyle = "kahoot";
 
-    // ─── Bindings calculés pour le sélecteur de style 2×2 ────────────
-    // Couleurs : sélectionné = fond rose clair + bordure rose accent;
-    //            non sélectionné = fond blanc + bordure grise neutre.
-    public bool StyleKahootSelected     => QuizStyle == "kahoot";
-    public bool StyleMillionaireSelected=> QuizStyle == "millionaire";
-    public bool StyleBurgerSelected     => QuizStyle == "burger";
-    public bool StyleWeakestSelected    => QuizStyle == "weakest";
+    public bool StyleKahootSelected => QuizStyle == "kahoot";
+    public bool StyleMillionaireSelected => QuizStyle == "millionaire";
+    public bool StyleBurgerSelected => QuizStyle == "burger";
+    public bool StyleWeakestSelected => QuizStyle == "weakest";
 
-    public Color StyleKahootBg          => StyleKahootSelected      ? Color.FromArgb("#E5DCC9") : Colors.White;
-    public Color StyleMillionaireBg     => StyleMillionaireSelected ? Color.FromArgb("#E5DCC9") : Colors.White;
-    public Color StyleBurgerBg          => StyleBurgerSelected      ? Color.FromArgb("#E5DCC9") : Colors.White;
-    public Color StyleWeakestBg         => StyleWeakestSelected     ? Color.FromArgb("#E5DCC9") : Colors.White;
+    public Color StyleKahootBg => StyleKahootSelected ? Color.FromArgb("#E5DCC9") : Colors.White;
+    public Color StyleMillionaireBg => StyleMillionaireSelected ? Color.FromArgb("#E5DCC9") : Colors.White;
+    public Color StyleBurgerBg => StyleBurgerSelected ? Color.FromArgb("#E5DCC9") : Colors.White;
+    public Color StyleWeakestBg => StyleWeakestSelected ? Color.FromArgb("#E5DCC9") : Colors.White;
 
-    public Color StyleKahootBorder      => StyleKahootSelected      ? Color.FromArgb("#C2754C") : Color.FromArgb("#E5DCC9");
+    public Color StyleKahootBorder => StyleKahootSelected ? Color.FromArgb("#C2754C") : Color.FromArgb("#E5DCC9");
     public Color StyleMillionaireBorder => StyleMillionaireSelected ? Color.FromArgb("#C2754C") : Color.FromArgb("#E5DCC9");
-    public Color StyleBurgerBorder      => StyleBurgerSelected      ? Color.FromArgb("#C2754C") : Color.FromArgb("#E5DCC9");
-    public Color StyleWeakestBorder     => StyleWeakestSelected     ? Color.FromArgb("#C2754C") : Color.FromArgb("#E5DCC9");
+    public Color StyleBurgerBorder => StyleBurgerSelected ? Color.FromArgb("#C2754C") : Color.FromArgb("#E5DCC9");
+    public Color StyleWeakestBorder => StyleWeakestSelected ? Color.FromArgb("#C2754C") : Color.FromArgb("#E5DCC9");
 
     [RelayCommand]
     private void SelectStyle(string? style)
     {
         if (string.IsNullOrEmpty(style)) return;
-        // Garde-fou : on accepte uniquement les 4 valeurs connues
         if (style is "kahoot" or "millionaire" or "burger" or "weakest")
-        {
             QuizStyle = style;
-        }
     }
 
     [ObservableProperty] private bool _showFullLeaderboard = true;
+
+    // ⚡ BUG 5 — Selfie réactivé sur la page de création de quiz
+    [ObservableProperty] private bool _selfieEnabled = true;
+
+    [RelayCommand]
+    private void ToggleSelfieEnabled()
+    {
+        SelfieEnabled = !SelfieEnabled;
+    }
 
     // ─── Liste des questions ─────────────────────────────────────
     public ObservableCollection<QuizQuestionItem> Questions { get; } = new();
@@ -140,7 +138,6 @@ public partial class CreateQuizViewModel : ObservableObject
     [ObservableProperty] private bool _isLoading = false;
 
     public bool HasGroup => !string.IsNullOrEmpty(GroupId);
-
     partial void OnGroupIdChanged(string? value) => OnPropertyChanged(nameof(HasGroup));
 
     // ─── Helpers ─────────────────────────────────────────────────
@@ -187,7 +184,6 @@ public partial class CreateQuizViewModel : ObservableObject
         Questions.Add(newQuestion);
     }
 
-    // 🔧 LOT 1.5 : charge les questions existantes en mode édition
     private async Task LoadExistingQuizAsync()
     {
         if (string.IsNullOrEmpty(SeriesId)) return;
@@ -195,8 +191,6 @@ public partial class CreateQuizViewModel : ObservableObject
         IsLoading = true;
         try
         {
-            // Le titre/description ne sont pas modifiables ici (mode édition questions seulement)
-            // mais on les pré-affiche en lecture pour donner du contexte
             if (!string.IsNullOrEmpty(SeriesTitle))
                 Title = SeriesTitle;
 
@@ -253,7 +247,7 @@ public partial class CreateQuizViewModel : ObservableObject
             {
                 await Shell.Current.DisplayAlert(
                     L.T("CreateQuiz_ValidationTitle"),
-                    $"Navigation impossible : {ex.Message}",
+                    L.F("CreateQuiz_NavImpossible", ex.Message),
                     L.T("Common_OK"));
             }
             catch { }
@@ -311,7 +305,6 @@ public partial class CreateQuizViewModel : ObservableObject
     [RelayCommand]
     private async Task CreateAsync()
     {
-        // Validation locale
         if (IsCreateMode && string.IsNullOrWhiteSpace(Title))
         {
             await Shell.Current.DisplayAlert(
@@ -350,14 +343,13 @@ public partial class CreateQuizViewModel : ObservableObject
         IsLoading = true;
         try
         {
-            // 🔧 LOT 1.5 : aiguillage selon le mode
             if (IsEditMode)
             {
                 if (string.IsNullOrEmpty(SeriesId))
                 {
                     await Shell.Current.DisplayAlert(
                         L.T("CreateQuiz_CreationFailedTitle"),
-                        "SeriesId manquant en mode édition",
+                        L.T("CreateQuiz_SeriesIdMissing"),
                         L.T("Common_OK"));
                     return;
                 }
@@ -383,7 +375,7 @@ public partial class CreateQuizViewModel : ObservableObject
                 return;
             }
 
-            // ─── Mode création (comportement existant) ──────────────
+            // ─── Mode création ──────────────────────────────────────
             var effectiveGroupId = string.IsNullOrEmpty(GroupId) ? null : GroupId;
 
             var result = await _quizService.CreateQuizAsync(
@@ -392,7 +384,8 @@ public partial class CreateQuizViewModel : ObservableObject
                 description: Description?.Trim() ?? string.Empty,
                 quizStyle: QuizStyle,
                 showFullLeaderboard: ShowFullLeaderboard,
-                questions: Questions.ToList());
+                questions: Questions.ToList(),
+                selfieEnabled: SelfieEnabled);  // ⚡ BUG 5
 
             if (!result.Success)
             {
@@ -482,7 +475,6 @@ public partial class CreateQuizViewModel : ObservableObject
             "insufficient_credits" => "CreateQuiz_Error_InsufficientCredits",
             "user_not_found" => "CreateQuiz_Error_UserNotFound",
             "sql_error" => "CreateQuiz_Error_SqlError",
-
             _ => "CreateQuiz_Error_Unknown"
         };
 
@@ -505,7 +497,6 @@ public partial class QuizQuestionItem : ObservableObject
     [ObservableProperty] private bool _hasCorrectAnswer = false;
     [ObservableProperty] private bool _canMoveUp = false;
     [ObservableProperty] private bool _canMoveDown = false;
-    // ⚡ QW2 : sélectionnée en mode multi-sélection ?
     [ObservableProperty] private bool _isSelected = false;
     public List<QuizQuestionOptionItem> Options { get; set; } = new();
     public bool HasPhoto => !string.IsNullOrEmpty(PhotoUrl);

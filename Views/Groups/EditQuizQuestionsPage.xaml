@@ -112,7 +112,7 @@
                         <Border.GestureRecognizers>
                             <TapGestureRecognizer Command="{Binding ExitQuestionSelectionCommand}"/>
                         </Border.GestureRecognizers>
-                        <Label Text="✕ Annuler"
+                        <Label Text="{tr:Translate Key=Group_CancelX}"
                                FontSize="13" FontAttributes="Bold"
                                TextColor="White"/>
                     </Border>

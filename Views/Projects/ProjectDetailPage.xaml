@@ -30,7 +30,7 @@
                                  Padding="16"
                                  Spacing="12">
 
-                <Label Text="Donne ton avis"
+                <Label Text="{tr:Translate Key=ProjectDetail_GiveOpinion}"
                        FontSize="18"
                        FontAttributes="Bold"
                        TextColor="{StaticResource TextPrimary}"
@@ -46,7 +46,7 @@
                             Padding="10">
                         <VerticalStackLayout Spacing="4" HorizontalOptions="Center">
                             <Label Text="❤️" FontSize="34" HorizontalOptions="Center"/>
-                            <Label Text="J'aime"
+                            <Label Text="{tr:Translate Key=ProjectDetail_Like}"
                                    FontSize="12"
                                    TextColor="{StaticResource Success}"
                                    HorizontalOptions="Center"/>
@@ -65,7 +65,7 @@
                             Padding="10">
                         <VerticalStackLayout Spacing="4" HorizontalOptions="Center">
                             <Label Text="😐" FontSize="34" HorizontalOptions="Center"/>
-                            <Label Text="Moyen"
+                            <Label Text="{tr:Translate Key=ProjectDetail_Meh}"
                                    FontSize="12"
                                    TextColor="{StaticResource Warning}"
                                    HorizontalOptions="Center"/>
@@ -84,7 +84,7 @@
                             Padding="10">
                         <VerticalStackLayout Spacing="4" HorizontalOptions="Center">
                             <Label Text="👎" FontSize="34" HorizontalOptions="Center"/>
-                            <Label Text="Pas fan"
+                            <Label Text="{tr:Translate Key=ProjectDetail_Dislike}"
                                    FontSize="12"
                                    TextColor="{StaticResource Error}"
                                    HorizontalOptions="Center"/>
@@ -133,7 +133,7 @@
                                 Padding="8"
                                 HorizontalOptions="Center"
                                 VerticalOptions="Center">
-                            <Label Text="Appuie pour voter A"
+                            <Label Text="{tr:Translate Key=ProjectDetail_TapVoteA}"
                                    TextColor="White"
                                    FontSize="13"
                                    FontAttributes="Bold"/>
@@ -169,7 +169,7 @@
                                 Padding="8"
                                 HorizontalOptions="Center"
                                 VerticalOptions="Center">
-                            <Label Text="Appuie pour voter B"
+                            <Label Text="{tr:Translate Key=ProjectDetail_TapVoteB}"
                                    TextColor="White"
                                    FontSize="13"
                                    FontAttributes="Bold"/>
@@ -188,13 +188,13 @@
                         StrokeShape="RoundRectangle 20"
                         Padding="12,6"
                         HorizontalOptions="Start">
-                    <Label Text="📊 Sondage"
+                    <Label Text="{tr:Translate Key=ProjectDetail_Poll}"
                            TextColor="{StaticResource TextOnAccent}"
                            FontSize="13"
                            FontAttributes="Bold"/>
                 </Border>
 
-                <Label Text="Choisis une option"
+                <Label Text="{tr:Translate Key=ProjectDetail_ChooseOption}"
                        FontSize="18"
                        FontAttributes="Bold"
                        TextColor="{StaticResource TextPrimary}"/>
@@ -225,7 +225,7 @@
                     </CollectionView.ItemTemplate>
                 </CollectionView>
 
-                <Label Text="👆 Appuie sur une option pour voter"
+                <Label Text="{tr:Translate Key=ProjectDetail_TapToVote}"
                        FontSize="13"
                        TextColor="{StaticResource TextTertiary}"
                        HorizontalOptions="Center"/>
@@ -257,7 +257,7 @@
                 <Label Text="✅"
                        FontSize="48"
                        HorizontalOptions="Center"/>
-                <Label Text="Merci pour ton vote !"
+                <Label Text="{tr:Translate Key=ProjectDetail_ThanksVote}"
                        FontSize="18"
                        FontAttributes="Bold"
                        TextColor="{StaticResource TextPrimary}"
@@ -540,7 +540,7 @@
                 <Label Text="🔒"
                        FontSize="48"
                        HorizontalOptions="Center"/>
-                <Label Text="Les statistiques ne sont pas disponibles pour ce projet."
+                <Label Text="{tr:Translate Key=ProjectDetail_NoStats}"
                        FontSize="16"
                        TextColor="{StaticResource TextTertiary}"
                        HorizontalOptions="Center"
