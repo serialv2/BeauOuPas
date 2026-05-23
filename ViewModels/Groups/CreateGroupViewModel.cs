@@ -3,8 +3,6 @@ using BeauOuPas.Models;
 using BeauOuPas.Services;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using static Android.Util.EventLogTags;
-using static Java.Util.Jar.Attributes;
 
 namespace BeauOuPas.ViewModels.Groups;
 
