@@ -277,6 +277,24 @@ public class SeriesService
             }
 
             System.Diagnostics.Debug.WriteLine($"[ResetSeries] OK for series {seriesId}");
+
+            // Nettoyage des votes party (table ajoutée après reset_series_for_replay ;
+            // non couverte par la RPC principale). Idempotent : no-op pour les quiz.
+            try
+            {
+                await _supabase.Rpc("clear_party_answers",
+                    new Dictionary<string, object>
+                    {
+                        { "p_series_id", seriesId },
+                        { "p_user_id",   userId }
+                    });
+            }
+            catch (Exception exParty)
+            {
+                System.Diagnostics.Debug.WriteLine(
+                    $"[ResetSeries] clear_party_answers (non bloquant): {exParty.Message}");
+            }
+
             return true;
         }
         catch (Exception ex)

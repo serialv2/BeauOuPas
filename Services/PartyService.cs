@@ -148,18 +148,33 @@ public class PartyService
     }
 
     // ─── A déjà voté ? ───────────────────────────────────────────
-    public async Task<bool> HasUserVotedAsync(string seriesId, string questionId)
+    // questionStartedAt : si fourni, on exclut les votes antérieurs à
+    // ce timestamp (cas partie relancée avec le même series_id/question_id
+    // sans nettoyage de party_answers — les anciens votes ne doivent pas
+    // bloquer le joueur dans la nouvelle session).
+    public async Task<bool> HasUserVotedAsync(
+        string seriesId,
+        string questionId,
+        DateTime? questionStartedAt = null)
     {
         try
         {
             var userId = CurrentUserId;
             if (userId == null) return false;
 
-            var existing = await _supabase.From<PartyAnswer>()
-                .Where(a => a.SeriesId == seriesId
-                            && a.QuestionId == questionId
-                            && a.VoterId == userId)
-                .Get();
+            var query = _supabase.From<PartyAnswer>()
+                .Filter("series_id",   Postgrest.Constants.Operator.Equals, seriesId)
+                .Filter("question_id", Postgrest.Constants.Operator.Equals, questionId)
+                .Filter("voter_id",    Postgrest.Constants.Operator.Equals, userId);
+
+            if (questionStartedAt.HasValue)
+            {
+                query = query.Filter("created_at",
+                    Postgrest.Constants.Operator.GreaterThanOrEqual,
+                    questionStartedAt.Value.ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ssZ"));
+            }
+
+            var existing = await query.Get();
             return existing.Models.Any();
         }
         catch { return false; }

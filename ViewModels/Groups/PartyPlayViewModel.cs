@@ -419,12 +419,12 @@ public partial class PartyPlayViewModel : ObservableObject, IDisposable
                     (DateTime?)questionNode["started_at"], voteDuration);
                 return;
             }
-            if (await _partyService.HasUserVotedAsync(SeriesId, qId))
+            var questionStartedAt = (DateTime?)questionNode["started_at"];
+            if (await _partyService.HasUserVotedAsync(SeriesId, qId, questionStartedAt))
             {
                 _hasVotedCurrent = true;
                 ShowVotedScreen();
-                StartCountdownFromStartedAt(
-                    (DateTime?)questionNode["started_at"], voteDuration);
+                StartCountdownFromStartedAt(questionStartedAt, voteDuration);
                 return;
             }
 
