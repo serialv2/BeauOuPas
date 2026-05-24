@@ -11,7 +11,10 @@
 	    drawable splash généré par MAUI (@drawable/maui_splash_screen).
 	-->
 	<style name="Maui.SplashTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-		<item name="android:windowBackground">@drawable/maui_splash_screen</item>
+		<!-- Couleur de fond = Color du MauiSplashScreen dans le .csproj (#F4EFE6).
+		     On ne peut pas référencer @drawable/maui_splash_screen ici car ce
+		     drawable est généré par MAUI après le passage d'AAPT2. -->
+		<item name="android:windowBackground">#F4EFE6</item>
 		<item name="android:windowNoTitle">true</item>
 		<item name="android:windowActionBar">false</item>
 		<item name="android:windowFullscreen">false</item>
