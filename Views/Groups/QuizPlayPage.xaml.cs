@@ -59,10 +59,9 @@ public partial class QuizPlayPage : ContentPage
                             $"[QuizPlayPage] Caméra avant: {frontCamera.Name}");
                     }
 
-                    // ⚠️ Sur 2ème navigation (nouveau quiz après être revenu en arrière),
-                    // la SurfaceView n'a pas encore réattaché son Handler quand on appelle
-                    // StartCameraPreview → "Unable to retrieve Handler". On attend le
-                    // Handler max 3s puis on retry une fois si encore échec.
+                    // ⚠️ Android : la SurfaceView peut ne pas avoir réattaché son Handler
+                    // lors d'une 2ème navigation → on attend max 3s.
+                    // iOS : Handler est toujours connecté → boucle instantanée.
                     var handlerTimeout = DateTime.UtcNow.AddSeconds(3);
                     while (HiddenCamera.Handler == null && DateTime.UtcNow < handlerTimeout)
                         await Task.Delay(100);
@@ -70,15 +69,27 @@ public partial class QuizPlayPage : ContentPage
                     try
                     {
                         await HiddenCamera.StartCameraPreview(CancellationToken.None);
+
+                        // ⚠️ iOS : AVCaptureSession.StartRunning() est asynchrone.
+                        // Sans ce délai, CaptureImage peut être appelé avant que la
+                        // session soit vraiment active → MediaCaptured ne se déclenche
+                        // jamais → timeout 8s → selfie null.
+                        if (DeviceInfo.Platform == DevicePlatform.iOS)
+                            await Task.Delay(1500);
+
                         _cameraReady = true;
                         System.Diagnostics.Debug.WriteLine("[QuizPlayPage] Caméra prête");
                     }
-                    catch (Exception exFirst) when (exFirst.Message.Contains("Handler"))
+                    catch (Exception exFirst)
                     {
+                        // Filtre retiré : sur Android le message contient "Handler",
+                        // sur iOS il peut être différent → on retry dans tous les cas.
                         System.Diagnostics.Debug.WriteLine(
-                            $"[QuizPlayPage] Camera 1st try failed, retry: {exFirst.Message}");
+                            $"[QuizPlayPage] Camera 1st try failed, retry in 500ms: {exFirst.Message}");
                         await Task.Delay(500);
                         await HiddenCamera.StartCameraPreview(CancellationToken.None);
+                        if (DeviceInfo.Platform == DevicePlatform.iOS)
+                            await Task.Delay(1500);
                         _cameraReady = true;
                         System.Diagnostics.Debug.WriteLine("[QuizPlayPage] Caméra prête (after retry)");
                     }
@@ -158,34 +169,53 @@ public partial class QuizPlayPage : ContentPage
 
         try
         {
-            var tcs = new TaskCompletionSource<Stream?>();
-            EventHandler<MediaCapturedEventArgs>? handler = null;
+            var result = await TryCaptureOnceAsync("[QuizPlayPage]");
 
-            handler = (s, e) =>
+            // iOS : premier frame parfois null (AE/AF pas encore stabilisé).
+            // Un retry immédiat suffit en général.
+            if (result == null && DeviceInfo.Platform == DevicePlatform.iOS)
             {
-                HiddenCamera.MediaCaptured -= handler;
-                tcs.TrySetResult(e.Media);
-            };
-
-            HiddenCamera.MediaCaptured += handler;
-
-            await HiddenCamera.CaptureImage(CancellationToken.None);
-
-            // Timeout 8s pour les premiers shots qui peuvent être lents
-            var completed = await Task.WhenAny(tcs.Task, Task.Delay(8000));
-            if (completed != tcs.Task)
-            {
-                HiddenCamera.MediaCaptured -= handler;
-                System.Diagnostics.Debug.WriteLine("[QuizPlayPage] Selfie capture TIMEOUT (8s)");
-                return null;
+                System.Diagnostics.Debug.WriteLine(
+                    "[QuizPlayPage] MediaCaptured null (iOS first frame), retry");
+                await Task.Delay(300);
+                result = await TryCaptureOnceAsync("[QuizPlayPage] retry");
             }
-            return await tcs.Task;
+
+            return result;
         }
         catch (Exception ex)
         {
             System.Diagnostics.Debug.WriteLine($"[QuizPlayPage] CaptureSelfie: {ex.Message}");
             return null;
         }
+    }
+
+    /// <summary>
+    /// Tente une seule capture et attend MediaCaptured (timeout 8s).
+    /// Retourne null en cas d'échec ou de timeout.
+    /// </summary>
+    private async Task<Stream?> TryCaptureOnceAsync(string tag)
+    {
+        var tcs = new TaskCompletionSource<Stream?>();
+        EventHandler<MediaCapturedEventArgs>? handler = null;
+
+        handler = (s, e) =>
+        {
+            HiddenCamera.MediaCaptured -= handler;
+            tcs.TrySetResult(e.Media);
+        };
+
+        HiddenCamera.MediaCaptured += handler;
+        await HiddenCamera.CaptureImage(CancellationToken.None);
+
+        var completed = await Task.WhenAny(tcs.Task, Task.Delay(8000));
+        if (completed != tcs.Task)
+        {
+            HiddenCamera.MediaCaptured -= handler;
+            System.Diagnostics.Debug.WriteLine($"{tag} Selfie capture TIMEOUT (8s)");
+            return null;
+        }
+        return await tcs.Task;
     }
 
     protected override async void OnDisappearing()
