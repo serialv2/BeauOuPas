@@ -292,7 +292,10 @@ public class SeriesService
     // Réutilise PhotoUploadService.UploadSessionSelfieFastAsync puis insert
     // une ligne series_selfies. Jamais throw, retourne false si échec.
     // ═════════════════════════════════════════════════════════════════
-    public async Task<bool> UploadSessionSelfieAsync(string seriesId, Stream photoStream)
+    public async Task<bool> UploadSessionSelfieAsync(
+        string seriesId,
+        Stream photoStream,
+        string? questionId = null)
     {
         try
         {
@@ -307,6 +310,7 @@ public class SeriesService
             {
                 SeriesId = seriesId,
                 SeriesProjectId = null,
+                SeriesQuestionId = questionId,
                 UserId = userId,
                 PhotoUrl = url,
                 CreatedAt = DateTime.UtcNow

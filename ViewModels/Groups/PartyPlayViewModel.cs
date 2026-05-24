@@ -524,7 +524,8 @@ public partial class PartyPlayViewModel : ObservableObject, IDisposable
 
         if (shouldDoSelfie)
         {
-            _ = CaptureAndUploadSelfieAsync();
+            // ⚡ Capture l'ID de question à L'INSTANT du vote (cf. note QuizPlay).
+            _ = CaptureAndUploadSelfieAsync(_currentQuestionId);
         }
     }
 
@@ -532,7 +533,7 @@ public partial class PartyPlayViewModel : ObservableObject, IDisposable
     /// <summary>
     /// Capture immédiate puis upload différé 0-10s. Non-bloquant.
     /// </summary>
-    private async Task CaptureAndUploadSelfieAsync()
+    private async Task CaptureAndUploadSelfieAsync(string? questionId)
     {
         IsSelfieCapturing = true;
         try
@@ -559,7 +560,7 @@ public partial class PartyPlayViewModel : ObservableObject, IDisposable
 
             bufferedStream.Position = 0;
             var ok = await _seriesService.UploadSessionSelfieAsync(
-                SeriesId, bufferedStream);
+                SeriesId, bufferedStream, questionId);
 
             System.Diagnostics.Debug.WriteLine(
                 $"[PartyPlay] Selfie upload result: {ok}");

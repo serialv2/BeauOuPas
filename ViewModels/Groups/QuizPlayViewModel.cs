@@ -821,7 +821,11 @@ public partial class QuizPlayViewModel : ObservableObject, IDisposable
 
         if (shouldDoSelfie)
         {
-            _ = CaptureAndUploadSelfieAsync();
+            // ⚡ Capture l'ID de question à L'INSTANT du vote. Pendant les ~8-18s
+            // entre capture et upload, le user peut être passé sur Q[n+1] — on
+            // doit garder l'attachement à la question pour laquelle le selfie
+            // a été pris (sinon il s'afficherait au mauvais reveal côté TV).
+            _ = CaptureAndUploadSelfieAsync(_currentQuestionId);
         }
     }
 
@@ -831,7 +835,7 @@ public partial class QuizPlayViewModel : ObservableObject, IDisposable
     /// vote), puis upload différé d'un délai aléatoire 0-10s pour lisser
     /// le pic réseau si gros événement. Non-bloquant pour l'utilisateur.
     /// </summary>
-    private async Task CaptureAndUploadSelfieAsync()
+    private async Task CaptureAndUploadSelfieAsync(string? questionId)
     {
         IsSelfieCapturing = true;
         try
@@ -858,7 +862,7 @@ public partial class QuizPlayViewModel : ObservableObject, IDisposable
 
             bufferedStream.Position = 0;
             var ok = await _seriesService.UploadSessionSelfieAsync(
-                SeriesId, bufferedStream);
+                SeriesId, bufferedStream, questionId);
 
             System.Diagnostics.Debug.WriteLine(
                 $"[QuizPlay] Selfie upload result: {ok}");
