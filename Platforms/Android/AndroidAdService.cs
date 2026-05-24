@@ -8,7 +8,7 @@ public class AndroidAdService : IAdService
 {
     private const string BannerId = "ca-app-pub-5814544077070305/9551316912";
     private const string RewardedId = "ca-app-pub-5814544077070305/8830321670";
-    private const string InterstitialId = "ca-app-pub-3940256099942544/1033173712";
+    private const string InterstitialId = "ca-app-pub-5814544077070305/2926367650";
 
     private readonly AppSettingsService _settingsService;
     private bool _rewardEarned = false;
