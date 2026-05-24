@@ -68,6 +68,30 @@ public class PhotoUploadService
         }
     }
 
+    // ─── Upload selfie "session" pour quiz / partie rapide ───────────
+    // Pas de seriesProjectId (les selfies quiz/party sont attachés à la
+    // série uniquement, pas à une question particulière).
+    // Path : selfies/{seriesId}/_session/{userId}_{timestamp}.jpg
+    public async Task<string> UploadSessionSelfieFastAsync(
+        Stream imageStream,
+        string seriesId,
+        string userId)
+    {
+        try
+        {
+            var timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+            var path = $"selfies/{seriesId}/_session/{userId}_{timestamp}.jpg";
+
+            var compressed = await _imageService.CreateThumbnailAsync(imageStream);
+            return await UploadToStorageAsync(compressed, path, "photos");
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"UploadSessionSelfieFast: {ex.Message}");
+            return string.Empty;
+        }
+    }
+
     // ─── ⚡ NOUVEAU : Upload photo pour une question de quiz ─────────
     // Bucket "quiz_photos", une seule version compressée (1080px display).
     // Le fichier est nommé avec un GUID temporaire, on n'a pas encore l'ID

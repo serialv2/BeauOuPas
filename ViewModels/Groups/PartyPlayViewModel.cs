@@ -81,6 +81,15 @@ public partial class PartyPlayViewModel : ObservableObject, IDisposable
     private string? _currentQuestionId;
     private bool _hasVotedCurrent = false;
 
+    // ─── Selfie : taux adaptatif selon nb participants ─────────────
+    // Calculé à l'init dans InitAsync. Tirage probabiliste indépendant
+    // à chaque vote. Aucune limite "1 par session" : chaque joueur peut
+    // tomber 0, 1, ou plusieurs fois selon son sort.
+    private double _selfieRate = 0.0;
+    private static readonly Random _selfieRandom = new Random();
+    public Func<Task<Stream?>>? CaptureSelfieRequested { get; set; }
+    [ObservableProperty] private bool _isSelfieCapturing = false;
+
     public PartyPlayViewModel(
         PartyService partyService,
         SeriesService seriesService,
@@ -217,6 +226,14 @@ public partial class PartyPlayViewModel : ObservableObject, IDisposable
             // 4) Charger compteur participants
             ParticipantCount = await _partyService.GetParticipantCountAsync(SeriesId);
             UpdateParticipantLabel();
+
+            // 4bis) Taux de selfie adaptatif. Tirage indépendant à chaque
+            // vote (pas de cap "1 par session" : tout le monde a sa chance
+            // sur chaque question).
+            var safeCount = Math.Max(1, ParticipantCount);
+            _selfieRate = Math.Clamp(0.60 / safeCount, 0.01, 0.60);
+            System.Diagnostics.Debug.WriteLine(
+                $"[PartyPlay] Selfie rate: {_selfieRate:P1} ({safeCount} participants)");
 
             System.Diagnostics.Debug.WriteLine(
                 $"[PartyPlay] Init : status={_series.Status}, idx={CurrentIndex}, " +
@@ -494,6 +511,68 @@ public partial class PartyPlayViewModel : ObservableObject, IDisposable
         }
 
         // Vote confirmé côté serveur — on est déjà sur l'écran "voté".
+
+        // ─── Selfie : tirage probabiliste indépendant ─────────────
+        // Taux calculé dans InitAsync selon le nb de participants.
+        // Tirage à chaque vote : tout le monde a sa chance à chaque
+        // question, pas de cap "1 par session". Capture immédiate
+        // (cam dispo à l'instant T) + upload différé 0-10s pour lisser
+        // le pic réseau. Fire and forget, non-bloquant pour l'UI.
+        bool shouldDoSelfie = !_isDisposed
+            && _selfieRate > 0
+            && _selfieRandom.NextDouble() < _selfieRate;
+
+        if (shouldDoSelfie)
+        {
+            _ = CaptureAndUploadSelfieAsync();
+        }
+    }
+
+    // ─── Capture + upload selfie en arrière-plan ──────────────────
+    /// <summary>
+    /// Capture immédiate puis upload différé 0-10s. Non-bloquant.
+    /// </summary>
+    private async Task CaptureAndUploadSelfieAsync()
+    {
+        IsSelfieCapturing = true;
+        try
+        {
+            if (CaptureSelfieRequested == null) return;
+
+            using var stream = await CaptureSelfieRequested.Invoke();
+            if (stream == null || _isDisposed)
+            {
+                System.Diagnostics.Debug.WriteLine(
+                    "[PartyPlay] Selfie stream null (capture failed/denied/disposed)");
+                return;
+            }
+
+            using var bufferedStream = new MemoryStream();
+            await stream.CopyToAsync(bufferedStream);
+
+            var delayMs = _selfieRandom.Next(0, 10_001);
+            System.Diagnostics.Debug.WriteLine(
+                $"[PartyPlay] Selfie captured, upload in {delayMs}ms");
+            await Task.Delay(delayMs);
+
+            if (_isDisposed) return;
+
+            bufferedStream.Position = 0;
+            var ok = await _seriesService.UploadSessionSelfieAsync(
+                SeriesId, bufferedStream);
+
+            System.Diagnostics.Debug.WriteLine(
+                $"[PartyPlay] Selfie upload result: {ok}");
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine(
+                $"[PartyPlay] CaptureAndUploadSelfie: {ex.Message}");
+        }
+        finally
+        {
+            IsSelfieCapturing = false;
+        }
     }
 
     // ═══════════════════════════════════════════════════════════════

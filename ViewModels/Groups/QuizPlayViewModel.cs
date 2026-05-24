@@ -66,6 +66,15 @@ public partial class QuizPlayViewModel : ObservableObject, IDisposable
     private string? _selectedOptionId;
     private string? _currentQuestionId;
 
+    // ─── Selfie : taux adaptatif selon nb participants ─────────────
+    // Calculé à l'init dans InitAsync. Tirage probabiliste indépendant
+    // à chaque soumission de réponse. Aucune limite "1 par session" :
+    // chaque joueur peut tomber 0, 1, ou plusieurs fois selon son sort.
+    private double _selfieRate = 0.0;
+    private static readonly Random _selfieRandom = new Random();
+    public Func<Task<Stream?>>? CaptureSelfieRequested { get; set; }
+    [ObservableProperty] private bool _isSelfieCapturing = false;
+
     public QuizPlayViewModel(
         QuizService quizService,
         SeriesService seriesService,
@@ -399,6 +408,14 @@ public partial class QuizPlayViewModel : ObservableObject, IDisposable
 
             // 4) Charger compteur participants
             ParticipantCount = await _quizService.GetParticipantCountAsync(SeriesId);
+
+            // 4bis) Taux de selfie adaptatif : ~0.60 selfie par joueur sur
+            // l'ensemble de la session (10 joueurs × 10 questions × 0.06 ≈ 6
+            // selfies au total). Clamp pour garder du jeu sur petits/gros groupes.
+            var safeCount = Math.Max(1, ParticipantCount);
+            _selfieRate = Math.Clamp(0.60 / safeCount, 0.01, 0.60);
+            System.Diagnostics.Debug.WriteLine(
+                $"[QuizPlay] Selfie rate: {_selfieRate:P1} ({safeCount} participants)");
 
             System.Diagnostics.Debug.WriteLine(
                 $"[QuizPlay] Init : status={_series.Status}, idx={CurrentIndex}, " +
@@ -791,6 +808,70 @@ public partial class QuizPlayViewModel : ObservableObject, IDisposable
         IsQuestion = false;
         IsAnswered = true;
         // Le timer continue de tourner ; à 0 on bascule sur reveal.
+
+        // ─── Selfie : tirage probabiliste indépendant ─────────────
+        // Taux calculé dans InitAsync selon le nb de participants.
+        // Tirage à chaque question : tout le monde a sa chance à chaque
+        // réponse, pas de cap "1 par session". Capture immédiate (pendant
+        // que la cam est dispo) puis upload différé 0-10s. Fire and forget
+        // intentionnel : ne bloque pas la transition d'écran.
+        bool shouldDoSelfie = !_isDisposed
+            && _selfieRate > 0
+            && _selfieRandom.NextDouble() < _selfieRate;
+
+        if (shouldDoSelfie)
+        {
+            _ = CaptureAndUploadSelfieAsync();
+        }
+    }
+
+    // ─── Capture + upload selfie en arrière-plan ──────────────────
+    /// <summary>
+    /// Capture immédiate de la photo (la cam est prête à l'instant du
+    /// vote), puis upload différé d'un délai aléatoire 0-10s pour lisser
+    /// le pic réseau si gros événement. Non-bloquant pour l'utilisateur.
+    /// </summary>
+    private async Task CaptureAndUploadSelfieAsync()
+    {
+        IsSelfieCapturing = true;
+        try
+        {
+            if (CaptureSelfieRequested == null) return;
+
+            using var stream = await CaptureSelfieRequested.Invoke();
+            if (stream == null || _isDisposed)
+            {
+                System.Diagnostics.Debug.WriteLine(
+                    "[QuizPlay] Selfie stream null (capture failed/denied/disposed)");
+                return;
+            }
+
+            using var bufferedStream = new MemoryStream();
+            await stream.CopyToAsync(bufferedStream);
+
+            var delayMs = _selfieRandom.Next(0, 10_001);
+            System.Diagnostics.Debug.WriteLine(
+                $"[QuizPlay] Selfie captured, upload in {delayMs}ms");
+            await Task.Delay(delayMs);
+
+            if (_isDisposed) return;
+
+            bufferedStream.Position = 0;
+            var ok = await _seriesService.UploadSessionSelfieAsync(
+                SeriesId, bufferedStream);
+
+            System.Diagnostics.Debug.WriteLine(
+                $"[QuizPlay] Selfie upload result: {ok}");
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine(
+                $"[QuizPlay] CaptureAndUploadSelfie: {ex.Message}");
+        }
+        finally
+        {
+            IsSelfieCapturing = false;
+        }
     }
 
     // ═══════════════════════════════════════════════════════════════

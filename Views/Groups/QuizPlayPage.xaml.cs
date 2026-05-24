@@ -1,26 +1,81 @@
 using BeauOuPas.ViewModels.Groups;
+using CommunityToolkit.Maui.Core;
+using CommunityToolkit.Maui.Views;
 
 namespace BeauOuPas.Views.Groups;
 
 public partial class QuizPlayPage : ContentPage
 {
     private readonly QuizPlayViewModel _vm;
+    private readonly ICameraProvider _cameraProvider;
+    private bool _cameraReady = false;
+    private bool _permissionDenied = false;
+    private bool _cameraInitInProgress = false;
 
     // Pour gérer la confirmation de sortie en plein quiz
     private bool _confirmingExit = false;
     private bool _exitConfirmed = false;
 
-    public QuizPlayPage(QuizPlayViewModel vm)
+    public QuizPlayPage(QuizPlayViewModel vm, ICameraProvider cameraProvider)
     {
         InitializeComponent();
         _vm = vm;
+        _cameraProvider = cameraProvider;
         BindingContext = vm;
+
+        _vm.CaptureSelfieRequested = CaptureSelfieFromCameraAsync;
     }
 
     protected override async void OnAppearing()
     {
         base.OnAppearing();
 
+        // 1) Permission caméra (pour le selfie auto)
+        var status = await Permissions.CheckStatusAsync<Permissions.Camera>();
+        if (status != PermissionStatus.Granted)
+            status = await Permissions.RequestAsync<Permissions.Camera>();
+
+        if (status != PermissionStatus.Granted)
+        {
+            _permissionDenied = true;
+            // Pas bloquant : le quiz peut tourner sans selfie. On informe juste.
+            System.Diagnostics.Debug.WriteLine("[QuizPlayPage] Camera permission denied → selfies désactivés");
+        }
+        else
+        {
+            if (!_cameraReady && !_cameraInitInProgress)
+            {
+                _cameraInitInProgress = true;
+                try
+                {
+                    await _cameraProvider.RefreshAvailableCameras(CancellationToken.None);
+                    var frontCamera = _cameraProvider.AvailableCameras
+                        .FirstOrDefault(c => c.Position == CameraPosition.Front);
+
+                    if (frontCamera != null)
+                    {
+                        HiddenCamera.SelectedCamera = frontCamera;
+                        System.Diagnostics.Debug.WriteLine(
+                            $"[QuizPlayPage] Caméra avant: {frontCamera.Name}");
+                    }
+
+                    await HiddenCamera.StartCameraPreview(CancellationToken.None);
+                    _cameraReady = true;
+                    System.Diagnostics.Debug.WriteLine("[QuizPlayPage] Caméra prête");
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"[QuizPlayPage] Camera init: {ex.Message}");
+                    _cameraReady = false;
+                }
+                finally
+                {
+                    _cameraInitInProgress = false;
+                }
+            }
+        }
+
+        // 2) Lancer le flow du quiz
         if (string.IsNullOrEmpty(_vm.SeriesId)) return;
         await _vm.InitAsync();
     }
@@ -68,10 +123,62 @@ public partial class QuizPlayPage : ContentPage
         }
     }
 
+    /// <summary>
+    /// Handler appelé par le ViewModel quand il faut prendre le selfie.
+    /// Retourne null si pas de permission, cam pas prête, ou timeout.
+    /// </summary>
+    private async Task<Stream?> CaptureSelfieFromCameraAsync()
+    {
+        if (_permissionDenied || !_cameraReady)
+        {
+            System.Diagnostics.Debug.WriteLine(
+                $"[QuizPlayPage] Selfie skipped (denied={_permissionDenied}, ready={_cameraReady})");
+            return null;
+        }
+
+        try
+        {
+            var tcs = new TaskCompletionSource<Stream?>();
+            EventHandler<MediaCapturedEventArgs>? handler = null;
+
+            handler = (s, e) =>
+            {
+                HiddenCamera.MediaCaptured -= handler;
+                tcs.TrySetResult(e.Media);
+            };
+
+            HiddenCamera.MediaCaptured += handler;
+
+            await HiddenCamera.CaptureImage(CancellationToken.None);
+
+            // Timeout 8s pour les premiers shots qui peuvent être lents
+            var completed = await Task.WhenAny(tcs.Task, Task.Delay(8000));
+            if (completed != tcs.Task)
+            {
+                HiddenCamera.MediaCaptured -= handler;
+                System.Diagnostics.Debug.WriteLine("[QuizPlayPage] Selfie capture TIMEOUT (8s)");
+                return null;
+            }
+            return await tcs.Task;
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"[QuizPlayPage] CaptureSelfie: {ex.Message}");
+            return null;
+        }
+    }
+
     protected override async void OnDisappearing()
     {
         base.OnDisappearing();
+        try
+        {
+            HiddenCamera.Handler?.DisconnectHandler();
+        }
+        catch { }
+
         await _vm.CleanupAsync();
         _vm.Dispose();
+        _cameraReady = false;
     }
 }

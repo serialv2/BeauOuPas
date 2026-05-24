@@ -11,17 +11,20 @@ public class SeriesService
     private readonly AppSettingsService _settingsService;
     private readonly CreditService _creditService;
     private readonly LocationService _locationService;  // ⚡ NOUVEAU
+    private readonly PhotoUploadService _uploadService; // ⚡ pour upload selfies session quiz/party
 
     public SeriesService(
         Supabase.Client supabase,
         AppSettingsService settingsService,
         CreditService creditService,
-        LocationService locationService)              // ⚡ NOUVEAU
+        LocationService locationService,                  // ⚡ NOUVEAU
+        PhotoUploadService uploadService)                 // ⚡ pour upload selfies session
     {
         _supabase = supabase;
         _settingsService = settingsService;
         _creditService = creditService;
-        _locationService = locationService;            // ⚡ NOUVEAU
+        _locationService = locationService;             // ⚡ NOUVEAU
+        _uploadService = uploadService;
     }
 
     public string? CurrentUserId => _supabase.Auth.CurrentUser?.Id;
@@ -279,6 +282,41 @@ public class SeriesService
         catch (Exception ex)
         {
             System.Diagnostics.Debug.WriteLine($"[ResetSeries] EXCEPTION: {ex.Message}");
+            return false;
+        }
+    }
+
+    // ═════════════════════════════════════════════════════════════════
+    // Upload d'un selfie de session (mode quiz / partie rapide). Pas lié
+    // à un projet/question particulière : SeriesProjectId reste NULL.
+    // Réutilise PhotoUploadService.UploadSessionSelfieFastAsync puis insert
+    // une ligne series_selfies. Jamais throw, retourne false si échec.
+    // ═════════════════════════════════════════════════════════════════
+    public async Task<bool> UploadSessionSelfieAsync(string seriesId, Stream photoStream)
+    {
+        try
+        {
+            var userId = CurrentUserId;
+            if (userId == null) return false;
+
+            var url = await _uploadService.UploadSessionSelfieFastAsync(
+                photoStream, seriesId, userId);
+            if (string.IsNullOrEmpty(url)) return false;
+
+            var selfie = new SeriesSelfie
+            {
+                SeriesId = seriesId,
+                SeriesProjectId = null,
+                UserId = userId,
+                PhotoUrl = url,
+                CreatedAt = DateTime.UtcNow
+            };
+            await _supabase.From<SeriesSelfie>().Insert(selfie);
+            return true;
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"[SeriesService] UploadSessionSelfie: {ex.Message}");
             return false;
         }
     }
