@@ -59,9 +59,29 @@ public partial class QuizPlayPage : ContentPage
                             $"[QuizPlayPage] Caméra avant: {frontCamera.Name}");
                     }
 
-                    await HiddenCamera.StartCameraPreview(CancellationToken.None);
-                    _cameraReady = true;
-                    System.Diagnostics.Debug.WriteLine("[QuizPlayPage] Caméra prête");
+                    // ⚠️ Sur 2ème navigation (nouveau quiz après être revenu en arrière),
+                    // la SurfaceView n'a pas encore réattaché son Handler quand on appelle
+                    // StartCameraPreview → "Unable to retrieve Handler". On attend le
+                    // Handler max 3s puis on retry une fois si encore échec.
+                    var handlerTimeout = DateTime.UtcNow.AddSeconds(3);
+                    while (HiddenCamera.Handler == null && DateTime.UtcNow < handlerTimeout)
+                        await Task.Delay(100);
+
+                    try
+                    {
+                        await HiddenCamera.StartCameraPreview(CancellationToken.None);
+                        _cameraReady = true;
+                        System.Diagnostics.Debug.WriteLine("[QuizPlayPage] Caméra prête");
+                    }
+                    catch (Exception exFirst) when (exFirst.Message.Contains("Handler"))
+                    {
+                        System.Diagnostics.Debug.WriteLine(
+                            $"[QuizPlayPage] Camera 1st try failed, retry: {exFirst.Message}");
+                        await Task.Delay(500);
+                        await HiddenCamera.StartCameraPreview(CancellationToken.None);
+                        _cameraReady = true;
+                        System.Diagnostics.Debug.WriteLine("[QuizPlayPage] Caméra prête (after retry)");
+                    }
                 }
                 catch (Exception ex)
                 {
