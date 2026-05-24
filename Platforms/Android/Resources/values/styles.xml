@@ -1,6 +1,23 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+	<!--
+	    Surcharge du thème splash auto-généré par MAUI.
+	    Le thème généré utilise Theme.SplashScreen qui n'hérite PAS de
+	    Theme.MaterialComponents → IllegalArgumentException au démarrage
+	    dès qu'un composant Material (BottomNavigationView, ImageCropper…)
+	    est instancié pendant la fenêtre de démarrage.
+	    On force MaterialComponents comme parent tout en conservant le
+	    drawable splash généré par MAUI (@drawable/maui_splash_screen).
+	-->
+	<style name="Maui.SplashTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+		<item name="android:windowBackground">@drawable/maui_splash_screen</item>
+		<item name="android:windowNoTitle">true</item>
+		<item name="android:windowActionBar">false</item>
+		<item name="android:windowFullscreen">false</item>
+		<item name="android:windowContentOverlay">@null</item>
+	</style>
+
 	<style name="MainTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
 		<item name="windowNoTitle">true</item>
 		<item name="windowActionBar">false</item>
