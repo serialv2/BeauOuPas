@@ -4,7 +4,7 @@
 		<TargetFrameworks>net9.0-android;net9.0-ios</TargetFrameworks>
 		<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net9.0-windows10.0.19041.0</TargetFrameworks>
 
-		<JavaMaximumHeapSize>8G</JavaMaximumHeapSize>
+		<JavaMaximumHeapSize>6G</JavaMaximumHeapSize>
 		<AndroidEnableMultiDex>true</AndroidEnableMultiDex>
 		<AndroidDexTool>d8</AndroidDexTool>
 
@@ -117,18 +117,20 @@
 		<PackageReference Include="ImageCropper.Maui" Version="1.2.3" />
 		<PackageReference Include="Plugin.MauiMTAdmob" Version="2.4.0" />
 
-		<PackageReference Include="Xamarin.AndroidX.Activity" Version="1.12.4.1" />
-		<PackageReference Include="Xamarin.AndroidX.Activity.Ktx" Version="1.12.4.1" />
+		<!-- Kotlin metadata ≤ 2.1.0 requis par le R8 embarqué dans .NET Android 9 SDK 35.0.105.
+		     Les versions 1.12.x / 1.8.9.x / 2.10.x utilisent Kotlin 2.3.x → OOM + JAVA0000 errors. -->
+		<PackageReference Include="Xamarin.AndroidX.Activity" Version="1.9.3.2" />
+		<PackageReference Include="Xamarin.AndroidX.Activity.Ktx" Version="1.9.3.2" />
 		<PackageReference Include="Xamarin.Google.Android.Material" Version="1.12.0.3" />
-		<PackageReference Include="Xamarin.AndroidX.Fragment" Version="1.8.9.2" />
-		<PackageReference Include="Xamarin.AndroidX.Fragment.Ktx" Version="1.8.9.2" />
+		<PackageReference Include="Xamarin.AndroidX.Fragment" Version="1.8.5.1" />
+		<PackageReference Include="Xamarin.AndroidX.Fragment.Ktx" Version="1.8.5.1" />
 
-		<PackageReference Include="Xamarin.AndroidX.Lifecycle.Common" Version="2.10.0.2" />
-		<PackageReference Include="Xamarin.AndroidX.Lifecycle.Runtime" Version="2.10.0.2" />
-		<PackageReference Include="Xamarin.AndroidX.Lifecycle.Process" Version="2.10.0.2" />
-		<PackageReference Include="Xamarin.AndroidX.Lifecycle.LiveData" Version="2.10.0.2" />
-		<PackageReference Include="Xamarin.AndroidX.Lifecycle.LiveData.Core" Version="2.10.0.2" />
-		<PackageReference Include="Xamarin.AndroidX.Lifecycle.LiveData.Core.Ktx" Version="2.10.0.2" />
+		<PackageReference Include="Xamarin.AndroidX.Lifecycle.Common" Version="2.8.7.1" />
+		<PackageReference Include="Xamarin.AndroidX.Lifecycle.Runtime" Version="2.8.7.1" />
+		<PackageReference Include="Xamarin.AndroidX.Lifecycle.Process" Version="2.8.7.1" />
+		<PackageReference Include="Xamarin.AndroidX.Lifecycle.LiveData" Version="2.8.7.1" />
+		<PackageReference Include="Xamarin.AndroidX.Lifecycle.LiveData.Core" Version="2.8.7.1" />
+		<PackageReference Include="Xamarin.AndroidX.Lifecycle.LiveData.Core.Ktx" Version="2.8.7.1" />
 	</ItemGroup>
 
 	<ItemGroup Condition="$(TargetFramework.Contains('-windows'))">
