@@ -1,5 +1,4 @@
 using Plugin.MauiMtAdmob;
-using Plugin.MauiMtAdmob.Extra;
 using BeauOuPas.Services;
 using BeauOuPas.Services.Ads;
 
@@ -7,16 +6,8 @@ namespace BeauOuPas;
 
 public class AndroidAdService : IAdService
 {
-    // ─── IDs de production ───────────────────────────────────────────
     private const string BannerId = "ca-app-pub-5814544077070305/9551316912";
     private const string RewardedId = "ca-app-pub-5814544077070305/8830321670";
-
-    // ⚠️ TODO PROD : créer le slot Interstitiel dans la console AdMob
-    //    (https://apps.admob.com/ → BeauOuPas → Blocs d'annonces →
-    //     Ajouter → Interstitiel → nommer "BeauOuPas - Interstitial - GameStart")
-    //    puis remplacer l'ID de test ci-dessous par l'ID réel de la forme
-    //    "ca-app-pub-5814544077070305/XXXXXXXXXX" AVANT le build de release.
-    // ID de test Google (sert toujours une pub bidon, safe pour dev/AdMob).
     private const string InterstitialId = "ca-app-pub-3940256099942544/1033173712";
 
     private readonly AppSettingsService _settingsService;
@@ -25,18 +16,19 @@ public class AndroidAdService : IAdService
     public AndroidAdService(AppSettingsService settingsService)
     {
         _settingsService = settingsService;
+
+        // Logs de diagnostic : on saura si la pub charge ou échoue
+        CrossMauiMTAdmob.Current.OnInterstitialLoaded += (s, e) =>
+            System.Diagnostics.Debug.WriteLine("[Ad] Interstitial LOADED ✓");
+        CrossMauiMTAdmob.Current.OnInterstitialFailedToLoad += (s, e) =>
+            System.Diagnostics.Debug.WriteLine($"[Ad] Interstitial FAILED to load: {e?.ToString() ?? "unknown"}");
     }
 
     public bool IsBannerReady => true;
-    public bool IsInterstitialReady
-        => CrossMauiMTAdmob.Current.IsInterstitialLoaded(InterstitialId);
-    public bool IsRewardedReady
-        => CrossMauiMTAdmob.Current.IsRewardedLoaded(RewardedId);
+    public bool IsInterstitialReady => CrossMauiMTAdmob.Current.IsInterstitialLoaded();
+    public bool IsRewardedReady => CrossMauiMTAdmob.Current.IsRewardedLoaded();
 
-    // ─── Bannière ────────────────────────────────────────────────────
     public Task LoadBannerAsync() => Task.CompletedTask;
-
-    // ─── Interstitielle ──────────────────────────────────────────────
 
     public Task LoadInterstitialAsync()
     {
@@ -44,10 +36,7 @@ public class AndroidAdService : IAdService
         {
             MainThread.BeginInvokeOnMainThread(() =>
             {
-                CrossMauiMTAdmob.Current.LoadInterstitial(
-                    InterstitialId,
-                    new MTInterstitialAdOptions(),
-                    InterstitialId);
+                CrossMauiMTAdmob.Current.LoadInterstitial(InterstitialId);
             });
             System.Diagnostics.Debug.WriteLine("[Ad] LoadInterstitial appelé");
         }
@@ -58,16 +47,12 @@ public class AndroidAdService : IAdService
         return Task.CompletedTask;
     }
 
-    /// <summary>
-    /// Affiche l'interstitielle si chargée. Retourne true si affichage déclenché.
-    /// </summary>
     public async Task<bool> ShowInterstitialAsync()
     {
         try
         {
             if (!await _settingsService.GetAdsEnabledAsync()) return false;
-            if (!CrossMauiMTAdmob.Current.IsInterstitialLoaded(InterstitialId))
-                return false;
+            if (!CrossMauiMTAdmob.Current.IsInterstitialLoaded()) return false;
 
             void OnInterstitialClosed(object? s, EventArgs e)
             {
@@ -78,7 +63,7 @@ public class AndroidAdService : IAdService
             CrossMauiMTAdmob.Current.OnInterstitialClosed += OnInterstitialClosed;
 
             MainThread.BeginInvokeOnMainThread(() =>
-                CrossMauiMTAdmob.Current.ShowInterstitial(InterstitialId));
+                CrossMauiMTAdmob.Current.ShowInterstitial());
 
             return true;
         }
@@ -89,10 +74,6 @@ public class AndroidAdService : IAdService
         }
     }
 
-    /// <summary>
-    /// Wrapper "game start" : non-bloquant, jamais throw, jamais hang.
-    /// Appelé sur la transition series.status 'preparing' → 'active'.
-    /// </summary>
     public async Task ShowInterstitialBeforeGameStartAsync()
     {
         try
@@ -103,17 +84,31 @@ public class AndroidAdService : IAdService
                 return;
             }
 
-            if (!CrossMauiMTAdmob.Current.IsInterstitialLoaded(InterstitialId))
+            // Si la pub n'est pas encore chargée, on patiente max 8s pour laisser
+            // le préchargement Google finir (peut prendre 5-6s au tout premier appel).
+            // Non-bloquant pour l'utilisateur (fire-and-forget), donc OK d'attendre.
+            var timeout = DateTime.UtcNow.AddSeconds(8);
+            while (!CrossMauiMTAdmob.Current.IsInterstitialLoaded() && DateTime.UtcNow < timeout)
             {
-                System.Diagnostics.Debug.WriteLine("[Ad] Interstitial skip : not loaded (no preload?)");
+                await Task.Delay(200);
+            }
+
+            if (!CrossMauiMTAdmob.Current.IsInterstitialLoaded())
+            {
+                System.Diagnostics.Debug.WriteLine("[Ad] Interstitial skip : not loaded after 8s wait");
                 return;
             }
+
+            // On attend la fermeture de la pub avant de retourner, pour que
+            // le caller puisse signaler la TV ("j'ai fini de regarder la pub").
+            var tcs = new TaskCompletionSource<bool>();
 
             void OnInterstitialClosed(object? s, EventArgs e)
             {
                 CrossMauiMTAdmob.Current.OnInterstitialClosed -= OnInterstitialClosed;
-                System.Diagnostics.Debug.WriteLine("[Ad] Interstitial closed, reload pour la prochaine");
+                System.Diagnostics.Debug.WriteLine("[Ad] Interstitial closed, reload");
                 _ = LoadInterstitialAsync();
+                tcs.TrySetResult(true);
             }
 
             CrossMauiMTAdmob.Current.OnInterstitialClosed += OnInterstitialClosed;
@@ -122,15 +117,29 @@ public class AndroidAdService : IAdService
             {
                 try
                 {
-                    CrossMauiMTAdmob.Current.ShowInterstitial(InterstitialId);
+                    CrossMauiMTAdmob.Current.ShowInterstitial();
                     System.Diagnostics.Debug.WriteLine("[Ad] ShowInterstitial (game start) appelé");
                 }
                 catch (Exception ex)
                 {
                     System.Diagnostics.Debug.WriteLine($"[Ad] ShowInterstitial threw: {ex.Message}");
                     CrossMauiMTAdmob.Current.OnInterstitialClosed -= OnInterstitialClosed;
+                    tcs.TrySetResult(false);
                 }
             });
+
+            // Garde-fou : si la fermeture n'arrive jamais (cas pathologique),
+            // on débloque après 60s pour ne pas hanger les callers à jamais.
+            _ = Task.Delay(60_000).ContinueWith(_ =>
+            {
+                if (!tcs.Task.IsCompleted)
+                {
+                    CrossMauiMTAdmob.Current.OnInterstitialClosed -= OnInterstitialClosed;
+                    tcs.TrySetResult(false);
+                }
+            });
+
+            await tcs.Task;
         }
         catch (Exception ex)
         {
@@ -138,7 +147,6 @@ public class AndroidAdService : IAdService
         }
     }
 
-    // ─── Rewarded ────────────────────────────────────────────────────
     public async Task LoadRewardedAsync()
     {
         try
@@ -147,10 +155,7 @@ public class AndroidAdService : IAdService
 
             MainThread.BeginInvokeOnMainThread(() =>
             {
-                CrossMauiMTAdmob.Current.LoadRewarded(
-                    RewardedId,
-                    new MTRewardedAdOptions(),
-                    RewardedId);
+                CrossMauiMTAdmob.Current.LoadRewarded(RewardedId);
             });
 
             System.Diagnostics.Debug.WriteLine("[Ad] LoadRewarded appelé");
@@ -168,28 +173,18 @@ public class AndroidAdService : IAdService
         try
         {
             var adsEnabled = await _settingsService.GetAdsEnabledAsync();
-            System.Diagnostics.Debug.WriteLine($"[Ad] adsEnabled = {adsEnabled}");
+            if (!adsEnabled) return false;
 
-            if (!adsEnabled)
-            {
-                System.Diagnostics.Debug.WriteLine("[Ad] Ads désactivées");
-                return false;
-            }
-
-            System.Diagnostics.Debug.WriteLine($"[Ad] IsRewardedLoaded: {CrossMauiMTAdmob.Current.IsRewardedLoaded(RewardedId)}");
-
-            if (!CrossMauiMTAdmob.Current.IsRewardedLoaded(RewardedId))
+            if (!CrossMauiMTAdmob.Current.IsRewardedLoaded())
             {
                 await LoadRewardedAsync();
                 var timeout = DateTime.Now.AddSeconds(5);
-                while (!CrossMauiMTAdmob.Current.IsRewardedLoaded(RewardedId)
+                while (!CrossMauiMTAdmob.Current.IsRewardedLoaded()
                        && DateTime.Now < timeout)
                     await Task.Delay(500);
             }
 
-            System.Diagnostics.Debug.WriteLine($"[Ad] IsRewardedLoaded après chargement: {CrossMauiMTAdmob.Current.IsRewardedLoaded(RewardedId)}");
-
-            if (!CrossMauiMTAdmob.Current.IsRewardedLoaded(RewardedId))
+            if (!CrossMauiMTAdmob.Current.IsRewardedLoaded())
             {
                 System.Diagnostics.Debug.WriteLine("[Ad] Rewarded pas chargé après timeout");
                 return false;
@@ -224,7 +219,7 @@ public class AndroidAdService : IAdService
             CrossMauiMTAdmob.Current.OnUserEarnedReward += OnUserEarnedReward;
 
             MainThread.BeginInvokeOnMainThread(() =>
-                CrossMauiMTAdmob.Current.ShowRewarded(RewardedId));
+                CrossMauiMTAdmob.Current.ShowRewarded());
 
             return await tcs.Task;
         }

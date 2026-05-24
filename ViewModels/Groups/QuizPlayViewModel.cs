@@ -410,10 +410,18 @@ public partial class QuizPlayViewModel : ObservableObject, IDisposable
             //    pendant le rendu)
             await _realtime.SubscribeAsync(SeriesId, "quiz");
 
-            // 5bis) Précharge l'interstitielle pendant que l'animateur prépare son lancement.
-            //       Affichée plus tard sur la transition preparing → active (cf. OnRealtimeSeriesChanged).
-            if (_series.Status == "preparing")
-                _ = _adService.LoadInterstitialAsync();
+            // 5bis) Précharge systématiquement l'interstitielle. Affichée :
+            //  - soit sur la transition preparing → active (cf. OnRealtimeSeriesChanged)
+            //  - soit ici même si on arrive directement en INTRO (animateur solo qui
+            //    lance le quiz depuis l'écran TV : status est déjà "active" à l'init).
+            _ = _adService.LoadInterstitialAsync();
+
+            if (_series.Status == "active"
+                && _questions.Count > 0
+                && _questions[0].StartedAt == null)
+            {
+                _ = ShowInterstitialThenSignalAsync();
+            }
 
             // 6) Premier rendu
             RenderCurrentScreen();
@@ -1088,10 +1096,12 @@ public partial class QuizPlayViewModel : ObservableObject, IDisposable
 
             // 🎬 Game start : preparing → active. On affiche une interstitielle
             // côté joueur (fire-and-forget, jamais bloquant). La pub se superpose
-            // pendant l'intro (20s) ; le state machine continue en arrière-plan.
+            // pendant l'intro ; le state machine continue en arrière-plan. Une fois
+            // la pub fermée, on signale à la TV pour qu'elle puisse démarrer Q1
+            // dès que tous les joueurs ont signé.
             if (prev != null && prev.Status == "preparing" && fresh.Status == "active")
             {
-                _ = _adService.ShowInterstitialBeforeGameStartAsync();
+                _ = ShowInterstitialThenSignalAsync();
             }
 
             // Status change ou index change → reroute
@@ -1199,6 +1209,17 @@ public partial class QuizPlayViewModel : ObservableObject, IDisposable
         ErrorTitle = title;
         ErrorMessage = message;
         IsError = true;
+    }
+
+    /// <summary>
+    /// Affiche la pub interstitielle (ou skip si pas dispo) puis signale à la TV
+    /// que ce joueur a fini, pour qu'elle puisse démarrer Q1 dès que tous ont signé.
+    /// </summary>
+    private async Task ShowInterstitialThenSignalAsync()
+    {
+        try { await _adService.ShowInterstitialBeforeGameStartAsync(); }
+        catch (Exception ex) { System.Diagnostics.Debug.WriteLine($"[QuizPlay] Interstitial ex: {ex.Message}"); }
+        finally { await _seriesService.MarkInterstitialSeenAsync(SeriesId); }
     }
 
     private void StopAllTimers()

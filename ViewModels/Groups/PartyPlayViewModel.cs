@@ -229,10 +229,20 @@ public partial class PartyPlayViewModel : ObservableObject, IDisposable
             //     + quiz_questions ; on ne touche pas SeriesRealtimeService)
             await _realtime.SubscribeAsync(SeriesId, "quiz");
 
-            // 5bis) Précharge l'interstitielle pendant le lobby. Affichée plus
-            //       tard sur la transition preparing → active.
-            if (_series != null && _series.Status == "preparing")
-                _ = _adService.LoadInterstitialAsync();
+            // 5bis) Précharge systématiquement l'interstitielle. Affichée :
+            //  - soit sur la transition preparing → active (cas multi-joueurs synchrones)
+            //  - soit ici même si on arrive directement en INTRO (cas typique : animateur
+            //    qui lance la partie depuis l'écran TV puis navigue vers PartyPlay,
+            //    le status est déjà "active" à l'init donc OnRealtimeSeriesChanged
+            //    ne voit jamais la transition).
+            _ = _adService.LoadInterstitialAsync();
+
+            if (_series.Status == "active"
+                && _questions.Count > 0
+                && _questions[0].StartedAt == null)
+            {
+                _ = ShowInterstitialThenSignalAsync();
+            }
 
             // 6) Premier rendu
             RenderCurrentScreen();
@@ -603,7 +613,7 @@ public partial class PartyPlayViewModel : ObservableObject, IDisposable
             // 🎬 Game start : preparing → active. Interstitielle non-bloquante.
             if (prev != null && prev.Status == "preparing" && fresh.Status == "active")
             {
-                _ = _adService.ShowInterstitialBeforeGameStartAsync();
+                _ = ShowInterstitialThenSignalAsync();
             }
 
             if (prev == null
@@ -669,6 +679,19 @@ public partial class PartyPlayViewModel : ObservableObject, IDisposable
     // ═══════════════════════════════════════════════════════════════
     // Helpers
     // ═══════════════════════════════════════════════════════════════
+
+    /// <summary>
+    /// Affiche la pub interstitielle (ou skip si pas dispo) puis signale à la
+    /// TV via RPC mark_interstitial_seen que ce joueur a fini. Permet à la TV
+    /// de démarrer la 1ère question dès que tout le monde a signé, sans
+    /// attendre la fin du countdown intro complet.
+    /// </summary>
+    private async Task ShowInterstitialThenSignalAsync()
+    {
+        try { await _adService.ShowInterstitialBeforeGameStartAsync(); }
+        catch (Exception ex) { System.Diagnostics.Debug.WriteLine($"[PartyPlay] Interstitial ex: {ex.Message}"); }
+        finally { await _seriesService.MarkInterstitialSeenAsync(SeriesId); }
+    }
 
     private void UpdateParticipantLabel()
     {

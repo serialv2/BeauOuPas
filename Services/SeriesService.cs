@@ -282,6 +282,30 @@ public class SeriesService
             return false;
         }
     }
+
+    // ═════════════════════════════════════════════════════════════════
+    // Signale à la TV que le joueur a fini de visionner sa pub interstitielle
+    // (ou qu'aucune pub ne lui sera affichée). La TV utilise cette info pour
+    // démarrer la 1ère question dès que tous les joueurs ont signalé, sans
+    // attendre la fin du countdown intro complet. Jamais bloquant côté UI.
+    // ═════════════════════════════════════════════════════════════════
+    public async Task MarkInterstitialSeenAsync(string seriesId)
+    {
+        try
+        {
+            await _supabase.Rpc("mark_interstitial_seen",
+                new Dictionary<string, object>
+                {
+                    { "p_series_id", seriesId }
+                });
+            System.Diagnostics.Debug.WriteLine($"[InterstitialSync] mark_interstitial_seen OK ({seriesId})");
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"[InterstitialSync] mark_interstitial_seen ERR: {ex.Message}");
+        }
+    }
+
     // ═════════════════════════════════════════════════════════════════
     // ⚡ Suppression sécurisée d'une série
     //

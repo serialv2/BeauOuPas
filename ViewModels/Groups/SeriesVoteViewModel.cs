@@ -195,10 +195,20 @@ public partial class SeriesVoteViewModel : ObservableObject, IDisposable
             //    on reçoit l'event et on se met à jour.
             await _realtime.SubscribeAsync(SeriesId);
 
-            // 4bis) Précharge l'interstitielle pendant le lobby. Affichée plus
-            //       tard sur la transition preparing → active.
-            if (series.Status == "preparing")
-                _ = _adService.LoadInterstitialAsync();
+            // 4bis) Précharge systématiquement l'interstitielle. Affichée :
+            //  - soit sur la transition preparing → active (cas multi-joueurs synchrones)
+            //  - soit ici même si on arrive directement sur le 1er projet pas démarré
+            //    (animateur solo qui lance la série depuis l'écran TV : status est
+            //    déjà "active" à l'init donc OnRealtimeSeriesChanged ne voit jamais
+            //    la transition).
+            _ = _adService.LoadInterstitialAsync();
+
+            if (series.Status == "active"
+                && _seriesProjects.Count > 0
+                && _seriesProjects[0].StartedAt == null)
+            {
+                _ = ShowInterstitialThenSignalAsync();
+            }
 
             // 5) Charger le projet courant (avec son started_at, qui peut être null
             //    si la TV n'a pas encore démarré ou pas encore avancé).
@@ -534,6 +544,22 @@ public partial class SeriesVoteViewModel : ObservableObject, IDisposable
             });
 
     // ─────────────────────────────────────────────────────────────────
+    // Interstitielle + signal à la TV
+    // ─────────────────────────────────────────────────────────────────
+
+    /// <summary>
+    /// Affiche la pub interstitielle (ou skip si pas dispo) puis signale à la TV
+    /// que ce joueur a fini, pour qu'elle puisse démarrer le 1er projet dès que
+    /// tous ont signé (sans attendre la fin du countdown intro complet).
+    /// </summary>
+    private async Task ShowInterstitialThenSignalAsync()
+    {
+        try { await _adService.ShowInterstitialBeforeGameStartAsync(); }
+        catch (Exception ex) { System.Diagnostics.Debug.WriteLine($"[SeriesVote] Interstitial ex: {ex.Message}"); }
+        finally { await _seriesService.MarkInterstitialSeenAsync(SeriesId); }
+    }
+
+    // ─────────────────────────────────────────────────────────────────
     // GESTION DU TIMER
     // ─────────────────────────────────────────────────────────────────
 
@@ -607,9 +633,10 @@ public partial class SeriesVoteViewModel : ObservableObject, IDisposable
 
             // 🎬 Game start : preparing → active. Interstitielle non-bloquante.
             // (la pub se superpose au démarrage, on ne bloque pas le state machine).
+            // Une fois la pub fermée, on signale à la TV via mark_interstitial_seen.
             if (_lastStatus == "preparing" && series.Status == "active")
             {
-                _ = _adService.ShowInterstitialBeforeGameStartAsync();
+                _ = ShowInterstitialThenSignalAsync();
             }
             _lastStatus = series.Status;
 
