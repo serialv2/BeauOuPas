@@ -36,3 +36,6 @@ structure.txt
 
 # Mac / OS
 .DS_Store
+
+# Assets generes pour Play Store (regenerable via script)
+playstore-assets/
